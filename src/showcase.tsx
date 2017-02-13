@@ -34,6 +34,8 @@ import { Dialog } from './components/Dialog/Dialog';
 import { DialogFooter } from './components/Dialog/DialogFooter';
 import { StatusBar } from './components/StatusBar/StatusBar';
 import { Treeview } from './components/Treeview/Treeview';
+import {TagContainer} from './components/TagContainer/TagContainer';
+import {CompactServer} from './components/CompactServer/CompactServer';
 
 export class Index extends React.Component<any, any> {
     constructor() {
@@ -42,10 +44,20 @@ export class Index extends React.Component<any, any> {
             showDialog: false
         };
     }
-
+    
     public render() {
         return (
             <div>
+                <CompactServer serverId={'CUSTOM-PC.localdomain'} onServerClose={this._onServerCloseCompactServer} onRoleEdit={this._onClickCompactServer} serverName={'CUSTOM-PC'} roleList={[]} status={1} classNameList={{ok: 'green', warning: 'yellow', critical: 'red'}}/>
+                <CompactServer serverId={'My very very long name of a server I am using I know its very long.domain.com'} onServerClose={this._onServerCloseCompactServer}  onRoleEdit={this._onClickCompactServer} serverName={'My very very long name of a server I am using I know its very long'}            roleList={[]} status={2} classNameList={{ok: 'green', warning: 'yellow', critical: 'red'}}/>
+                
+                <CompactServer serverId={'BANANA-PC.banana.com'}  onServerClose={this._onServerCloseCompactServer}  onRoleEdit={this._onClickCompactServer} serverName={'BANANA-PC'} roleList={[{display:'WPF', iconName:'icon-Add'}, {display:'Search', iconName:'icon-Alert'}]} status={0} classNameList={{ok: 'green', warning: 'yellow', critical: 'red'}}/>
+                
+                <TagContainer title={'Roles'} tags={[{display:'Tag1', iconName:'icon-Add'}, {display:'Tag2', iconName:'icon-Alert'}, {display:'Tag3', iconName:'icon-Buy'}]}>
+                    <div className="edit-tags tag" title="Edit tags">
+                        <Icon className="icon-Edit"></Icon>
+                    </div>
+                </TagContainer>
                 <Ribbon items={[]}></Ribbon>
                 <AddToFavorites favorited={true} />
                 <AddToFavorites favorited={false} />
@@ -307,6 +319,14 @@ export class Index extends React.Component<any, any> {
                 <StatusBar text={'Initializing index...'}></StatusBar>
             </div>);
     };
+
+    private _onClickCompactServer(serverId){
+            console.log("Clicked on editing roles of server " + serverId);        
+    }
+    
+    private _onServerCloseCompactServer(serverId){
+            console.log("Clicked on closing server " + serverId);        
+    }
 
     private _onTreeViewChange(ev, itemId, checked) {
         console.log(itemId + ':' + checked);

@@ -1,0 +1,41 @@
+@import '../../index.scss';
+
+.tag-container{
+    @include baseFont();
+    width: 95%;
+    margin:5px 2.5%;
+    height: auto;
+
+    .tag{
+        display: inline-block;
+        padding: 3px;
+        margin: 2px 4px;
+        background: #efefef;
+        border-radius: 4px;
+        cursor: default;
+    }
+    .icon{
+        margin-right: 2px;
+    }
+    .edit-tags{
+        display: inline-block;
+        margin:5px;
+        cursor: pointer;
+        background: none;
+
+    }
+    .edit-tags:hover{
+        background: #0078d7;
+        color: white;
+        .icon{
+            background: #0078d7;
+            color: white;
+        }
+    } 
+    h5{
+        margin: 0;
+        margin-top: 5px;
+        cursor: default;
+    }
+    
+}

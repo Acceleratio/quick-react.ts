@@ -1,0 +1,82 @@
+@import '../../index.scss';
+
+.compact-server-container{
+     @include baseFont();
+     position: relative;
+     margin:10px;
+     border-left: 10px solid;
+     float: left;
+     width: 95%;
+     padding: 10px;
+     background: rgb(232, 233, 239);
+     color:  #676666;
+
+     hr{
+        width: 100%;
+        margin: 0 auto;
+        line-height: 0.1em;
+        margin-top: 5px;
+        margin-bottom: 4px;
+        border-style: solid;
+        color:#f9f9fb;
+     }
+     .server-title{
+        position: relative;
+        float: left;
+        margin: 5px;
+        width:100%;
+        font-weight: 600;
+        .server-close{
+                font-size: 27px;
+                position: absolute;
+                right: 10px;
+                top: -15px;
+                color: red;
+                display: none;
+                font-weight: 900;
+                cursor: pointer;
+        }
+     }
+
+     .server-title:hover .server-close, .server-close:hover{
+         display: block;
+     }
+
+     .tag-container{
+         position: relative;
+         float: left;
+         width: 100%;
+         margin: 5px 0;
+         background: rgb(232, 233, 239);
+         .tag{
+            background: rgb(232, 233, 239);
+            margin-top:0;
+            margin-bottom: 0;
+            padding-top:0;
+            padding-bottom: 0;
+         }
+         .edit-tags:hover{
+            background: inherit;
+            color:#7DC458;
+            .icon{
+                background: inherit;
+                color:#7DC458;
+            }
+         }
+     }
+     .icon {
+         color: #676666;
+     }
+}
+
+.green{
+    border-left-color: #7DC458;
+}
+
+.yellow{
+    border-left-color: #EAC71B;
+}
+
+.red{
+    border-left-color: red;
+}
