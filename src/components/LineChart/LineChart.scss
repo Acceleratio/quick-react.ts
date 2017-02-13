@@ -1,0 +1,36 @@
+@import '../../index.scss';
+
+.graph-line {
+    fill: none;
+    stroke: #6b6b6b;
+    stroke-width: 2px;
+}
+
+.tick line {
+    opacity: 0.2;
+}
+
+.graph-title {
+    font-size: 16px;
+    padding-left: 50px;
+    font-weight: bold;
+    color: #6b6b6b;
+}
+
+.component-container {
+    display: inline-block;
+}
+
+.chart-container {
+    display: inline-block;
+}
+
+.domain {
+    visibility: hidden;
+}
+
+g {
+    text {
+        color: #6b6b6b;
+    }
+}
