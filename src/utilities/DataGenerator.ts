@@ -9,14 +9,14 @@ export class DataGenerator {
     }
 
     private generateRandom(min: number, max: number) : number {
-        return Math.random() * (max - min ) + min;
+        return Math.floor(Math.random() * (max - min ) + min);
     }
 
     private getValue() : number {
-        let next = this.generateRandom(0, 1);
+        let next = this.generateRandom(0, 100);
 
-        while ( Math.abs(next - this._prev) > 0.1 ) {
-            next = this.generateRandom(0, 1);
+        while ( Math.abs(next - this._prev) > 5 ) {
+            next = this.generateRandom(0, 100);
         }
         this._prev = next;
         
@@ -46,11 +46,11 @@ export class DataGenerator {
             max_count = 120;
         }
 
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j <= 4; j++) {
             this._data.shift();
         }
 
-        const value = this.generateRandom(0, 1);
+        const value = this.generateRandom(0, 100);
         this._prev = value;
         this._data = this.pushData(this._currentTime, value, this._data);
         
