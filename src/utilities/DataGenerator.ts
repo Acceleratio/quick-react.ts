@@ -50,6 +50,8 @@ export class DataGenerator {
             this._data.shift();
         }
 
+        let current = new Date();
+
         const value = this.generateRandom(0, 100);
         this._prev = value;
         this._data = this.pushData(this._currentTime, value, this._data);

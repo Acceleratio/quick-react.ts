@@ -46,7 +46,6 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     }
 
     public componentDidUpdate() {
-        console.log(this.props.data);
         this.redraw();
     }
 
@@ -62,25 +61,20 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     private redraw() {
         d3.select('.' + this.LINE_CLASS).remove();
         d3.select('.x-axis').remove();
-        d3.select('.line-chart-capture').remove();
-        this.redrawGraph();
+
+        const svg = d3.select('.' + this.GRAPH_CONTAINER_CLASS);
+        this.drawXAxis(svg);
+        this.drawLine(svg);
     }
 
     private draw() {
         const svg = this.createContainer();
         this.drawXAxis(svg);
         this.drawYAxis(svg);
-        this.drawCaptureArea(svg);
         this.drawLine(svg);
         this.drawCircle(svg);
-        this.addTooltip()
-    }
-
-    private redrawGraph() {
-        const svg = d3.select('.' + this.GRAPH_CONTAINER_CLASS);
-        this.drawXAxis(svg);
+        this.addTooltip();
         this.drawCaptureArea(svg);
-        this.drawLine(svg);
     }
 
     private drawXAxis(svg: any) : void {
@@ -101,7 +95,7 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     }
 
     private createContainer() {
-        return d3.select(this.refs.container).append('svg').attr('id', 'graph')
+        return d3.select(this.refs.container).append('svg')
                     .attr('width', this.props.width)
                     .attr('height', this.props.height)
                     .append('g').attr('class', this.GRAPH_CONTAINER_CLASS)
@@ -109,15 +103,15 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     }
 
     private generateX() {
-        return (d3.scaleTime()
+        return d3.scaleTime()
                 .domain(d3.extent(this.props.data, (d) => d.time))
-                .range([0, this.width]));
+                .range([0, this.width]);
     }
 
     private generateY() {
-        return (d3.scaleLinear()
+        return d3.scaleLinear()
                 .domain([0, 100])
-                .range([this.height, 0]));
+                .range([this.height, 0]);
     }
 
     private generateXAxis() {
@@ -130,15 +124,15 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     }
 
     private generateYAxis() {
-        return (d3.axisLeft(this.generateY())
+        return d3.axisLeft(this.generateY())
                 .tickSizeInner(-(this.width))
                 .tickSizeOuter(0)
                 .ticks(2)
-                .tickPadding(10));   
+                .tickPadding(10);   
     }
 
     private constructLine() {
-        const x = this._x;
+        const x = this.generateX();
         const y = this._y;
         
         return d3.line<DataType>()
@@ -191,7 +185,7 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     }
 
     private mouseMove() {
-        const x = this._x;
+        const x = this.generateX();
         const y = this._y;
 
         let x0 = x.invert(d3.mouse(d3.event.currentTarget)[0]);

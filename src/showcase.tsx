@@ -53,7 +53,7 @@ export class Index extends React.Component<any, any> {
             data: this._generator.generateValues()
         };
 
-        setTimeout(() => this.setState({data: this._generator.generateValues()}), 5000);
+        setInterval(() => this.setState({data: this._generator.generateValues()}), 5000);
     }
 
     componentDidMount() {
