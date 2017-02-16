@@ -54,7 +54,7 @@ export class Dropdown extends React.Component<IDropdownProps, any> {
   }
 
   public render() {
-    let { label, options, onRenderItem = this._onRenderItem, hasTitleBorder, icon, dropdownType, children, className, calloutClassName } = this.props;
+    let { label, options, onRenderItem = this._onRenderItem, hasTitleBorder, icon, dropdownType, children, className, calloutClassName, layerClassName } = this.props;
     let { id, isOpen, selectedIndex, isDisabled } = this.state;
     let selectedOption = options[selectedIndex];
 
@@ -102,7 +102,7 @@ export class Dropdown extends React.Component<IDropdownProps, any> {
         { isOpen && (
           <Callout
             isBeakVisible={ false }
-            className={ classNames('dropdown-callout', calloutClassName )}
+            className={ classNames('dropdown-callout', calloutClassName, layerClassName )}
             gapSpace={ 0 }
             doNotLayer={ false }
             targetElement={ this._dropDown }
@@ -152,7 +152,7 @@ export class Dropdown extends React.Component<IDropdownProps, any> {
   }
 
   public setSelectedIndex(index: number) {
-    let { onChanged, options } = this.props;
+    let { onChanged, options, onClick } = this.props;
     let { selectedIndex } = this.state;
 
     index = Math.max(0, Math.min(options.length - 1, index));
@@ -165,7 +165,11 @@ export class Dropdown extends React.Component<IDropdownProps, any> {
       if (onChanged) {
         onChanged(options[index], index);
       }
+    } 
+    if (onClick) {
+      onClick(options[index], index);
     }
+  
   }
 
   @autobind

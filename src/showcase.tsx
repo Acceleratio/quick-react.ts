@@ -35,6 +35,7 @@ import { DialogFooter } from './components/Dialog/DialogFooter';
 import { StatusBar } from './components/StatusBar/StatusBar';
 import { Treeview } from './components/Treeview/Treeview';
 import { LineChart } from './components/LineChart/LineChart';
+import { ToggleSwitch } from './components/ToggleSwitch/ToggleSwitch';
 
 import { DataGenerator } from './utilities/DataGenerator';
 
@@ -287,6 +288,8 @@ export class Index extends React.Component<any, any> {
                     label="Pick one">
                 </ChoiceGroup>
                 <br />
+                <ToggleSwitch onChange={this._onToggle} />
+                <br/>
                 <Slider label={'This is slider:'} min={0} max={50} step={5} defaultValue={20} showValue={true}></Slider>
                 <br />
                 <Label>I'm a Label</Label>
@@ -321,6 +324,10 @@ export class Index extends React.Component<any, any> {
                 ></LineChart>
             </div>);
     };
+
+    private _onToggle(checked){
+        console.log(checked);
+    }
 
     private _onTreeViewChange(ev, itemId, checked) {
         console.log(itemId + ':' + checked);

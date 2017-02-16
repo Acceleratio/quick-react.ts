@@ -22,4 +22,5 @@ export interface ICalloutProps extends React.Props<Callout | CalloutContent> {
   onDismiss?: (ev?: any) => void;
   doNotLayer?: boolean;
   setInitialFocus?: boolean;
+  layerClassName?: string;
 }

@@ -318,7 +318,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
     private _onEnterClick(ev: React.KeyboardEvent<HTMLElement>) {
         const { onEnterClick } = this.props;
 
-        if(onEnterClick !== undefined) {
+        if (onEnterClick !== undefined) {
             switch (ev.which) {     
                 case KeyCodes.enter:
                     onEnterClick(this.state.value);

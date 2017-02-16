@@ -72,7 +72,8 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
             onLayerDidMount,
             onLayerMounted,
             subText,
-            title
+            title,
+            layerClassName
         } = this.props;
 
         let { id, isOpen, isAnimatingOpen, isAnimatingClose } = this.state;
@@ -100,7 +101,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
         }
 
         return (
-            <Layer onLayerMounted={ onLayerMounted || onLayerDidMount }>
+            <Layer onLayerMounted={ onLayerMounted || onLayerDidMount } className={ layerClassName }>
                 <Popup
                     role="dialog"
                     onDismiss={ onDismiss }

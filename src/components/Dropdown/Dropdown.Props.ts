@@ -10,6 +10,7 @@ export interface IDropdownProps {
   selectedKey ?: string | number;
   options ?: IDropdownOption[];
   onChanged ?: (option: IDropdownOption, index?: number) => void;
+  onClick ?: (option: IDropdownOption, index?: number) => void;
   onRenderItem ?: IRenderFunction<IDropdownOption>;
   disabled ?: boolean;
   hasTitleBorder ?: boolean;
@@ -17,6 +18,7 @@ export interface IDropdownProps {
   dropdownType ?: DropdownType;
   className ?: string;
   calloutClassName ?: string;
+  layerClassName ?: string;
 }
 
 export interface IDropdownOption {
