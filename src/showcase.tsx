@@ -34,14 +34,21 @@ import { Dialog } from './components/Dialog/Dialog';
 import { DialogFooter } from './components/Dialog/DialogFooter';
 import { StatusBar } from './components/StatusBar/StatusBar';
 import { Treeview } from './components/Treeview/Treeview';
+import { LineChart } from './components/LineChart/LineChart';
 import { ToggleSwitch } from './components/ToggleSwitch/ToggleSwitch';
+
+import { DataGenerator } from './utilities/DataGenerator';
 
 export class Index extends React.Component<any, any> {
     constructor() {
         super();
+        const generator = new DataGenerator();
         this.state = {
-            showDialog: false
+            showDialog: false,
+            data: generator.generateValues()
         };
+
+        setInterval(() => this.setState({data: generator.generateValues()}), 5000);
     }
 
     public render() {
@@ -308,6 +315,13 @@ export class Index extends React.Component<any, any> {
                 </Treeview>
                 <br />
                 <StatusBar text={'Initializing index...'}></StatusBar>
+                <br />
+                <LineChart 
+                    title={'CPU USAGE'}
+                    data={this.state.data} 
+                    width={330} 
+                    height={200} 
+                ></LineChart>
             </div>);
     };
 

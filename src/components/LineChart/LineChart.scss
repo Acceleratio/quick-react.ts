@@ -1,0 +1,73 @@
+@import '../../index.scss';
+
+$main-color: #5d5d5d;
+$background-color: #f4f4f4;
+
+.chart-container {
+    text-align: center;
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    font-weight: 500;
+    color: $main-color;
+    background-color: #e5e5e5;
+
+    svg {
+        display: block;
+        margin-top: -25px;
+    }
+}
+
+.graph-line {
+    fill: none;
+    stroke: $main-color;
+    stroke-width: 2px;
+    opacity: 0.8;
+}
+
+.tick {
+    line {
+        stroke: white;
+        stroke-width: 1px;
+    }
+
+    text {
+        font-family: 'Segoe UI';
+        font-size: 12px;
+        opacity: 0.8;
+        fill: $main-color;
+    }
+}
+
+.y2 {
+    font-family: 'Segoe UI';
+    font-size: 12px;
+}
+
+.graph-title {
+    font-size: 16px;
+    padding-left: 50px;
+    font-weight: bold;
+    color: #6b6b6b;
+}
+
+.component-container {
+    display: inline-block;
+}
+
+.chart-container {
+    display: inline-block;
+}
+
+.domain {
+    visibility: hidden;
+}
+
+g {
+    text {
+        color: #6b6b6b;
+    }
+
+    line {
+        margin: 0 auto;
+    }
+}
