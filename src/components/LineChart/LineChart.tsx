@@ -17,13 +17,10 @@ export class LineChart extends React.Component<IChartProps, undefined> {
         left: 50,
         right: 40
     };
-
     private width: number = this.props.width - this.margin.left - this.margin.right;
     private height: number = this.props.height - this.margin.top - this.margin.bottom;
-    private _x = this.generateX();
     private _y = this.generateY();
     
-    TRANSFORM_SUBCONTAINER : string = 'translate(' + this.margin.left + ',' + (this.margin.top + 20) + ')';
     GRAPH_CONTAINER_CLASS: string = 'graph-container';
     LINE_CLASS: string = 'graph-line';
     TRANSLATE_WIDTH: number = 10;
@@ -33,9 +30,7 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     refs: {
         [key: string]: (Element);
         container: (HTMLInputElement);
-    }; 
-
-    bisect =  d3.bisector<DataType, any>((d) => d.time).left;
+    };
 
     constructor(props: IChartProps) {
         super(props);
@@ -107,7 +102,7 @@ export class LineChart extends React.Component<IChartProps, undefined> {
                     .attr('height', this.props.height + 20)
                     .append('g')
                     .attr('class', this.GRAPH_CONTAINER_CLASS)
-                    .attr('transform', this.TRANSFORM_SUBCONTAINER);        
+                    .attr('transform', 'translate(' + this.margin.left + ',' + (this.margin.top + 20) + ')');        
     }
 
     private generateX() {
@@ -142,11 +137,9 @@ export class LineChart extends React.Component<IChartProps, undefined> {
 
     private constructLine() {
         const x = this.generateX();
-        const y = this._y;
-        
         return d3.line<DataType>()
                     .x((d) => x(d.time))
-                    .y((d) => y(d.value));
+                    .y((d) => this._y(d.value));
     }
 
     private createFocus(svg: any) {
@@ -179,7 +172,6 @@ export class LineChart extends React.Component<IChartProps, undefined> {
             .attr('class', 'tip-pol')
             .attr('points', '10,20 20,35 30,20');
 
-            //.style('stroke', 'black');
         this._focus.append('text')
             .attr('class', 'y2')
             .attr('dx', 8)
@@ -188,31 +180,23 @@ export class LineChart extends React.Component<IChartProps, undefined> {
 
     private mouseMove() {
         const x = this.generateX();
-        const y = this._y;
+        const bisect = d3.bisector<DataType, any>((d) => d.time).left;
 
         let x0 = x.invert(d3.mouse(d3.event.currentTarget)[0]);
 
-        let i = this.bisect(this.props.data, x0, 1);
+        let i = bisect(this.props.data, x0, 1);
         let d0 = this.props.data[i - 1];
         let d1 = this.props.data[i];
 
         let d = (x0.getTime() - d0.time.getTime()) > (d1.time.getTime() - x0.getTime()) ? d1 : d0;
 
         this._focus.select('.tip-rect')
-                .attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (y(d.value) - 40) + ')')
+                .attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (this._y(d.value) - 40) + ')')
                 .attr('display', 'block');
         this._focus.select('.tip-pol')
-                .attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (y(d.value) - 40) + ')');
+                .attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (this._y(d.value) - 40) + ')');
         this._focus.select('text.y2')
-                .attr('transform', 'translate(' + (x(d.time) - 24) + ',' + (y(d.value) - 20) + ')')
-                .text(this.formatValue(d.value));
-    }
-
-    private formatValue(val: number): string {
-        return val + ' %';
-    }
-
-    private calculateXPosition(x: any) {
-        
+                .attr('transform', 'translate(' + (x(d.time) - 24) + ',' + (this._y(d.value) - 20) + ')')
+                .text(() => d.value + ' %');
     }
 }
