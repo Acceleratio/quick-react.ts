@@ -13,7 +13,7 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     private _focus: any;
     private margin: any = {
         top: 20,
-        bottom: 20,
+        bottom: 30,
         left: 50,
         right: 40
     };
@@ -51,9 +51,8 @@ export class LineChart extends React.Component<IChartProps, undefined> {
 
     public render() {
         return (
-            <div className={'component-container'}>
-                <Label className={'graph-title'}>{this.props.title}</Label>
-                <div className={'chart-container'} ref="container"></div>
+            <div className={'chart-container'} ref="container">
+                {this.props.title}
             </div>
         );
     }
@@ -72,24 +71,31 @@ export class LineChart extends React.Component<IChartProps, undefined> {
         this.drawXAxis(svg);
         this.drawYAxis(svg);
         this.drawLine(svg);
-        //this.drawCircle(svg);
         this.createFocus(svg);
         this.addTooltip();
         this.drawCaptureArea(svg);
     }
 
+    private style(g: any) {
+        g.selectAll('.tick').attr('stroke', 'white');
+    }
+
     private drawXAxis(svg: any) : void {
-        svg.append('g')
+        svg.insert('g', ':first-child')
             .attr('transform', this.TRANSFORM_X_AXIS)
-            .attr('class', 'x-axis').call(this.generateXAxis());
+            .attr('class', 'x-axis')
+            .call(this.generateXAxis());
     }
 
     private drawYAxis(svg: any) : void {
-        svg.append('g').call(this.generateYAxis());
+        const g = svg.append('g')
+                .attr('class', 'y-axis')
+                .call(this.generateYAxis());
+        g.selectAll('line').attr('transform', 'translate(-15, 0)');
     }
 
     private drawLine(svg: any) {
-        return svg.append('path')
+        return svg.insert('path', '.y-axis + *')
             .data([this.props.data])
             .attr('class', this.LINE_CLASS)
             .attr('d', this.constructLine());
@@ -99,7 +105,8 @@ export class LineChart extends React.Component<IChartProps, undefined> {
         return d3.select(this.refs.container).append('svg')
                     .attr('width', this.props.width)
                     .attr('height', this.props.height + 20)
-                    .append('g').attr('class', this.GRAPH_CONTAINER_CLASS)
+                    .append('g')
+                    .attr('class', this.GRAPH_CONTAINER_CLASS)
                     .attr('transform', this.TRANSFORM_SUBCONTAINER);        
     }
 
@@ -121,15 +128,16 @@ export class LineChart extends React.Component<IChartProps, undefined> {
                 .tickSizeInner(-(this.height))
                 .tickSizeOuter(0)
                 .ticks(2, '%I:%M:%S %p')
-                .tickPadding(10);        
+                .tickPadding(15);        
     }
 
     private generateYAxis() {
         return d3.axisLeft(this.generateY())
-                .tickSizeInner(-(this.width))
-                .tickSizeOuter(0)
+                .tickSizeInner(-(this.width + 15))
+                .tickSizeOuter(-10)
                 .ticks(2)
-                .tickPadding(10);   
+                .tickFormat((d) => (d + '%'))
+                .tickPadding(20);   
     }
 
     private constructLine() {
@@ -144,15 +152,6 @@ export class LineChart extends React.Component<IChartProps, undefined> {
     private createFocus(svg: any) {
         this._focus =  svg.append('g').style('display', 'none');
         return this._focus;
-    }
-
-    private drawCircle(svg: any) {
-        return (this.createFocus(svg)
-            .append('circle') 
-            .attr('class', 'y')
-            .style('fill', 'none') 
-            .style('stroke', 'darkgrey')
-            .attr('r', 4));
     }
 
     private drawCaptureArea(svg: any) {
@@ -171,10 +170,16 @@ export class LineChart extends React.Component<IChartProps, undefined> {
         this._focus.append('rect')
             .attr('width', '40')
             .attr('height', '24')
-            .attr('class', 'tip')
+            .attr('class', 'tip-rect')
             .attr('display', 'none')
+            .attr('fill', 'white');
+
+        this._focus.append('polygon')
             .attr('fill', 'white')
-            .style('stroke', 'black');
+            .attr('class', 'tip-pol')
+            .attr('points', '10,20 20,35 30,20');
+
+            //.style('stroke', 'black');
         this._focus.append('text')
             .attr('class', 'y2')
             .attr('dx', 8)
@@ -193,10 +198,14 @@ export class LineChart extends React.Component<IChartProps, undefined> {
 
         let d = (x0.getTime() - d0.time.getTime()) > (d1.time.getTime() - x0.getTime()) ? d1 : d0;
 
-        // this._focus.select('circle.y').attr('transform',  'translate(' + x(d.time) + ',' +  y(d.value) + ')');
-        this._focus.select('.tip').attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (y(d.value) - 30) + ')').attr('display', 'block');
-        // this._focus.select('text.y1').attr('transform', 'translate(' + x(d.time) + ',' + ( y(d.value + 15)) + ')').text(d.value);
-        this._focus.select('text.y2').attr('transform', 'translate(' + (x(d.time) - 24) + ',' + (y(d.value) - 8) + ')').text(this.formatValue(d.value));
+        this._focus.select('.tip-rect')
+                .attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (y(d.value) - 40) + ')')
+                .attr('display', 'block');
+        this._focus.select('.tip-pol')
+                .attr('transform', 'translate(' + (x(d.time) - 20) + ',' + (y(d.value) - 40) + ')');
+        this._focus.select('text.y2')
+                .attr('transform', 'translate(' + (x(d.time) - 24) + ',' + (y(d.value) - 20) + ')')
+                .text(this.formatValue(d.value));
     }
 
     private formatValue(val: number): string {

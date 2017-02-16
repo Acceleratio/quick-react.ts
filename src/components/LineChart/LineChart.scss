@@ -1,13 +1,41 @@
 @import '../../index.scss';
 
-.graph-line {
-    fill: none;
-    stroke: #6b6b6b;
-    stroke-width: 2px;
+$main-color: #5d5d5d;
+$background-color: #f4f4f4;
+
+.chart-container {
+    text-align: center;
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    font-weight: 500;
+    color: $main-color;
+    background-color: #e5e5e5;
+
+    svg {
+        display: block;
+        margin-top: -25px;
+    }
 }
 
-.tick line {
-    opacity: 0.2;
+.graph-line {
+    fill: none;
+    stroke: $main-color;
+    stroke-width: 2px;
+    opacity: 0.8;
+}
+
+.tick {
+    line {
+        stroke: white;
+        stroke-width: 1px;
+    }
+
+    text {
+        font-family: 'Segoe UI';
+        font-size: 12px;
+        opacity: 0.8;
+        fill: $main-color;
+    }
 }
 
 .y2 {
