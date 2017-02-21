@@ -1,0 +1,80 @@
+@import '../../index.scss';
+
+$error: #FF6666;
+$warning: #D7AA3C;
+$ok: #60BD68 ;
+$normal: #657386 ;
+
+$font: 'Segoe UI';
+
+
+.pie-chart-component {
+    display: inline-block;
+    margin: 5px 5px 5px 5px;
+    border: 1px solid #e8e9ef;
+
+    .label {
+        text-align: center;
+        padding: 0px 0px 5px 0px;
+        color: $normal;
+        font-size: 13px;
+    }
+
+    .label.text {
+        padding-bottom: 2px;
+        font-size: 12px;
+    }
+
+    .label.title {
+        padding: 2px 0px 2px 0px;
+        font-weight: 600;
+    }
+
+    .disk-usage-ok {
+        fill: $ok;
+    }
+
+    .disk-usage-critical {
+        fill: $error;
+    }
+
+    .disk-usage-warning {
+        fill: $warning;
+    }
+
+    .disk-usage-free {
+        fill: $normal;
+    }
+
+    .pie-chart-container {
+        display: block;
+
+        svg {
+            margin-top: -25px;
+        }
+    }
+
+    g {
+        text {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: default;
+            font-family: $font;
+            font-size: 11px;
+            fill: $normal;
+        }
+
+        rect {
+            stroke: #e8e9ef;
+        }
+    }
+
+    .arc-text {
+        .percentage-label {
+            font-family: $font;
+            fill: white;
+        }
+    }
+}

@@ -36,21 +36,33 @@ import { StatusBar } from './components/StatusBar/StatusBar';
 import { Treeview } from './components/Treeview/Treeview';
 import { ToggleSwitch } from './components/ToggleSwitch/ToggleSwitch';
 import { LineChart } from './components/LineChart/LineChart';
+import { PieChart } from './components/PieChart/PieChart';
 
 import { DataGenerator } from './utilities/DataGenerator';
 
 export class Index extends React.Component<any, any> {
     constructor() {
         super();
+        let pieData = [{'label': 'used', value: 64, text: 'Used: 68.36 GB'}, {'label': 'free', value: 36, text: 'Free: 11.54 GB'}];
         const generator = new DataGenerator();
         this.state = {
             showDialog: false,
             selector: true,
-            data: generator.generateValues()
+            data: generator.generateValues(),
+            pieData: pieData
         };
-
-        setInterval(() => this.setState({data: generator.generateValues()}), 5000);
+        /* setInterval(() => {
+            pieData = this.generateValues(pieData);
+            this.setState({pieData: pieData});
+        }, 500); */
     }
+
+    private generateValues(d: any[]) {
+        d[0].value = d[0].value + 1;
+        d[1].value = d[1].value - 1;
+        return d;
+    }
+
     public render() {
         return (
             <div>
@@ -322,6 +334,13 @@ export class Index extends React.Component<any, any> {
                     width={330} 
                     height={200} 
                 ></LineChart>
+                <br/>
+                <PieChart text={'Sample text'} 
+                        title={'Partition C:'} 
+                        height={160} 
+                        width={160} 
+                        data={this.state.pieData} 
+                ></PieChart>
             </div>);
     };
 
