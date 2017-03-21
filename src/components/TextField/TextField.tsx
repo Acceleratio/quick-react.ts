@@ -54,8 +54,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
 
         this._onInputChange = this._onInputChange.bind(this);
         this._onFocus = this._onFocus.bind(this);
-        this._onBlur = this._onBlur.bind(this);
-        
+        this._onBlur = this._onBlur.bind(this);        
         this._delayedValidate = this._async.debounce(this._validate, this.props.deferredValidationTime);
         this._lastValidation = 0;
         this._willMountTriggerValidation = false;
@@ -328,7 +327,8 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 break;
             default:
                 return;
-        }        
+        }
+        
         // We only get here if the keypress has been handled.
         ev.preventDefault();
         ev.stopPropagation();
