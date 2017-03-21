@@ -23,7 +23,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
         onChanged: () => { },
         onBeforeChange: () => { },
         onNotifyValidationResult: () => { },
-        onGetErrorMessage: () => undefined,        
+        onGetErrorMessage: () => undefined,
         onAccept: () => { },
         deferredValidationTime: 200,
         errorMessage: ''
