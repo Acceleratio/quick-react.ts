@@ -23,8 +23,8 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
         onChanged: () => { },
         onBeforeChange: () => { },
         onNotifyValidationResult: () => { },
-        onGetErrorMessage: () => undefined,
-        onEnterClick: () => { },
+        onGetErrorMessage: () => undefined,        
+        onAccept: () => { },
         deferredValidationTime: 200,
         errorMessage: ''
     };
@@ -55,7 +55,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
         this._onInputChange = this._onInputChange.bind(this);
         this._onFocus = this._onFocus.bind(this);
         this._onBlur = this._onBlur.bind(this);
-
+        
         this._delayedValidate = this._async.debounce(this._validate, this.props.deferredValidationTime);
         this._lastValidation = 0;
         this._willMountTriggerValidation = false;
@@ -287,7 +287,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 ref={ (c): HTMLTextAreaElement => this._field = c }
                 value={ this.state.value }
                 onChange={ this._onInputChange }
-                onKeyUp={ this._onEnterClick }
+                onKeyUp={ this._onKeyUp }
                 className={ this._fieldClassName }
                 onFocus={ this._onFocus }
                 onBlur={ this._onBlur }
@@ -306,7 +306,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 ref={ (c): HTMLInputElement => this._field = c }
                 value={ this.state.value }
                 onChange={ this._onInputChange }
-                onKeyUp={ this._onEnterClick }
+                onKeyUp={ this._onKeyUp }
                 className={ this._fieldClassName }
                 onFocus={ this._onFocus }
                 onBlur={ this._onBlur }
@@ -315,20 +315,20 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
     }
 
     @autobind
-    private _onEnterClick(ev: React.KeyboardEvent<HTMLElement>) {
-        const { onEnterClick } = this.props;
-
-        if (onEnterClick !== undefined) {
-            switch (ev.which) {     
-                case KeyCodes.enter:
-                    onEnterClick(this.state.value);
-                    break;
-
-                default:
-                    return;
-            }
-        } 
-
+    private _onKeyUp(ev: React.KeyboardEvent<HTMLElement>) {
+        const { onAccept, multiline } = this.props;              
+        switch (ev.which) {     
+            case KeyCodes.enter:
+                if (!multiline) {
+                    this._validate(this._field.value);
+                    if (onAccept) {
+                        onAccept();
+                    }
+                }
+                break;
+            default:
+                return;
+        }        
         // We only get here if the keypress has been handled.
         ev.preventDefault();
         ev.stopPropagation();

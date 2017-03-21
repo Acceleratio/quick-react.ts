@@ -14,8 +14,8 @@ export interface ITextFieldProps extends React.HTMLProps<HTMLInputElement | HTML
     onChanged ?: (newValue: any) => void;
     onBeforeChange ?: (newValue: any) => void;
     onNotifyValidationResult ?: (errorMessage: string, value: string) => void;
-    onGetErrorMessage ?: (value: string) => string | PromiseLike<string>;
-    onEnterClick ?: (newValue: any) => void;
+    onGetErrorMessage ?: (value: string) => string | PromiseLike<string>;    
+    onAccept ?: () => void;
     deferredValidationTime ?: number;
     className ?: string;
     inputClassName ?: string;
