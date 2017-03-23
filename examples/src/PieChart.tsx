@@ -7,7 +7,7 @@ import * as ReactDOM from 'react-dom';
 
 import { PieChart } from './../../src/components/PieChart/PieChart';
 import { IPieChartData } from './../../src/components/PieChart/PieChart.props';
-import { data, updatedData } from './../../src/mockData/pieData';
+import { data, updatedData } from '../mockData/pieData';
 
 export class Index extends React.Component<any, any> {
    constructor() {

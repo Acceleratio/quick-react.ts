@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { Dashboard } from './../../src/components/Dashboard/Dashboard';
-import { dummyDashboard, generateMeasures, generateRandomStatus, convertFarm } from './../../src/mockData/DashboardDummy';
+import { dummyDashboard, generateMeasures, generateRandomStatus, convertFarm } from '../mockData/DashboardDummy';
 import { IFarm, ISharePointServer, ServerStatus } from './../../src/models';
 
 export class Index extends React.Component<any, any> {

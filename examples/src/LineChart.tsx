@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { LineChart } from '../../src/components/LineChart/LineChart';
-import { data, series } from '../../src/MockData/Data';
+import { data, series } from '../MockData/Data';
 
 export class Index extends React.PureComponent<any, any> {
     constructor(props) {

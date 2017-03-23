@@ -1,9 +1,9 @@
 /* tslint:disable:no-console */
-import { ICompactDashboardProps } from '../components/CompactDashboard';
-import { ITileDashboardProps, ITiledDashboardFarm, ITiledDashboardServer } from '../components/TileDashboard';
-import { IDashboardProps } from '../components/Dashboard';
-import { ActiveDashboard } from '../components/DashboardHeader/DashboardHeader.Props';
-import { IFarm, ServerStatus, IMeasure, MeasureType, CpuMeasure, Partition, DiskMeasure, NetworkMeasure, RamMeasure } from '../models';
+import { ICompactDashboardProps } from '../../src/components/CompactDashboard';
+import { ITileDashboardProps, ITiledDashboardFarm, ITiledDashboardServer } from '../../src/components/TileDashboard';
+import { IDashboardProps } from '../../src/components/Dashboard';
+import { ActiveDashboard } from '../../src/components/DashboardHeader/DashboardHeader.Props';
+import { IFarm, ServerStatus, IMeasure, MeasureType, CpuMeasure, Partition, DiskMeasure, NetworkMeasure, RamMeasure } from '../../src/models';
 import { farms } from './farms';
 
 export const dummyCompact: ICompactDashboardProps = {

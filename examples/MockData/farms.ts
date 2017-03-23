@@ -1,5 +1,5 @@
-import { ICompactDashboardProps } from '../components/CompactDashboard/CompactDashboard.Props';
-import { IFarm } from '../models';
+import { ICompactDashboardProps } from '../../src/components/CompactDashboard/CompactDashboard.Props';
+import { IFarm } from '../../src/models';
 
 export const classListExample = {
     ok: 'green',

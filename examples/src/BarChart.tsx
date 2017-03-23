@@ -7,7 +7,7 @@ import * as ReactDOM from 'react-dom';
 
 import { BarChart } from './../../src/components/BarChart/BarChart';
 import { IBarChartData } from './../../src/components/BarChart/BarChart.props';
-import { data, updatedData } from './../../src//mockData/barChart';
+import { data, updatedData } from '..//mockData/barChart';
 
 export class Index extends React.Component<any, any> {
      constructor() {
