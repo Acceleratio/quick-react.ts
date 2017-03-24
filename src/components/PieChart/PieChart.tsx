@@ -123,17 +123,12 @@ export class PieChart extends React.PureComponent<IPieChartProps, any> {
                 data.push(sortedData[i]);
             }
 
-            let value = 0;
-            let hasOther: boolean;
+            let value = 0;            
             for (let i = elementsToTake; i < sortedData.length; i++) {
-                value += sortedData[i].value;
-                hasOther = true;
-            }
-
-            if (hasOther) {
-                data.push({ label: 'Other', value: value });
-            }
-
+                value += sortedData[i].value;            
+            }            
+            data.push({ label: 'Other', value: value });            
+            
             return data;
         }
 
