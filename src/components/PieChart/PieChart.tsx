@@ -106,28 +106,38 @@ export class PieChart extends React.PureComponent<IPieChartProps, any> {
      * elements are shown in descending order and all other elements are displayed together
      * as one value.
      */
-    private transformData(): Array<any> {
-        let data = Array(0);        
+     private transformData(): Array<any> {
 
-        if (this.props.displayingElements !== undefined) {
 
-            if (this.props.displayingElements > this.props.data.length || 
-                    this.props.displayingElements === this.props.data.length ) { 
-                        return this.props.data; 
+        const sortedData = this.props.data.sort((a, b) => b.value - a.value);
+
+        if (this.props.displayingElements !== undefined && this.props.displayingElements < sortedData.length) {
+
+            let data = Array(0);
+            let elementsToTake = this.props.displayingElements - 1;
+            if (elementsToTake === sortedData.length - 1) {
+                elementsToTake --;
+            }
+            
+            for (let i = 0; i < elementsToTake; i++) {
+                data.push(sortedData[i]);
             }
 
-            const sortedData = this.props.data.sort((a, b) => b.value - a.value);
-            
-            for (let i = 0; i < this.props.displayingElements - 1; i++) { data.push(sortedData[i]); }
-    
             let value = 0;
-            for (let i = this.props.displayingElements - 1; i < this.props.data.length; i++) { value += sortedData[i].value; }
-            data.push({ label: 'Other', value: value });
+            let hasOther: boolean;
+            for (let i = elementsToTake; i < sortedData.length; i++) {
+                value += sortedData[i].value;
+                hasOther = true;
+            }
+
+            if (hasOther) {
+                data.push({ label: 'Other', value: value });
+            }
 
             return data;
         }
 
-        return this.props.data;
+        return sortedData;
     }
 
     /**

@@ -41,7 +41,7 @@ export class Index extends React.PureComponent<any, any> {
                             colors={['#344086', '#8bd764', '#f3f986', '#ec1271', '#636363', 'red', 'green', 'purple', 'aquamarine', 'lightgrey']}
                             tipText={(d: IPieChartData) => (d.label + ' : ' + d.value)} 
                             showLegend={true}
-                            displayingElements={6}/>
+                            displayingElements={4}/>
                 </div>
             </div>
         );
