@@ -49,6 +49,7 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
                 'messageBar-warning': this.props.messageBarType === MessageBarType.warning
             }
         );
+        
         let tooltip;
         if (typeof this.props.children === 'string') {
             tooltip = this.props.children;
@@ -57,8 +58,7 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
             <div className={ messageBarClassName } role="status">
                 <div className={'messageBar-content'}>
                 { this._getIconSpan() }
-                <div className={'messageBar-actionables'}>
-                    
+                <div className={'messageBar-actionables'}>                    
                     <div className={'messageBar-text'} id={ this.state.labelId }>
                     <span className={ this._getInnerTextClassName() } title={tooltip}>
                         { this.props.children }
