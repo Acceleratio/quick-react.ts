@@ -38,6 +38,7 @@
     font-weight: $font-weight-regular;
     min-width: 0;
     display: flex;
+    padding-right: 10px;
 }
 
 //== Modifier: Info message
@@ -96,6 +97,7 @@
     flex-direction: column;
     width: 100%;
     min-width: 0;
+    margin-right: 20px;
 }
 
 .messageBar-actionables > .messageBar-dismissal {
@@ -110,8 +112,8 @@
     align-items: center;
 }
 
-.messageBar-actionsOneline {
-    position: relative;
+.messageBar-actionsOneline {   
+    margin-right: 20px;    
 }
 
 .messageBar-dismissal {
@@ -123,10 +125,10 @@
     @include margin-right(-8px);
 }
 
-.messageBar-checkbox {
-    right: 45px;
-    top: 0;
-    position: absolute !important;
+.messageBar-checkbox {    
+    position: absolute;
+    right: 35px;
+    top: 0px;
 }
 
 // Add space between adjacent MessageBars.
@@ -135,7 +137,6 @@
 }
 
 .messageBar-innerTextPadding {
-    @include padding-right(24px); // Add padding if we have a dismiss to prevent button overlapping text.
 
     span, .messageBar-innerText > span {
         @include padding-right(4px); // Add padding between text and hyperlink.
@@ -165,5 +166,13 @@
 
     .messageBar-content > .messageBar-actionables {
         flex-direction: row;
+    }
+}
+
+.messageBar-checkBox-container {
+    flex: 1;
+    min-width: 250px;
+    .checkbox-label {        
+        white-space: nowrap;
     }
 }

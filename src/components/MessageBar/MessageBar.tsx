@@ -49,21 +49,25 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
                 'messageBar-warning': this.props.messageBarType === MessageBarType.warning
             }
         );
-
+        let tooltip;
+        if (typeof this.props.children === 'string') {
+            tooltip = this.props.children;
+        }
         return (
             <div className={ messageBarClassName } role="status">
                 <div className={'messageBar-content'}>
                 { this._getIconSpan() }
                 <div className={'messageBar-actionables'}>
-                    { this._getDismissDiv() }
-                    { this._getDontShowAgainDiv() }
+                    
                     <div className={'messageBar-text'} id={ this.state.labelId }>
-                    <span className={ this._getInnerTextClassName() }>
+                    <span className={ this._getInnerTextClassName() } title={tooltip}>
                         { this.props.children }
                     </span>
                     </div>
-                </div>
-                { this._getActionsDiv() }
+                    { this._getActionsDiv() }                    
+                    { this._getDontShowAgainDiv() }
+                    { this._getDismissDiv() }                                        
+                </div>                
                 </div>
             </div>
         );
@@ -78,14 +82,13 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
     }
 
     private _getInnerTextClassName(): string {
-        return this.props.onDismiss || this.props.actions ? 'messageBar-innerTextPadding' : 'messageBar-innerText';
+        return 'messageBar-innerText';
     }
 
     private _getActionsDiv(): JSX.Element {
         if (this.props.actions) {
             return (
-                <div className={'messageBar-actionsOneline'}>
-                    { this._getDismissDiv() }
+                 <div className={'messageBar-actionsOneline'}>                   
                     { this.props.actions }
                 </div>
             );  
@@ -111,7 +114,7 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
         
         if (this.props.hasDontShowAgain != null && this.props.hasDontShowAgain) {
             return (
-                <Checkbox className={'messageBar-checkbox'} checked={ this.props.dontShowAgainChecked } label={'Dont show this message again'} onChange={ this.props.dontShowAgainClicked }></Checkbox>
+                <div className="messageBar-checkBox-container"><Checkbox className={'messageBar-checkbox'} checked={ this.props.dontShowAgainChecked } label={'Dont show this message again'} onChange={ this.props.dontShowAgainClicked }></Checkbox></div>
             );
         }
         
