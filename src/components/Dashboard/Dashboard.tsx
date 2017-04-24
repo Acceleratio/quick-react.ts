@@ -70,7 +70,7 @@ export class Dashboard extends React.PureComponent<IDashboardProps, any> {
                     selectedDashboardKey={activeView}
                     />
                 {
-                    farms && farms.length === 0 && this.props.emptyDashboardMessage && <div style={{ position: 'absolute', width: '100%', top: '140px' }}>
+                    farms && farms.length === 0 && this.props.emptyDashboardMessage && <div className="empty-dasboard-message-container">
                         {this.props.emptyDashboardMessage}
                     </div>
                 }
