@@ -8,4 +8,5 @@ export interface ISearchProps extends React.Props<Search> {
     onChanged?: (newValue: any) => void;
     value?: string;
     className?: string;
+    debounceWaitMs?: number;
 }

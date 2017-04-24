@@ -32,6 +32,25 @@ export function filterServerByName(filter: string, serverName: string): boolean 
     return serverName.toLowerCase().trim().indexOf(filter.toLowerCase().trim()) !== -1;
 }
 
+export function filterServerByStatus(status: string, serverStatus: ServerStatus) {
+    let stringToStatus: ServerStatus;
+    status = status.replace('status:', '').toLowerCase().trim();
+    switch (status) {
+        case 'critical':
+            stringToStatus = ServerStatus.Critical;
+            break;
+        case 'warning':
+            stringToStatus = ServerStatus.Warning;
+            break;
+        case 'ok': 
+            stringToStatus = ServerStatus.OK;
+            break;
+        default:
+            break;
+    }
+    return serverStatus === stringToStatus;
+}
+
 export function getDiskInformationFromMeasurements(serverMeasurements: Array<IMeasure>): Array<Partition> {
     let diskMeasurement = serverMeasurements.filter(x => x.type === MeasureType.Disk)[0] as DiskMeasure;
     if (!diskMeasurement) {

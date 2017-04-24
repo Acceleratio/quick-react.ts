@@ -8,6 +8,7 @@ import { KeyCodes } from '../../utilities/KeyCodes';
 import { Icon } from '../../components/Icon/Icon';
 import { getDocument } from '../../utilities/getDocument';
 import { elementContains } from '../../utilities/elementContains';
+import * as _ from 'lodash';
 import './Search.scss';
 
 export interface ISearchState {
@@ -18,7 +19,8 @@ export interface ISearchState {
 
 export class Search extends CommonComponent<ISearchProps, ISearchState> {
     public static defaultProps: ISearchProps = {
-        labelText: 'Search'
+        labelText: 'Search',
+        debounceWaitMs: 200
     };
 
     private _rootElement: HTMLElement;
@@ -32,6 +34,8 @@ export class Search extends CommonComponent<ISearchProps, ISearchState> {
             this.props.onChange = this.props.onChanged;
         }
 
+        this._callOnChange = _.debounce(this._callOnChange, props.debounceWaitMs);
+        
         this.state = {
             value: props.value || '',
             hasFocus: false,
@@ -61,24 +65,24 @@ export class Search extends CommonComponent<ISearchProps, ISearchState> {
         );
 
         return (
-            <div 
-                ref={ this._resolveRef('_rootElement') }
-                className={ searchClassName }
+            <div
+                ref={this._resolveRef('_rootElement')}
+                className={searchClassName}
                 { ...{ onFocusCapture: this._onFocusCapture } }>
                 <Icon className={'search-icon'} iconName={'icon-search'}></Icon>
                 <input
-                    id={ id }
+                    id={id}
                     className={'search-field'}
-                    placeholder={ labelText }
-                    onChange={ this._onInputChange }
-                    onKeyDown={ this._onKeyDown }
-                    value={ value }
-                    ref={ this._resolveRef('_inputElement') }/>
-                    <div
-                        className={'search-clearButton'}
-                        onClick={ this._onClearClick }>
-                        <Icon iconName={'icon-delete'}></Icon>
-                    </div>
+                    value={value}
+                    placeholder={labelText}
+                    onChange={this._onInputChange}
+                    onKeyDown={this._onKeyDown}
+                    ref={this._resolveRef('_inputElement')} />
+                <div
+                    className={'search-clearButton'}
+                    onClick={this._onClearClick}>
+                    <Icon iconName={'icon-delete'}></Icon>
+                </div>
             </div>
         );
     }
@@ -109,18 +113,18 @@ export class Search extends CommonComponent<ISearchProps, ISearchState> {
     private _onKeyDown(ev: React.KeyboardEvent<HTMLElement>) {
         switch (ev.which) {
 
-        case KeyCodes.escape:
-            this._onClearClick(ev);
-            break;
+            case KeyCodes.escape:
+                this._onClearClick(ev);
+                break;
 
-        case KeyCodes.enter:
-            if (this.props.onSearch && this.state.value.length > 0) {
-                this.props.onSearch(this.state.value);
-            }
-            break;
+            case KeyCodes.enter:
+                if (this.props.onSearch && this.state.value.length > 0) {
+                    this.props.onSearch(this.state.value);
+                }
+                break;
 
-        default:
-            return;
+            default:
+                return;
         }
 
         // We only get here if the keypress has been handled.
@@ -133,7 +137,6 @@ export class Search extends CommonComponent<ISearchProps, ISearchState> {
         this.setState({
             value: this._inputElement.value
         });
-
         this._callOnChange(this._inputElement.value);
     }
 

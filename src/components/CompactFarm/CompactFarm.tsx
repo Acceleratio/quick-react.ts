@@ -7,7 +7,7 @@ import { Group } from '../Group/Group';
 import { GroupHeader } from '../GroupHeader/GroupHeader';
 import * as classNames from 'classnames';
 import { autobind } from '../../utilities/autobind';
-import { getServerMeasures, sortServersByStatusAndName, filterServerByName } from '../../utilities/server';
+import { getServerMeasures, sortServersByStatusAndName, filterServerByName, filterServerByStatus } from '../../utilities/server';
 import { CommonComponent } from '../Common/Common';
 import { Callout } from '../Callout/Callout';
 
@@ -86,12 +86,17 @@ export class CompactFarm extends CommonComponent<ICompactFarmProps, any> {
 
     public render() {
         const farm = this.props.farm;
-        const servers = farm.servers.filter((server) => { return filterServerByName(this.props.filter, server.name); }).sort(sortServersByStatusAndName);
+        let servers = farm.servers.sort((server1, server2) => {
+            return sortServersByStatusAndName(
+                {status: server1.status, name: server1.name}, 
+                {status: server2.status, name: server2.name}
+            );
+        });
+
         return (
             <div className={'compact-farm'}>
                 <Group
                     serverChildrenCount={servers.length}
-                    filter={this.props.filter}
                     className={'farm-name-inside'}
                     id={farm.id} name={farm.name}
                     key={farm.id.configDataBaseName + '-' + farm.id.sqlInstance}
@@ -100,7 +105,6 @@ export class CompactFarm extends CommonComponent<ICompactFarmProps, any> {
                     {
                         servers.map((server) => (
                             <CompactServer
-                                filter={this.props.filter}
                                 key={server.id.FQDN}
                                 roles={server.roles}
                                 id={server.id}

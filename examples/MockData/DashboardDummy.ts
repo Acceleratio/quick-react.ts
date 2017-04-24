@@ -38,7 +38,6 @@ export const dummyDashboard: IDashboardProps = {
     groupOnClick: (groupId: any) => { console.log('Clicked on group ' + groupId); }
 };
 
-
 export function convertFarm(farm: IFarm): ITiledDashboardFarm {
     let servers = farm.servers.map((server) => {
         let measures = generateMeasures();

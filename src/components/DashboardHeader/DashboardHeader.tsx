@@ -3,19 +3,15 @@ import { IDashboardHeaderProps } from './DashboardHeader.Props';
 import { Search } from '../Search/Search';
 import { Pivot } from '../Pivot/Pivot';
 import { PivotItem } from '../Pivot/PivotItem';
+import { autobind } from '../../utilities/autobind';
 import { Label } from '../Label/Label';
 import { Icon } from '../Icon/Icon';
 import * as classNames from 'classnames';
+import * as _ from 'lodash';
 import './DashboardHeader.scss';
 
-
-export class DashboardHeader extends React.Component<IDashboardHeaderProps, any> {
-
-    constructor(props?: IDashboardHeaderProps) {
-        super(props);
-    }
-
-    render() {
+export class DashboardHeader extends React.PureComponent<IDashboardHeaderProps, any> {
+    public render() {
         let { hasAddFarmButton, title, selectedDashboardKey } = this.props;
         return (
             <div className="dashboard-header-container">
@@ -26,7 +22,7 @@ export class DashboardHeader extends React.Component<IDashboardHeaderProps, any>
                         <Icon className={'add-farm'} iconName={'icon-add'} onClick={this.props.onAddFarmClick} title={'Add'} />
                     }
                 </span>
-                <Search onSearch={this.props.onSearch} onChange={this.props.onChanged} value={this.props.filter} />
+                <Search onSearch={this.props.onSearch} onChange={this.props.onChanged} />
                 <div style={{ display: 'inline-block' }}>&nbsp;</div>
 
                 {this.props.pivotItems &&
@@ -47,4 +43,3 @@ export class DashboardHeader extends React.Component<IDashboardHeaderProps, any>
         );
     }
 }
-

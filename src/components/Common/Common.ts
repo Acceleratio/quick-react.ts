@@ -3,7 +3,7 @@ import {EventGroup} from './EventGroup';
 import {IDisposable} from './IDisposable';
 import {Async} from './Async';
 
-export class CommonComponent < P, S > extends React.Component < P, S > {
+export class CommonComponent < P, S > extends React.PureComponent < P, S > {
 
     private __async: Async;
     private __events: EventGroup;

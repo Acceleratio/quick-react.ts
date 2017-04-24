@@ -49,7 +49,7 @@ export class Index extends React.Component<any, any> {
         //         };
         //     });
         //     this.setState({ farms: newFarms });
-        // }, 5000);
+        // }, 10000);
     }
 
     public render() {
@@ -61,7 +61,7 @@ export class Index extends React.Component<any, any> {
                     farms={this.state.farms}
                     filter={''}
                     title={dummyDashboard.title}
-                    activeView={0} 
+                    activeView={0}
                     hasAddButton
                     addFarm={dummyDashboard.addFarm}
                     groupAddFunc={dummyDashboard.groupAddFunc}

@@ -3,15 +3,16 @@ import { ITileDashboardProps, ITiledDashboardFarm, ITiledDashboardServer } from 
 import { ServerTile } from '../ServerTile/ServerTile';
 import { ITileData } from '../ServerTile/ServerTile.Props';
 const AutoSizer = require('react-virtualized').AutoSizer;
+const List = require('react-virtualized').List;
 import { Group } from '../Group/Group';
 import { GroupHeader } from '../GroupHeader/GroupHeader';
-const List = require('react-virtualized').List;
 import * as classNames from 'classnames';
 import { TagContainer } from '../TagContainer/TagContainer';
 import { Icon } from '../Icon/Icon';
 import { autobind } from '../../utilities/autobind';
-import { getServerMeasures, sortServersByStatusAndName, filterServerByName } from '../../utilities/server';
+import { getServerMeasures, sortServersByStatusAndName, filterServerByName, filterServerByStatus } from '../../utilities/server';
 import { TileGroup } from '../TileGroup';
+import { filterFarms } from '../Dashboard/Dashboard';
 
 import './TileDashboard.scss';
 
@@ -28,17 +29,28 @@ export class TileDashboard extends React.Component<ITileDashboardProps, any> {
 
     constructor(props?: ITileDashboardProps) {
         super(props);
+
+        this.state = {
+            farms: filterFarms(props.farms, props.filter)
+        };
     }
 
     @autobind
     private componentDidUpdate(prevProps: ITileDashboardProps, prevState) {
-        if (this.props.filter !== prevProps.filter && this.list) {
+        if ((this.props.filter !== prevProps.filter && this.list) || prevProps.farms !== this.props.farms) {
             this.list.recomputeRowHeights();
         }
     }
 
-    render() {
-        let { farms } = this.props;
+    public componentWillReceiveProps(nextProps: ITileDashboardProps, nextState: any) {
+        if ((nextProps.filter !== this.props.filter) || (this.props.farms !== nextProps.farms)) {
+            const filteredFarms = filterFarms(nextProps.farms, nextProps.filter);
+            this.setState({ farms: filteredFarms });
+        }
+    }
+
+    public render() {
+        let { farms } = this.state;
         let classname = classNames({ [this.props.className]: this.props.className !== undefined });
         return (
             <div className={classname}>
@@ -78,7 +90,7 @@ export class TileDashboard extends React.Component<ITileDashboardProps, any> {
             return 0;
         }
         const serversPerRow = Math.floor((width - totalPaddingHorizontal) / serverTileWidth);
-        const farmServerCount = farm.servers.filter((server) => { return filterServerByName(this.props.filter, server.name); }).length;
+        let farmServerCount = farm.servers.length;
         const rowCount = Math.ceil(farmServerCount / serversPerRow);
         const serverHeight = rowCount * servertileHeight;
         const totalHeight = serverHeight + headerTotalHeight;
@@ -87,20 +99,20 @@ export class TileDashboard extends React.Component<ITileDashboardProps, any> {
 
     @autobind
     private getRow(index: number): ITiledDashboardFarm {
-        const { farms } = this.props;
-        return farms[index];
+        return this.state.farms[index];
     }
 
     @autobind
     private _renderRow({ index, isScrolling, key, style }): JSX.Element {
         const farm = this.getRow(index);
-        const servers = farm.servers.filter((server) => { return filterServerByName(this.props.filter, server.name); }).sort(sortServersByStatusAndName);
-
+        if (farm.servers.length === 0) {
+            return;
+        }
+        
         return (
             <div style={style} key={index}>
                 <TileGroup
                     farm={farm}
-                    filter={this.props.filter}
                     serverOnClick={this.props.serverOnClick}
                     groupOnClick={this.props.groupOnClick}
                     />
