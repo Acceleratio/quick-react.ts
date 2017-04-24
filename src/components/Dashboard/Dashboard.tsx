@@ -36,7 +36,7 @@ export class Dashboard extends React.Component<IDashboardProps, any> {
     }
 
     render() {
-        let {headerClass, hasAddButton} = this.props;
+        let {headerClass, hasAddButton, farms} = this.props;
         let {filter, activeView} = this.state;
         return (
             <div className="dashboard">
@@ -50,7 +50,12 @@ export class Dashboard extends React.Component<IDashboardProps, any> {
                     title={this.props.title}
                     onViewChange={this.changeView}
                     selectedDashboardKey={activeView}
-                     />
+                    />
+                {
+                    farms && farms.length === 0 && this.props.emptyDashboardMessage && <div style={{ position: 'absolute', width: '100%', top: '140px' }}>
+                        {this.props.emptyDashboardMessage}
+                    </div>
+                }
                 {
                     ((activeView === ActiveDashboard.CompactHorizontal || activeView === ActiveDashboard.CompactVertical)) &&
                     <CompactDashboard

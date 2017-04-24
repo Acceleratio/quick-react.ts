@@ -10,7 +10,11 @@ export interface IDashboardProps extends React.Props<any> {
     activeView: ActiveDashboard;
     hasAddButton?: boolean;
     headerClass?: string;
-
+    /**
+     * Message to be shown when there is no data present. can also be a JSX element
+     */
+    emptyDashboardMessage?: any;
+    
     /**
      * Item that represents different available dashboards. Based on this the dashboard component will render different tabs.
      */
