@@ -34,21 +34,18 @@ export class CompactServer extends React.PureComponent<ICompactServerProps, any>
                 <span className={'server-title'}>
                     <span>{this.props.name}</span>
                 </span>
-                {
-                    this.props.roles.length > 0 ? 
-                    (
-                        <div>
-                            <hr />
+                <div>
+                    <hr/>
+                    {
+                        this.props.roles.length > 0 ? 
+                        (
                             <TagContainer title={''} tags={this.props.roles} />
-                        </div>
-                    ) : 
-                    (
-                        <div>
-                            <hr/>
+                        ) : 
+                        (
                             <div style={divPlaceholderStyle}> </div>
-                        </div>
-                    )
-                }
+                        )
+                    }
+                </div>
             </div>
         );
     }
