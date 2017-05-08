@@ -47,7 +47,7 @@ export class Dashboard extends React.PureComponent<IDashboardProps, any> {
     constructor(props?: IDashboardProps) {
         super(props);
         this.state = {
-            activeView: props.activeView,
+            activeView: props.initialActiveView,
             filter: this.props.filter
         };
     }
@@ -119,7 +119,11 @@ export class Dashboard extends React.PureComponent<IDashboardProps, any> {
 
     @autobind
     changeView(item?: PivotItem, ev?: React.MouseEvent<any>) {
-        this.setState({ activeView: Number(item.props.itemKey) });
+        let activeView = Number(item.props.itemKey);
+        this.setState({ activeView });
+        if (this.props.onActiveViewChanged) {
+            this.props.onActiveViewChanged(activeView);
+        }
     }
 
     @autobind

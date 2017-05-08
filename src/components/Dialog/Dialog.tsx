@@ -11,6 +11,8 @@ import { Button } from '../../components/Button/Button';
 import { ButtonType } from '../../components/Button/Button.Props';
 import { Icon } from '../../components/Icon/Icon';
 import './Dialog.scss';
+import { autobind } from '../../utilities/autobind';
+import { KeyCodes } from '../../utilities/KeyCodes';
 
 export interface IDialogState {
     isOpen?: boolean;
@@ -50,7 +52,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                 isOpen: true,
                 isAnimatingOpen: true,
                 isAnimatingClose: false
-            });
+            });         
         }
 
         // Closing the dialog
@@ -59,7 +61,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                 isOpen: false,
                 isAnimatingOpen: false,
                 isAnimatingClose: true
-            });
+            });            
         }
     }
 
@@ -110,7 +112,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                     <div className={dialogClassName}
                         ref={this._onDialogRef}>
                         <Overlay isDarkThemed={isDarkOverlay} onClick={isBlocking ? null : onDismiss} />
-                        <div className={classNames('dialog-main', this.props.containerClassName)}>
+                        <div className={classNames('dialog-main', this.props.containerClassName)} ref="dialogContainer" tabIndex={0} onKeyUp={this._onContainerKeyUp}>
                             <div className={'dialog-header'}>
                                 <p className={'dialog-title'} id={id + '-title'}>{title}</p>
                                 <div className={'dialog-topButton'}>
@@ -135,6 +137,19 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                 </Popup>
             </Layer>
         );
+    }
+
+    @autobind
+    private _onContainerKeyUp(ev: React.KeyboardEvent<HTMLElement>) {
+        switch (ev.which) {
+            case KeyCodes.escape:                
+                if (this.props.onDismiss) {
+                    this.props.onDismiss();
+                }
+                break;
+            default:
+                return;
+        }
     }
 
     private _groupChildren(): { footers: any[]; contents: any[]; } {
@@ -168,7 +183,8 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
             this.setState({
                 isOpen: true,
                 isAnimatingOpen: false
-            });
+            });            
+            (this.refs.dialogContainer as HTMLElement).focus();            
         }
 
         // The dialog has just closed (faded out)

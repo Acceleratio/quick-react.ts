@@ -318,10 +318,12 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
         const { onAccept, multiline } = this.props;              
         switch (ev.which) {     
             case KeyCodes.enter:
-                if (!multiline) {
-                    this._validate(this._field.value);
+                if (!multiline) {                    
+                    this._validate(this._field.value);                 
+
+                    // problems with React batched updates and trying to use the changed value immediately when enter was pressed 
                     if (onAccept) {
-                        onAccept();
+                        setTimeout(onAccept, 0);                                                
                     }
                 }
                 break;

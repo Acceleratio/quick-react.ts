@@ -7,7 +7,8 @@ import { IPivotItemProps } from '../Pivot/PivotItem.Props';
 export interface IDashboardProps extends React.Props<any> {
     title: string;
     filter: string;
-    activeView: ActiveDashboard;
+    initialActiveView: ActiveDashboard;
+    onActiveViewChanged?: (activeView: ActiveDashboard) => void;
     hasAddButton?: boolean;
     headerClass?: string;
     /**

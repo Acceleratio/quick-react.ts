@@ -61,7 +61,7 @@ export class Index extends React.Component<any, any> {
                     farms={this.state.farms}
                     filter={''}
                     title={dummyDashboard.title}
-                    activeView={0}
+                    initialActiveView={0}
                     hasAddButton
                     addFarm={dummyDashboard.addFarm}
                     groupAddFunc={dummyDashboard.groupAddFunc}
