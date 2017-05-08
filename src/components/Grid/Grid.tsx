@@ -27,7 +27,7 @@ export class QuickGrid<T> extends React.Component<IGridProps<T>, IGridState> {
             .filter((column) => { return props.groupBy.indexOf(column.valueMember) === -1; })
             .map((col) => { return this.getColumnWidthInPx(this.getGridWidth(), totalWidth, col.width); });
         this.state = {
-            columnWidths: columnWidths,     
+            columnWidths: columnWidths,
             expandedRows: {},
             selectedRowIndex: undefined,
             hoverRowIndex: undefined,
@@ -173,8 +173,14 @@ export class QuickGrid<T> extends React.Component<IGridProps<T>, IGridState> {
             column.cellClassName,
             { 'is-selected': rowIndex === this.state.selectedRowIndex },
             { 'is-hover': rowIndex === this.state.hoverRowIndex });
+
         const onMouseOver = () => { this.setState((prevState) => { return { ...prevState, hoverRowIndex: rowIndex }; }); };
         const onClick = () => { this._setSelectedRowIndex(rowIndex); };
+        const onDoubleClick = () => {
+            if (this.props.onRowDoubleClicked) {
+                this.props.onRowDoubleClicked(rowData);
+            }
+        };
 
         const columnElement = () => {
             if (column.cellFormatter) {
@@ -194,6 +200,7 @@ export class QuickGrid<T> extends React.Component<IGridProps<T>, IGridState> {
                 className={className}
                 onMouseOver={onMouseOver}
                 onClick={onClick}
+                onDoubleClick={onDoubleClick}
             >
                 {columnElement()}
             </div>

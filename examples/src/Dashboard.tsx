@@ -69,6 +69,7 @@ export class Index extends React.Component<any, any> {
                     groupEditFunc={dummyDashboard.groupEditFunc}
                     serverClose={dummyDashboard.serverClose}
                     serverRoleEdit={dummyDashboard.serverRoleEdit}
+                    serverOnClick={dummyDashboard.serverOnClick}
                 />
             </div>
         );

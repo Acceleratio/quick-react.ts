@@ -31,7 +31,8 @@ export class Index extends React.Component<any, any> {
             <div>
                 <ServerGridDashboard
                     className={'viewport-height'}
-                    farms={this.state.farms} />
+                    farms={this.state.farms}
+                    filter={''} />
             </div>
         );
     }

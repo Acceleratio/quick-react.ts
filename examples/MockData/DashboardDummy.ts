@@ -35,7 +35,8 @@ export const dummyDashboard: IDashboardProps = {
     groupEditFunc: (groupId: any) => { console.log('Clicked edit icon of group ' + groupId); },
     serverClose: (serverFQDN: any) => { console.log('Clicked close icon of server ' + serverFQDN); },
     serverRoleEdit: (serverFQDN: any) => { console.log('Clicked edit role icon of server ' + serverFQDN); },
-    groupOnClick: (groupId: any) => { console.log('Clicked on group ' + groupId); }
+    groupOnClick: (groupId: any) => { console.log('Clicked on group ' + groupId); },
+    serverOnClick: (groupId: any, serverId: any) => {console.log('Clicked on group ' + groupId + ' and server ' + serverId); }    
 };
 
 export function convertFarm(farm: IFarm): ITiledDashboardFarm {

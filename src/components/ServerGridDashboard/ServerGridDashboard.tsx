@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IServerGridDashboardProps, ServerGridRow } from './ServerGridDashboard.Props';
+import { IServerGridDashboardProps, ServerGridRow, IServerGridDashboardState } from './ServerGridDashboard.Props';
 import { ITiledDashboardFarm } from '../TileDashboard/TileDashboard.Props';
 import * as classNames from 'classnames';
 import { Icon } from '../Icon/Icon';
@@ -8,6 +8,7 @@ import { ProgressBar } from '../ProgressBar/ProgressBar';
 import { QuickGrid } from '../Grid/Grid';
 import { IGridProps, GridColumn } from '../Grid/Grid.Props';
 import { GetClassForStatus } from '../../utilities/server';
+import { filterFarms } from '../Dashboard/Dashboard';
 
 import { sortServersByStatusAndName, filterServerByName, convertNetwork, convertDisk, convertRam } from '../../utilities/server';
 import { IMeasure, MeasureType, IFarm, Partition, DiskMeasure, CpuMeasure, RamMeasure, NetworkMeasure, ServerStatus } from '../../models';
@@ -15,9 +16,7 @@ import { IMeasure, MeasureType, IFarm, Partition, DiskMeasure, CpuMeasure, RamMe
 import './ServerGridDashboard.scss';
 class ServerGrid extends QuickGrid<ServerGridRow> { }
 
-const getMeasure = (measures, measureType) => {
-    return measures.filter((mes) => { return mes.type === measureType; })[0];
-};
+
 
 const gridColumns: Array<GridColumn> = [{
     valueMember: 'FarmName',
@@ -76,20 +75,12 @@ const gridColumns: Array<GridColumn> = [{
     cellFormatter: (cellData) => { return <div className={GetClassForStatus('', cellData.status) + ' server-dashboard-grid-cell-content'}> {cellData.currentUsage + ' ' + cellData.usageUnit}</div>; }
 }];
 
-export interface IServerGridDashboardState {
-    rows: Array<ServerGridRow>;
-    groupBy: Array<string>;
-    expandedRows: any;
-    sortColumn: string;
-    sortDirection: any;
-}
-
 export class ServerGridDashboard extends React.Component<IServerGridDashboardProps, IServerGridDashboardState> {
     private grid;
     constructor(props: IServerGridDashboardProps) {
         super(props);
         this.state = {
-            rows: this.transformFarmToRows(props.farms),
+            rows: this.transformFarmToRows(props.farms, props.filter),
             expandedRows: {},
             groupBy: ['FarmName'],
             sortColumn: 'ServerName',
@@ -99,19 +90,25 @@ export class ServerGridDashboard extends React.Component<IServerGridDashboardPro
 
     componentWillReceiveProps(nextProps) {
         this.setState((oldState) => {
-            return { ...oldState, rows: this.transformFarmToRows(nextProps.farms) };
+            return { ...oldState, rows: this.transformFarmToRows(nextProps.farms, nextProps.filter) };
         });
     }
-
-    private transformFarmToRows(farms: Array<ITiledDashboardFarm>): Array<ServerGridRow> {
+    
+    private transformFarmToRows(farms: Array<ITiledDashboardFarm>, filter: string): Array<ServerGridRow> {
+        const filteredFarms = filterFarms(farms, filter);
         let rows = [];
-        farms.forEach(farm => {
+        const getMeasure = (measures, measureType) => {
+            return measures.filter((mes) => { return mes.type === measureType; })[0];
+        };
+        filteredFarms.forEach(farm => {
             farm.servers.forEach(server => {
                 const cpu = getMeasure(server.measures, MeasureType.CPU);
                 const mem = getMeasure(server.measures, MeasureType.Ram);
                 const disk = getMeasure(server.measures, MeasureType.Disk);
                 const net = getMeasure(server.measures, MeasureType.Network);
                 rows.push({
+                    GroupId: farm.id,
+                    ServerId: server.id,
                     FarmName: farm.name,
                     UserCount: server.numberOfUsers,
                     ServerName: server.name,
@@ -130,7 +127,7 @@ export class ServerGridDashboard extends React.Component<IServerGridDashboardPro
         return rows;
     }
 
-    render() {
+    public render(): JSX.Element {
         const className = classNames({ [this.props.className]: this.props.className !== undefined }, 'server-grid-dashboard-container');
         return (
             <div className={className}>
@@ -141,9 +138,19 @@ export class ServerGridDashboard extends React.Component<IServerGridDashboardPro
                     rowHeight={28}
                     headerHeight={28}
                     overscanRowCount={30}
+                    onRowDoubleClicked={this.onRowDoubleClick}
                 />
             </div>
         );
+    }
+
+    @autobind
+    private onRowDoubleClick(row: ServerGridRow) {
+        const { serverOnClick } = this.props;
+
+        if (serverOnClick) {
+            serverOnClick(row.GroupId, row.ServerId);
+        }
     }
 }
 

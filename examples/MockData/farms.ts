@@ -16,22 +16,20 @@ let roleListFarms = [{ display: 'WPF', iconName: 'icon-add' }, { display: 'WPF11
 export const farms: Array<IFarm> = createFarms(10, 20, 50);
 
 export function createFarms(numOfFarms: number, minServerCount: number, maxServerCount: number) {
-    let _farms = Array(0);    
+    let _farms = Array(0);
     for (let farmIndex = 0; farmIndex <= numOfFarms; farmIndex++) {
         let numOfServers = Math.floor(Math.random() * (maxServerCount - minServerCount + 1)) + minServerCount;
         let servers = [];
         for (let i = 0; i <= numOfServers; i++) {
             servers.push({
-                id: {
-                    FQDN: 'FQDN' + i
-                },
+                id: 'server' + i,
                 name: 'server ' + i,
                 roles: roleListFarms,
                 status: Math.random() >= 0.5 ? 1 : 2
             });
         }
         _farms.push({
-            id: { sqlInstance: 'instance' + farmIndex, configDataBaseIcon: 'icon-sql_log', configDataBaseName: 'db' + farmIndex },
+            id: 'Demo Farm' + farmIndex,
             name: 'Demo Farm ' + farmIndex,
             isCustom: Math.random() >= 0.5,
             version: {
@@ -60,7 +58,7 @@ function createProcessorUsages(): Array<IProcessorUsageData> {
     return cpuUsage;
 }
 
-const processorUsage: IProcessorUsage = {data: createProcessorUsages(), status: 1 } ;
+const processorUsage: IProcessorUsage = { data: createProcessorUsages(), status: 1 };
 
 const partitionUsages: Array<IPartitionUsage> = [
     { name: 'C', usageUnit: 'GB', capacity: 60, used: 20, status: 0 },

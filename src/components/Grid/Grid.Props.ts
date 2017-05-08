@@ -12,7 +12,7 @@ export interface IGridProps<T> {
     headerHeight: number;
     overscanRowCount?: number;
     onSelectedRowChanged?: (selectedRowIndex: number) => void;
-    onRowDoubleClicked?: (selectedRowIndex: number) => void;
+    onRowDoubleClicked?: (row: T) => void;
 }
 
 export interface IGridState {
