@@ -32,6 +32,8 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
         contentClassName: ''
     };
 
+    private _containerRef: HTMLElement;
+
     constructor(props: IDialogProps) {
         super(props);
 
@@ -112,7 +114,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                     <div className={dialogClassName}
                         ref={this._onDialogRef}>
                         <Overlay isDarkThemed={isDarkOverlay} onClick={isBlocking ? null : onDismiss} />
-                        <div className={classNames('dialog-main', this.props.containerClassName)} ref="dialogContainer" tabIndex={0} onKeyUp={this._onContainerKeyUp}>
+                        <div className={classNames('dialog-main', this.props.containerClassName)} ref={this._getContainerRef} tabIndex={0} onKeyUp={this._onContainerKeyUp}>
                             <div className={'dialog-header'}>
                                 <p className={'dialog-title'} id={id + '-title'}>{title}</p>
                                 <div className={'dialog-topButton'}>
@@ -120,8 +122,8 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                                         <Icon
                                             disabled={false}
                                             className={'dialog-button dialog-button-close'}
-                                            onClick={ onDismiss } 
-                                            iconName={'icon-delete'}/>
+                                            onClick={onDismiss}
+                                            iconName={'icon-delete'} />
                                     }
                                 </div>
                             </div>
@@ -140,9 +142,14 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
     }
 
     @autobind
+    private _getContainerRef(ref) {
+        this._containerRef = ref;
+    }
+
+    @autobind
     private _onContainerKeyUp(ev: React.KeyboardEvent<HTMLElement>) {
         switch (ev.which) {
-            case KeyCodes.escape:                
+            case KeyCodes.escape:
                 if (this.props.onDismiss) {
                     this.props.onDismiss();
                 }
@@ -183,8 +190,11 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
             this.setState({
                 isOpen: true,
                 isAnimatingOpen: false
-            });            
-            (this.refs.dialogContainer as HTMLElement).focus();            
+            });
+            
+            if (this._containerRef) {
+                this._containerRef.focus();
+            }
         }
 
         // The dialog has just closed (faded out)
