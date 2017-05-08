@@ -52,7 +52,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                 isOpen: true,
                 isAnimatingOpen: true,
                 isAnimatingClose: false
-            });         
+            });
         }
 
         // Closing the dialog
@@ -61,7 +61,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
                 isOpen: false,
                 isAnimatingOpen: false,
                 isAnimatingClose: true
-            });            
+            });
         }
     }
 

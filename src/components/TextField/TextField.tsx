@@ -323,7 +323,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
 
                     // problems with React batched updates and trying to use the changed value immediately when enter was pressed 
                     if (onAccept) {
-                        setTimeout(onAccept, 0);                                                
+                        setTimeout(onAccept, 0);
                     }
                 }
                 break;
