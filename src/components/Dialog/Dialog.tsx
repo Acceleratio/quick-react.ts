@@ -22,7 +22,7 @@ export interface IDialogState {
 }
 
 export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
-    public static defaultProps: IDialogProps = {
+    public static defaultProps: IDialogProps = { 
         isOpen: false,
         isDarkOverlay: true,
         isBlocking: true,
