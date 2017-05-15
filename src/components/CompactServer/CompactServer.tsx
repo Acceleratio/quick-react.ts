@@ -19,6 +19,11 @@ export class CompactServer extends React.PureComponent<ICompactServerProps, any>
             { 'status-ok': status === ServerStatus.OK },
             { 'status-critical': status === ServerStatus.Critical });
 
+        const divPlaceholderStyle = {
+            height: '21px',
+            display: 'block'
+        };
+
         return (
             <div
                 className={className}
@@ -29,13 +34,18 @@ export class CompactServer extends React.PureComponent<ICompactServerProps, any>
                 <span className={'server-title'}>
                     <span>{this.props.name}</span>
                 </span>
-                {
-                    this.props.roles.length > 0 &&
-                    <div>
-                        <hr/>
-                        <TagContainer title={''} tags={this.props.roles}/>
-                    </div>
-                }
+                <div>
+                    <hr/>
+                    {
+                        this.props.roles.length > 0 ? 
+                        (
+                            <TagContainer title={''} tags={this.props.roles} />
+                        ) : 
+                        (
+                            <div style={divPlaceholderStyle}> </div>
+                        )
+                    }
+                </div>
             </div>
         );
     }
