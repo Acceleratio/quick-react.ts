@@ -22,16 +22,17 @@ export class Index extends React.Component<any, any> {
         return (
             <div>
                 <DateTimePicker 
-                    is24HourFormat={false} 
+                    is24HourFormat={true} 
                     selectedDateTime={this.state.date}
                     includeTime={true}
                     onTimeSelectionChanged={(date) => this.setDate(date)}
                 />
                  <DateTimePicker 
-                    is24HourFormat={false} 
+                    is24HourFormat={true} 
                     selectedDateTime={this.state.date}
-                    includeTime={false}
+                    includeTime={true}
                     onTimeSelectionChanged={(date) => this.setDate(date)}
+                    keyboardTimeInput={true}
                 />
             </div>
         );

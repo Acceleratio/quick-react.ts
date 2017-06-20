@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
+import * as NumericInput from 'react-numeric-input';
 import { Slider } from '../Slider/Slider';
+import { TextField } from '../TextField/TextField';
 import { autobind } from '../../utilities/autobind';
 
 import * as moment from 'moment';
@@ -9,14 +11,18 @@ export interface ITimePickerProps {
     hour: number;
     minute: number;
     is24Hour: boolean;
+    useKeyboardInput?: boolean;
     onTimeChanged: (hour: number, minute: number) => void;
 }
 
-export class TimePicker extends React.Component<ITimePickerProps, void> {
-
-
+export class TimePicker extends React.Component<ITimePickerProps, any> {
+    private isPeriodPm: boolean;
     private hourHover: boolean;
     private minuteHover: boolean;
+
+    public static defaultProps = {
+        useKeyboardInput: false
+    };
 
     @autobind
     onHourSliderEnter() {
@@ -53,21 +59,88 @@ export class TimePicker extends React.Component<ITimePickerProps, void> {
     }
 
 
+    @autobind
+    onHourInputChange(e) {
+        let hour = parseInt(e.target.value, 10);
+        if (isNaN(hour)) {
+            return;
+        }
+
+        if (!this.props.is24Hour) {
+            if (hour > 12) {
+                hour = 12;
+            }
+            if (this.isPeriodPm) {
+                if (hour < 12) {
+                    hour += 12;
+                }
+            } else {
+                if (hour === 12) {
+                    hour = 0;
+                }
+            }
+        } else {
+            if (hour > 23) {
+                hour = 23;
+            }
+        }
+        this.props.onTimeChanged(hour, this.props.minute);
+    }
+
+    @autobind
+    onMinuteInputChange(e) {
+        let minute = parseInt(e.target.value, 10);
+        if (isNaN(minute)) {
+            return;
+        }
+        if (minute > 59) {
+            minute = 59;
+        }
+        this.props.onTimeChanged(this.props.hour, minute);
+    }
+
+    @autobind
+    onInputBlur(e) {
+        if (isNaN(parseInt(e.target.value, 10))) {
+            this.forceUpdate();
+            return;
+        }
+    }
+
+    @autobind
+    changePeriod() {
+        let { hour, minute } = this.props;
+        let newHour: number;
+        if (this.isPeriodPm) {
+            newHour = hour - 12;
+            this.isPeriodPm = false;
+        } else {
+            newHour = hour + 12;
+            this.isPeriodPm = true;
+        }
+        this.props.onTimeChanged(newHour, minute);
+    }
+
     public render(): JSX.Element {
 
-        let {hour, minute} = this.props;        
+        let { hour, minute, useKeyboardInput, is24Hour } = this.props;
         let amPmDesignator: string = '';
         let hourDisp: any;
         hourDisp = hour;
 
-        if (!this.props.is24Hour) {
+        if (!is24Hour) {
             if (hour >= 12) {
                 amPmDesignator = 'PM';
+                this.isPeriodPm = true;
                 if (hour > 12) {
                     hourDisp -= 12;
                 }
             } else {
+                if (hour === 0) {
+                    hourDisp = 12;
+                }
                 amPmDesignator = 'AM';
+                this.isPeriodPm = false;
             }
         }
         if (hourDisp < 10) {
@@ -79,7 +152,7 @@ export class TimePicker extends React.Component<ITimePickerProps, void> {
         } else {
             minuteDisp = minute.toString();
         }
-        let hourClasses = classNames('time-picker-hours',
+        let hourClasses = classNames('time-picker-hours', 'textField-field',
             {
                 isSelected: this.hourHover
             });
@@ -88,13 +161,46 @@ export class TimePicker extends React.Component<ITimePickerProps, void> {
             {
                 isSelected: this.minuteHover
             });
+
+        let hourPicker, minutePicker;
+
+        if (useKeyboardInput) {
+            hourPicker = <NumericInput
+                className={hourClasses}
+                min={0}
+                max={this.props.is24Hour ? 23 : 12}
+                maxLength={2}
+                value={hourDisp}
+                onBlur={this.onInputBlur}
+                style={false}
+                onKeyUp={this.onHourInputChange} />;
+
+            minutePicker = <NumericInput
+                className={minuteClasses}
+                min={0}
+                max={59}
+                maxLength={2}
+                value={minuteDisp}
+                onBlur={this.onInputBlur}
+                style={false}
+                onKeyUp={this.onMinuteInputChange} />;
+        } else {
+            hourPicker = <span className={hourClasses}>{hourDisp}</span>;
+            minutePicker = <span className={minuteClasses}>{minuteDisp}</span>;
+        }
         return (
             <div className="time-picker">
                 <div className="time-picker-time-value">
-                    <span className={hourClasses}>{hourDisp}</span>
+                    {hourPicker}
                     <span className="time-picker-colon">:</span>
-                    <span className={minuteClasses}>{minuteDisp}</span>
-                    <span className="time-picker-ampm-designator">{amPmDesignator}</span>
+                    {minutePicker}
+                    {!is24Hour &&
+                        <span
+                            onClick={this.changePeriod}
+                            className="time-picker-ampm-designator">
+                            {amPmDesignator}
+                        </span>
+                    }
                 </div>
                 <div className="time-picker-sliders">
                     <div onMouseEnter={this.onHourSliderEnter} onMouseLeave={this.onHourSliderLeave}><Slider value={hour} min={0} max={23} showValue={false} onChange={this.onHourSliderChange} /></div>

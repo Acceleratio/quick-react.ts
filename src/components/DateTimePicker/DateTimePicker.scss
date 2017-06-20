@@ -81,7 +81,22 @@ $silver-color: #a09f9f;
     }
 }
 .time-picker-hours, .time-picker-minute {
-    width: 24px;
+    @include baseFont();
+    @include normalize();
+    line-height: 1;
+    font-size: 24px;
+    color: $gray-color;
+    font-weight: 300;
+    border: 0;
+    height: 28px;
+    width: 26px;
+    text-align: center;
+    outline: 0;
+}
+
+input.time-picker-hours, input.time-picker-minute {
+    position: relative;
+    top: -1px;
 }
 
 .time-picker-ampm-designator {    
@@ -90,6 +105,11 @@ $silver-color: #a09f9f;
     font-size: 11px;
     font-weight: 400;
     padding-top: 12px;
+    cursor: pointer;
+    width: 20px;
+}
+.time-picker-ampm-designator:hover{
+    background-color: $gray-lighter-color;
 }
 
 .time-picker-colon {

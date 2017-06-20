@@ -4784,6 +4784,10 @@ react-draggable@2.2.3:
   dependencies:
     classnames "^2.2.5"
 
+react-numeric-input@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/react-numeric-input/-/react-numeric-input-2.0.7.tgz#f8d46ac4176cd2ef47c8e8c813171499fb65338d"
+
 react-onclickoutside@^5.9.0:
   version "5.11.1"
   resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-5.11.1.tgz#00314e52567cf55faba94cabbacd119619070623"
