@@ -13,7 +13,7 @@ export interface IDateTimePickerProps {
     is24HourFormat: boolean;
     includeTime?: boolean;
     isValidDate?: (currentDate: any, selectedDate: any) => boolean;
-    keyboardTimeInput?: boolean;
+    useKeyboardForTimeInput?: boolean;
     onTimeSelectionChanged: (selectedDateTime: Date) => void;
 }
 
@@ -53,7 +53,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, void> 
                 <DateTime input={false} value={this.props.selectedDateTime} timeFormat={false} onChange={this.onDatePickerChanged} isValidDate={this.props.isValidDate} />
                 {
                     this.props.includeTime &&
-                    <TimePicker hour={hour} minute={minute} is24Hour={this.props.is24HourFormat} useKeyboardInput={this.props.keyboardTimeInput} onTimeChanged={this.onTimePickerChanged} />
+                    <TimePicker hour={hour} minute={minute} is24Hour={this.props.is24HourFormat} useKeyboardInput={this.props.useKeyboardForTimeInput} onTimeChanged={this.onTimePickerChanged} />
                 }
             </div>
         );

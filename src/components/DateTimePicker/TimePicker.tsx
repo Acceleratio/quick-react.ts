@@ -58,23 +58,30 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         this.props.onTimeChanged(this.props.hour, value);
     }
 
-    normalizeHours(hour: number, is24Hour: boolean, isPeriodPm: boolean) {
+    normalizeHours(hour: number, is24Hour: boolean) {
         if (!is24Hour) {
             if (hour > 12) {
                 hour = 12;
             }
-            if (isPeriodPm) {
-                if (hour < 12) {
-                    hour += 12;
-                }
-            } else {
-                if (hour === 12) {
-                    hour = 0;
-                }
-            }
         } else {
             if (hour > 23) {
                 hour = 23;
+            }
+        }
+        return hour;
+    }
+
+    convertTo24HourFormat(hour: number, is24Hour: boolean, isPeriodPm: boolean) {
+        if (is24Hour) {
+            return hour;
+        }
+        if (isPeriodPm) {
+            if (hour < 12) {
+                hour += 12;
+            }
+        } else {
+            if (hour === 12) {
+                hour = 0;
             }
         }
         return hour;
@@ -87,7 +94,8 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
             return;
         }
 
-        hour = this.normalizeHours(hour, this.props.is24Hour, this.isPeriodPm);
+        hour = this.normalizeHours(hour, this.props.is24Hour);
+        hour = this.convertTo24HourFormat(hour, this.props.is24Hour, this.isPeriodPm);
         this.props.onTimeChanged(hour, this.props.minute);
     }
 
