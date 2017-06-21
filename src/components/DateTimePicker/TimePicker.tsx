@@ -58,19 +58,12 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         this.props.onTimeChanged(this.props.hour, value);
     }
 
-
-    @autobind
-    onHourInputChange(e) {
-        let hour = parseInt(e.target.value, 10);
-        if (isNaN(hour)) {
-            return;
-        }
-
-        if (!this.props.is24Hour) {
+    normalizeHours(hour: number, is24Hour: boolean, isPeriodPm: boolean) {
+        if (!is24Hour) {
             if (hour > 12) {
                 hour = 12;
             }
-            if (this.isPeriodPm) {
+            if (isPeriodPm) {
                 if (hour < 12) {
                     hour += 12;
                 }
@@ -84,6 +77,17 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                 hour = 23;
             }
         }
+        return hour;
+    }
+
+    @autobind
+    onHourInputChange(e) {
+        let hour = parseInt(e.target.value, 10);
+        if (isNaN(hour)) {
+            return;
+        }
+
+        hour = this.normalizeHours(hour, this.props.is24Hour, this.isPeriodPm);
         this.props.onTimeChanged(hour, this.props.minute);
     }
 
