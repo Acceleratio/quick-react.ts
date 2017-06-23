@@ -346,6 +346,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                             rowCount={this.getRowCount()}
                                             columnCount={this.state.columnsToDisplay.length}
                                             {...this.state} // force update on any state change
+                                            {...this.props} // force update on any prop change
                                         />
                                     </div>
                                 </div>
