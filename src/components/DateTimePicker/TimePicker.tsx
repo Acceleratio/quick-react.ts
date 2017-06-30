@@ -164,7 +164,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         } else {
             minuteDisp = minute.toString();
         }
-        let hourClasses = classNames('time-picker-hours', 'textField-field',
+        let hourClasses = classNames('time-picker-hours',
             {
                 isSelected: this.hourHover
             });
