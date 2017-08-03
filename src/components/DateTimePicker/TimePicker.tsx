@@ -16,9 +16,15 @@ export interface ITimePickerProps {
 }
 
 export class TimePicker extends React.Component<ITimePickerProps, any> {
-    private isPeriodPm: boolean;
-    private hourHover: boolean;
-    private minuteHover: boolean;
+    componentWillMount() {
+        this.setState({
+            isPeriodPm: false,
+            hourHover: false,
+            minuteHover: false,
+            hourTimeFormat: this.formatUnfocused,
+            minuteTimeFormat: this.formatUnfocused
+        });
+    }
 
     public static defaultProps = {
         useKeyboardInput: false
@@ -26,26 +32,30 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
 
     @autobind
     onHourSliderEnter() {
-        this.hourHover = true;
-        this.forceUpdate();
+        this.setState({
+            hourHover: true
+        });
     }
 
     @autobind
     onHourSliderLeave() {
-        this.hourHover = false;
-        this.forceUpdate();
+        this.setState({
+            hourHover: false
+        });
     }
 
     @autobind
     onMinuteSliderEnter() {
-        this.minuteHover = true;
-        this.forceUpdate();
+        this.setState({
+            minuteHover: true
+        });
     }
 
     @autobind
     onMinuteSliderLeave() {
-        this.minuteHover = false;
-        this.forceUpdate();
+        this.setState({
+            minuteHover: false
+        });
     }
 
     @autobind
@@ -87,6 +97,28 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         return hour;
     }
 
+    removeNonNumeric(num: string): string {
+        return num.replace(/[\D]+/g, '');
+    }
+
+    @autobind
+    formatHourFocused(num: string): string {
+        if (num === '0' && this.props.is24Hour === false) {
+            num = '12';
+        }
+        return this.removeNonNumeric(num);
+    }
+
+    @autobind
+    formatUnfocused(num: string): string {
+        num = this.removeNonNumeric(num);
+        if (num.length === 1) {
+            return '0' + num;
+        } else {
+            return num;
+        }
+    }
+
     @autobind
     onHourInputChange(e) {
         let hour = parseInt(e.target.value, 10);
@@ -95,7 +127,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         }
 
         hour = this.normalizeHours(hour, this.props.is24Hour);
-        hour = this.convertTo24HourFormat(hour, this.props.is24Hour, this.isPeriodPm);
+        hour = this.convertTo24HourFormat(hour, this.props.is24Hour, this.state.isPeriodPm);
         this.props.onTimeChanged(hour, this.props.minute);
     }
 
@@ -112,24 +144,48 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
     }
 
     @autobind
-    onInputBlur(e) {
-        if (isNaN(parseInt(e.target.value, 10))) {
-            this.forceUpdate();
-            return;
-        }
+    onHourInputBlur(e) {
+        this.setState({
+            hourTimeFormat: this.formatUnfocused
+        });
+    }
+
+    @autobind
+    onMinuteInputBlur(e) {
+        this.setState({
+            minuteTimeFormat: this.formatUnfocused
+        });
+    }
+
+    @autobind
+    onHourInputFocus(e) {
+        this.setState({
+            hourTimeFormat: this.formatHourFocused
+        });
+    }
+
+    @autobind
+    onMinuteInputFocus(e) {
+        this.setState({
+            minuteTimeFormat: this.removeNonNumeric
+        });
     }
 
     @autobind
     changePeriod() {
         let { hour, minute } = this.props;
         let newHour: number;
-        if (this.isPeriodPm) {
+        let newPeriod: boolean;
+        if (this.state.isPeriodPm) {
             newHour = hour - 12;
-            this.isPeriodPm = false;
+            newPeriod = false;
         } else {
             newHour = hour + 12;
-            this.isPeriodPm = true;
+            newPeriod = true;
         }
+        this.setState({
+            isPeriodPm: newPeriod
+        });
         this.props.onTimeChanged(newHour, minute);
     }
 
@@ -143,7 +199,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         if (!is24Hour) {
             if (hour >= 12) {
                 amPmDesignator = 'PM';
-                this.isPeriodPm = true;
+                this.state.isPeriodPm = true;
                 if (hour > 12) {
                     hourDisp -= 12;
                 }
@@ -152,7 +208,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                     hourDisp = 12;
                 }
                 amPmDesignator = 'AM';
-                this.isPeriodPm = false;
+                this.state.isPeriodPm = false;
             }
         }
         if (hourDisp < 10) {
@@ -166,12 +222,12 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         }
         let hourClasses = classNames('time-picker-hours',
             {
-                isSelected: this.hourHover
+                isSelected: this.state.hourHover
             });
 
         let minuteClasses = classNames('time-picker-minute',
             {
-                isSelected: this.minuteHover
+                isSelected: this.state.minuteHover
             });
 
         let hourPicker, minutePicker;
@@ -183,8 +239,10 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                 max={this.props.is24Hour ? 23 : 12}
                 maxLength={2}
                 value={hourDisp}
-                onBlur={this.onInputBlur}
+                onFocus={this.onHourInputFocus}
+                onBlur={this.onHourInputBlur}
                 style={false}
+                format={this.state.hourTimeFormat}
                 onKeyUp={this.onHourInputChange} />;
 
             minutePicker = <NumericInput
@@ -193,8 +251,10 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                 max={59}
                 maxLength={2}
                 value={minuteDisp}
-                onBlur={this.onInputBlur}
+                onFocus={this.onMinuteInputFocus}
+                onBlur={this.onMinuteInputBlur}
                 style={false}
+                format={this.state.minuteTimeFormat}
                 onKeyUp={this.onMinuteInputChange} />;
         } else {
             hourPicker = <span className={hourClasses}>{hourDisp}</span>;
