@@ -44,7 +44,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         this.state = {
             columnWidths: this.getColumnWidths(columnsToDisplay),
             columnsToDisplay: columnsToDisplay,
-            expandedRows: {},
+            collapsedRows: {},
             selectedRowIndex: undefined,
             sortColumn: props.sortColumn,
             sortDirection: props.sortDirection,
@@ -67,6 +67,24 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             return modifiedRow;
         });
         return newRows;
+    }
+    
+    expandAll = (event) => {
+        this.setState((prevState) => {
+            return {
+                ...prevState,
+                collapsedRows: {}
+            };
+        });
+    }
+
+    collapseAll = (event) => {
+        this.setState((prevState) => {
+            return {
+                ...prevState,
+                collapsedRows: { ...this.props.rows }
+            };
+        });
     }
 
     getGroupByFromProps(groupBy: Array<string | IGroupBy>) {
@@ -159,12 +177,15 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return this.getRows().length;
     }
 
-    onRowExpandToggle(columnGroupName, name, shouldExpand) {
+    onRowExpandToggle(name, shouldExpand) {
         this.setState((oldState) => {
-            let expandedRows = { ...oldState.expandedRows };
-            expandedRows[columnGroupName] = { ...expandedRows[columnGroupName] };
-            expandedRows[columnGroupName][name] = { isExpanded: shouldExpand };
-            return { ...oldState, expandedRows: expandedRows };
+            let collapsedRows = { ...oldState.collapsedRows };
+            if (shouldExpand) {
+                delete collapsedRows[name];
+            } else {
+                collapsedRows[name] = {};
+            }
+            return { ...oldState, collapsedRows: collapsedRows };
         });
     }
 
@@ -269,7 +290,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             const columnName = this.props.columns.filter((column) => { return column.valueMember === rowData.columnGroupName; })[0].headerText;
             const divStyle: React.CSSProperties = { paddingLeft: 30 * rowData.depth };
             const toggleRow = () => {
-                this.onRowExpandToggle(rowData.columnGroupName, rowData.groupKey, !rowData.isExpanded);
+                this.onRowExpandToggle(rowData.groupKey, !rowData.isExpanded);
             };
             let groupByFormat = `${columnName}: ${rowData.displayName}` || `${columnName}: ${rowData.name}`;
             if (this.props.groupRowFormat) {
@@ -408,6 +429,16 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         let headerClass = classNames('grid-component-header', this.props.headerClassName);
         return (
             <div className={mainClass}>
+                <div
+                    onClick={this.expandAll}
+                >
+                    Clickme
+                </div>
+                <div
+                    onClick={this.collapseAll}
+                >
+                    ClickMeToo
+                </div>
                 <ScrollSync>
                     {({ onScroll, scrollLeft }) => (
                         <AutoSizer onResize={this.onGridResize}>
@@ -431,6 +462,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         onGroupBySort={this.onGroupBySort}
                                         hasActionColumn={this.props.gridActions != null}
                                     />
+
                                     <Grid
                                         ref={this.setGridReference}
                                         height={height - this.groupByToolboxHeight()}

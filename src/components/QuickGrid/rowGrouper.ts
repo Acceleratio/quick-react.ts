@@ -5,19 +5,18 @@ import { groupBy } from '../../utilities/array';
 class RowGrouper {
     groupByColumns: Array<IGroupBy>;
     columns: Array<GridColumn>;
-    expandedRows: any;
+    collapsedRows: any;
 
-    constructor(groupByColumns, expandedRows, columns) {
+    constructor(groupByColumns, collapsedRows, columns) {
         this.groupByColumns = [...groupByColumns];
-        this.expandedRows = expandedRows;
+        this.collapsedRows = collapsedRows;
         this.columns = [...columns];
     }
 
-    isRowExpanded(columnName, name) {
+    isRowExpanded(name) {
         let isExpanded = true;
-        let expandedRowGroup = this.expandedRows[columnName];
-        if (expandedRowGroup && expandedRowGroup[name]) {
-            isExpanded = expandedRowGroup[name].isExpanded;
+        if (name in this.collapsedRows) {
+            isExpanded = false;
         }
         return isExpanded;
     }
@@ -36,7 +35,7 @@ class RowGrouper {
             let groupKeyValue = groupKeys[i];
             let groupItem = groupedRows[groupKeyValue][0];
             const groupKey = parentGroupKey + '||' + groupKeyValue;
-            let isExpanded = this.isRowExpanded(columnName, groupKey);
+            let isExpanded = this.isRowExpanded(groupKey);
             const rowGroupHeader: GroupRow = { type: 'GroupRow', columnGroupName: columnName, displayName: groupItem[displayName], name: groupKeyValue, groupKey: groupKey, depth: groupByColumnIndex, isExpanded: isExpanded };
             dataViewRows.push(rowGroupHeader);
             if (isExpanded) {

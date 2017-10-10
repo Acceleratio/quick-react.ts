@@ -10,7 +10,7 @@ import { DataTypeEnum } from './QuickGrid.Props';
 
 const getInputRows = (state: IQuickGridState, props: IQuickGridProps) => state.rows;
 const getGroupBy = (state: IQuickGridState, props: IQuickGridProps) => state.groupBy;
-const getExpandedRows = (state: IQuickGridState, props: IQuickGridProps) => state.expandedRows;
+const getCollapsedRows = (state: IQuickGridState, props: IQuickGridProps) => state.collapsedRows;
 const getSortColumn = (state: IQuickGridState, props: IQuickGridProps) => state.sortColumn;
 const getSortDirection = (state: IQuickGridState, props: IQuickGridProps) => state.sortDirection;
 const getColumns = (state: IQuickGridState, props: IQuickGridProps) => props.columns;
@@ -68,7 +68,7 @@ const getSortedRows = createSelector(getInputRows, getSortColumn, getSortDirecti
         return sortRows(rows, sortColumn, sortDirection, groupBy, columns);
     });
 
-export const getRowsSelector = createSelector(getSortedRows, getGroupBy, getExpandedRows, getColumns,
-    (rows, groupedColumns, expandedRows = {}, columns) => {
-        return groupRows(rows, groupedColumns, expandedRows, columns);
+export const getRowsSelector = createSelector(getSortedRows, getGroupBy, getCollapsedRows, getColumns,
+    (rows, groupedColumns, collapsedRows = {}, columns) => {
+        return groupRows(rows, groupedColumns, collapsedRows, columns);
     });
