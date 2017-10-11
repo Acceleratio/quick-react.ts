@@ -16,8 +16,8 @@ export interface IGridHeaderProps {
     displayGroupContainer: boolean;
     onGroupByChanged?: (groupBy: Array<IGroupBy>) => void;
     hasActionColumn: boolean;
-    collapseAll: (event) => void;
-    expandAll: (event) => void;
+    onCollapseAll: (event) => void;
+    onExpandAll: (event) => void;
 }
 
 export interface IGridHeaderState {

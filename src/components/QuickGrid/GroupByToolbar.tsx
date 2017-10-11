@@ -14,8 +14,8 @@ export interface IGroupByProps {
     onGroupByRemoved: (groupName: string) => void;
     onGroupByChanged: (newGroupBy: Array<IGroupBy>) => void;
     onSort: (sortBy: string, sortDirection: SortDirection) => void;
-    collapseAll: (event) => void;
-    expandAll: (event) => void;
+    onCollapseAll: (event) => void;
+    onExpandAll: (event) => void;
 
     // Drag&Drop props
     canDrop?: any;
@@ -97,7 +97,7 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
     }
 
     render() {
-        const { connectDropTarget, columns, onGroupByRemoved, collapseAll, expandAll } = this.props;
+        const { connectDropTarget, columns, onGroupByRemoved, onCollapseAll, onExpandAll } = this.props;
         const isEmpty = _.isEmpty(this.state.groupBy);
         return connectDropTarget(
             <div className="group-drop-toolbar">
@@ -116,14 +116,14 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
                         <Icon
                             iconName="icon-expandAll"
                             className="expand"
-                            onClick={expandAll}
+                            onClick={onExpandAll}
                             title="Expand all"
                         />
 
                         <Icon
                             iconName="icon-expand_collapse"
                             className="collapse"
-                            onClick={collapseAll}
+                            onClick={onCollapseAll}
                             title="Collapse all"
                         />
                     </div>

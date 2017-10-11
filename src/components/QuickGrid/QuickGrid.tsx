@@ -475,8 +475,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         displayGroupContainer={this.props.displayGroupContainer}
                                         onGroupBySort={this.onGroupBySort}
                                         hasActionColumn={this.props.gridActions != null}
-                                        collapseAll={this.collapseAll}
-                                        expandAll={this.expandAll}
+                                        onCollapseAll={this.collapseAll}
+                                        onExpandAll={this.expandAll}
                                     />
 
                                     <Grid
