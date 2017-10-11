@@ -5,7 +5,7 @@ import { groupBy } from '../../utilities/array';
 class RowGrouper {
     groupByColumns: Array<IGroupBy>;
     columns: Array<GridColumn>;
-    collapsedRows: any;
+    collapsedRows: Array<string>;
 
     constructor(groupByColumns, collapsedRows, columns) {
         this.groupByColumns = [...groupByColumns];
@@ -15,7 +15,8 @@ class RowGrouper {
 
     isRowExpanded(name) {
         let isExpanded = true;
-        if (name in this.collapsedRows) {
+        let index: number = this.collapsedRows.indexOf(name, 0);
+        if (index > -1) {
             isExpanded = false;
         }
         return isExpanded;

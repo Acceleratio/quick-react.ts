@@ -33,7 +33,7 @@ export interface IQuickGridState {
     sortColumn?: string;
     sortDirection?: SortDirection;
     groupBy?: Array<IGroupBy>;
-    collapsedRows: any;
+    collapsedRows: Array<string>;
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;

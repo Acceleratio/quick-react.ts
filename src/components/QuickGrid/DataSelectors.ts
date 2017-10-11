@@ -69,6 +69,6 @@ const getSortedRows = createSelector(getInputRows, getSortColumn, getSortDirecti
     });
 
 export const getRowsSelector = createSelector(getSortedRows, getGroupBy, getCollapsedRows, getColumns,
-    (rows, groupedColumns, collapsedRows = {}, columns) => {
+    (rows, groupedColumns, collapsedRows = [], columns) => {
         return groupRows(rows, groupedColumns, collapsedRows, columns);
     });
