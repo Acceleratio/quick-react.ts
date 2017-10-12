@@ -27,7 +27,7 @@ export interface IHeaderColumnProps {
     connectDropTarget?: any;
 }
 
-class HeaderColumnInner extends React.Component<IHeaderColumnProps, void> {
+class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
     DragElement = <div style={{ height: 50, width: 30 }} > <span> Drag </span> </div>;
     render() {
         const { className, text, showSortIndicator, sortDirection, onClick, onKeyDown } = this.props;

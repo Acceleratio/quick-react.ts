@@ -25,7 +25,6 @@ const getActionItemOptions = createSelector([getActionItems], (actionItems) => {
     return actionItems.map((item, index) => ({ key: index, icon: item.iconName, text: item.name }));
 });
 
-
 const defaultMinColumnWidth = 50;
 const emptyCellWidth = 5;
 export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridState> {
@@ -34,6 +33,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         groupBy: [],
         rowHeight: 28
     };
+    private finalGridRows: Array<any>;
     private _grid: any;
     private _headerGrid: any;
     private parentElement: HTMLElement;
@@ -50,25 +50,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             selectedRowIndex: undefined,
             sortColumn: props.sortColumn,
             sortDirection: props.sortDirection,
-            groupBy: groupByState,
-            rows: this.addLowerCaseMembersToRows(props.rows, props.columns)
+            groupBy: groupByState
         };
         this.columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         this.onGridResize = _.debounce(this.onGridResize, 100);
-    }
-
-    addLowerCaseMembersToRows = (rows: Array<any>, columns: Array<GridColumn>) => {
-        let members = columns.filter(col =>
-            (col.dataType === DataTypeEnum.String)).map(col => (col.valueMember));
-        const newRows = [...rows].map((row) => {
-            let modifiedRow = { ...row };
-            for (let value of members) {
-                modifiedRow[lowercasedColumnPrefix + value]
-                    = modifiedRow[value].toLowerCase();
-            }
-            return modifiedRow;
-        });
-        return newRows;
+        this.finalGridRows = getRowsSelector(this.state, props);
     }
 
     expandAll = (event) => {
@@ -81,7 +67,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     collapseAll = (event) => {
-        let collapsedRows = this.getAllGroupKeys(this.state.rows);
+        let collapsedRows = this.getAllGroupKeys(this.props.rows);
         this.setState((prevState) => {
             return {
                 ...prevState,
@@ -156,17 +142,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             this.setState((prevState) => { return { ...prevState, columnsToDisplay: columnsToDisplay, columnWidths: columnWidths, groupBy: newGroupBy }; });
             this.columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         }
-        if (nextProps.columns !== this.props.columns || nextProps.rows !== this.props.rows) {
-            this.setState((oldState) => {
-                return {
-                    ...oldState,
-                    rows: this.addLowerCaseMembersToRows(this.props.rows, this.props.columns)
-                };
-            });
-        }
     }
-
     componentDidUpdate(prevProps, prevState) {
+        this.finalGridRows = getRowsSelector(this.state, this.props);
         if (prevProps.columns !== this.props.columns || prevState.groupBy !== this.state.groupBy || prevState.columnWidths !== this.state.columnWidths) {
             this._grid.recomputeGridSize();
         } else if (this.state.sortDirection !== prevState.sortDirection || this.state.sortColumn !== prevState.sortColumn) {
@@ -184,20 +162,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         // left margin is 25px
         return width - 25 - scrollbarSize();
     }
-
-    getRow = ({ index }) => {
-        const rows = this.getRows();
-        return rows[index % rows.length];
-    }
-
-    getRows() {
-        return getRowsSelector(this.state, this.props);
-    }
-
-    getRowCount = () => {
-        return this.getRows().length;
-    }
-
     onRowExpandToggle(name, shouldExpand) {
         this.setState((oldState) => {
             let collapsedRows = [...oldState.collapsedRows];
@@ -231,8 +195,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
-        const rowData = this.getRow({ index: rowIndex });
-        if (rowData.type === 'GroupRow' && this.props.groupBy.length > 0) {
+        const rowData = this.finalGridRows[rowIndex];
+        if (rowData.type === 'GroupRow') { // todo Different member - > true
             return this.renderGroupCell(columnIndex, key, rowIndex, rowData, style);
         } else {
             if (columnIndex === 0 && this.props.gridActions != null) {
@@ -274,19 +238,20 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         );
     }
 
+    onActionItemClick = (option, rowIndex) => {
+        const { onActionSelected, actionItems } = this.props.gridActions;
+        if (onActionSelected) {
+            const action = actionItems[option.key];
+            const rowData = this.finalGridRows[rowIndex];
+            onActionSelected(action.commandName, action.parameters, rowData);
+        }
+    }
     renderActionCell(key, rowIndex: number, rowData, style) {
         const rowClass = 'grid-row-' + rowIndex;
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
         const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
         const actionOptions = getActionItemOptions(this.props);
-        const { onActionSelected, actionIconName, actionItems } = this.props.gridActions;
-        const onActionItemClick = (option, index) => {
-            if (onActionSelected) {
-                const action = actionItems[option.key];
-                onActionSelected(action.commandName, action.parameters, rowData);
-            }
-        };
-
+        const { actionIconName } = this.props.gridActions;
         return (
             <div
                 key={key}
@@ -299,7 +264,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                     icon={actionIconName}
                     dropdownType={DropdownType.actionDropdown}
                     displaySelection={false}
-                    onClick={onActionItemClick}
+                    onClick={this.onActionItemClick}
                     options={actionOptions}
                 />
             </div>
@@ -364,8 +329,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const columns = this.state.columnsToDisplay;
         const notLastIndex = columnIndex < (columns.length - 1);
         const column = columns[columnIndex];
-        const width = this.state.columnWidths[columnIndex];
-        const label = column.headerText;
         const dataKey = column.dataMember || column.valueMember;
         const cellData = rowData[dataKey];
         const rowClass = 'grid-row-' + rowIndex;
@@ -457,11 +420,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         let headerClass = classNames('grid-component-header', this.props.headerClassName);
         return (
             <div className={mainClass}>
-
-                <ScrollSync>
-                    {({ onScroll, scrollLeft }) => (
-                        <AutoSizer onResize={this.onGridResize}>
-                            {({ height, width }) => (
+                <AutoSizer onResize={this.onGridResize}>
+                    {({ height, width }) => (
+                        <ScrollSync>
+                            {({ onScroll, scrollLeft }) => (
                                 <div style={{ width, height }} >
                                     <GridHeader
                                         ref={this.setHeaderGridReference}
@@ -496,7 +458,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         rowHeight={this.props.rowHeight}
                                         className={classNames('grid-component',
                                             { 'no-scrollbar': this.props.columnSummaries })}
-                                        rowCount={this.getRowCount()}
+                                        rowCount={this.finalGridRows.length}
                                         columnCount={this.state.columnsToDisplay.length}
                                         {...this.state} // force update on any state change
                                         {...this.props} // force update on any prop change
@@ -515,9 +477,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                     }
                                 </div>
                             )}
-                        </AutoSizer>
+                        </ScrollSync>
                     )}
-                </ScrollSync>
+                </AutoSizer>
+
             </div>
         );
     }

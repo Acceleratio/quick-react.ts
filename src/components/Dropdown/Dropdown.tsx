@@ -16,7 +16,7 @@ export interface IDropdownState {
   isDisabled: boolean;
 }
 
-export class Dropdown extends React.Component<IDropdownProps, IDropdownState> {
+export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState> {
   public static defaultProps = {
     options: [],
     hasTitleBorder: false,

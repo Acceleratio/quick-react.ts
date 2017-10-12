@@ -38,7 +38,6 @@ export interface IQuickGridState {
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;
-    rows: Array<any>;
 }
 
 export interface GroupRow {
