@@ -8,11 +8,11 @@ import './QuickGrid.scss';
 export interface IGridFooterProps {
     columnWidths: Array<number>;
     columns: Array<GridColumn>;
-    columnsToDisplay: Array<GridColumn>;
     height: number;
     width: number;
     rowData: any;
     scrollLeft: any;
+    onScroll: any;
 }
 
 export interface IGridFooterState {
@@ -27,17 +27,19 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
         this.state = {
             columnWidths: props.columnWidths
         };
-        this.columnMinWidths = this.getColumnMinWidths(props.columnsToDisplay);
+        this.columnMinWidths = this.getColumnMinWidths(props.columns);
     }
 
     getColumnMinWidths(columns) {
         return columns.map((col) => { return col.minWidth || 20; });
     }
 
+    getColumnWidth = ({ index }) => this.props.columnWidths[index];
+
     componentWillReceiveProps(nextProps: IGridFooterProps) {
         if (!shallowCompareArrayEqual(nextProps.columnWidths, this.props.columnWidths)) {
             this.setState((prevState) => { return { ...prevState, columnWidths: nextProps.columnWidths }; });
-            this.columnMinWidths = this.getColumnMinWidths(nextProps.columnsToDisplay);
+            this.columnMinWidths = this.getColumnMinWidths(nextProps.columns);
         }
     }
 
@@ -48,7 +50,7 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
     setGridReference = (ref) => { this._footerGrid = ref; };
 
     columnSummaryCellRenderer = ({ columnIndex, key, rowIndex, style }): JSX.Element => {
-        const columns = this.props.columnsToDisplay;
+        const columns = this.props.columns;
         const notLastIndex = columnIndex < (columns.length - 1);
         const column = columns[columnIndex];
         const dataKey = column.dataMember || column.valueMember;
@@ -69,20 +71,20 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
 
     render() {
         return (
-            <div style={{ width: this.props.width }}>
                 <Grid
                     ref={this.setGridReference}
                     height={this.props.height}
                     width={this.props.width}
-                    rowHeight={this.props.height - 2}
+                    rowHeight={this.props.height - 20}
                     rowCount={1}
-                    columnCount={this.props.columnsToDisplay.length}
+                    columnCount={this.props.columns.length}
                     cellRenderer={this.columnSummaryCellRenderer}
-                    columnWidth={({ index }) => this.props.columnWidths[index]}
+                    columnWidth={this.getColumnWidth}
                     className="grid-column-footer"
                     scrollLeft={this.props.scrollLeft}
+                    onScroll={this.props.onScroll}
                     {...this.props}
                 />
-            </div>);
+        );
     }
 }

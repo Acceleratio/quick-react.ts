@@ -17,7 +17,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContextProvider, DragDropContext } from 'react-dnd';
 import { groupBy as arrayGroupBy } from '../../utilities/array';
 const createSelector = require('reselect').createSelector;
-import {GridFooter} from './QuickGridFooter';
+import { GridFooter } from './QuickGridFooter';
 import './QuickGrid.scss';
 
 const getActionItems = (props: IQuickGridProps) => props.gridActions.actionItems;
@@ -447,7 +447,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     gridFooterContainerHeight = () => {
-        return this.props.columnSummaries ? 30 : 0;
+        return this.props.columnSummaries ? 40 : 0;
     }
     setHeaderGridReference = (ref) => { this._headerGrid = ref; };
     setGridReference = (ref) => { this._grid = ref; };
@@ -494,7 +494,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         overscanRowCount={this.props.overscanRowCount}
                                         columnWidth={this.getColumnWidth}
                                         rowHeight={this.props.rowHeight}
-                                        className="grid-component"
+                                        className={classNames('grid-component',
+                                            { 'no-scrollbar': this.props.columnSummaries })}
                                         rowCount={this.getRowCount()}
                                         columnCount={this.state.columnsToDisplay.length}
                                         {...this.state} // force update on any state change
@@ -502,15 +503,14 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                     />
                                     {this.props.columnSummaries &&
                                         <GridFooter
-                                            columns={this.props.columns}
                                             height={this.gridFooterContainerHeight()}
                                             columnWidths={this.state.columnWidths}
                                             rowData={this.props.columnSummaries}
                                             width={width}
-                                            columnsToDisplay={this.state.columnsToDisplay}
+                                            columns={this.state.columnsToDisplay}
                                             scrollLeft={scrollLeft}
-                                            {...this.state}
-                                            {...this.props}
+                                            onScroll={onScroll}
+
                                         />
                                     }
                                 </div>

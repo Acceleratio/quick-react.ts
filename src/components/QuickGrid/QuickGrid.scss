@@ -100,8 +100,14 @@ $drag-handle-width: 5px;
             white-space: nowrap;
             text-overflow: ellipsis;
             margin-left: 5px;
+            margin-bottom: 20px;
+            
         }
     }
+}
+
+.grid-component.no-scrollbar {
+    overflow: hidden !important;
 }
 
 .grid-component-header {
