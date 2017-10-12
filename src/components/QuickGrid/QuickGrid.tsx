@@ -446,8 +446,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return 30 + (this.props.displayGroupContainer ? 62 : 0); // header height + Drag&Drop height+padding
     }
 
-    columnSummaryContainerHeight = () => {
-        return this.props.columnSummaries ? 40 : 0;
+    gridFooterContainerHeight = () => {
+        return this.props.columnSummaries ? 30 : 0;
     }
     setHeaderGridReference = (ref) => { this._headerGrid = ref; };
     setGridReference = (ref) => { this._grid = ref; };
@@ -486,7 +486,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
                                     <Grid
                                         ref={this.setGridReference}
-                                        height={height - this.groupByToolboxHeight() - this.columnSummaryContainerHeight()}
+                                        height={height - this.groupByToolboxHeight() - this.gridFooterContainerHeight()}
                                         width={width}
                                         onScroll={onScroll}
                                         scrollLeft={scrollLeft}
@@ -503,7 +503,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                     {this.props.columnSummaries &&
                                         <GridFooter
                                             columns={this.props.columns}
-                                            height={this.columnSummaryContainerHeight()}
+                                            height={this.gridFooterContainerHeight()}
                                             columnWidths={this.state.columnWidths}
                                             rowData={this.props.columnSummaries}
                                             width={width}

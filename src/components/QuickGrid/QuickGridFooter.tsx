@@ -55,7 +55,7 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
         const cellData = this.props.rowData[dataKey];
         const className = classNames(
             'grid-component-cell',
-            { 'border-column-cell': columnIndex < (this.props.columns.length - 1) }); // ovo je mozda problem
+            'grid-footer-cell');
         return (
             <div
                 key={key}

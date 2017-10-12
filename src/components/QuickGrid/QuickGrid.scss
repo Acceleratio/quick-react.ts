@@ -90,6 +90,18 @@ $drag-handle-width: 5px;
     margin-top: 25px;
     margin-left: 25px;
     margin-bottom: 5px;
+
+    .grid-column-footer {
+        .grid-footer-cell {
+            border-top: 2px solid $gray-light-color;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin-left: 5px;
+        }
+    }
 }
 
 .grid-component-header {

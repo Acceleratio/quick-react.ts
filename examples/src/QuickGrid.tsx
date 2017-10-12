@@ -27,11 +27,10 @@ const gridActions: QuickGridActions = {
 };
 
 const columnSummaries = {
-    Name: 'Prvi',
-    Color: 'Drugi',
-    Animal: 'Treci',
-    Mixed: 'Cetri',
-    Numbers: 'Pet'
+    Name: 'Craziest: Vinko',
+    Color: 'Best: Orange',
+    Animal: 'Fastest: Dog',
+    Numbers: 'Favorite: 7'
 };
 
 export class Index extends React.Component<any, any> {
@@ -70,7 +69,7 @@ export class Index extends React.Component<any, any> {
                             displayGroupContainer={true}
                             onGroupByChanged={this.groupByChanged}
                             gridActions={gridActions}
-                            // columnSummaries={columnSummaries}
+                            columnSummaries={columnSummaries}
                         />
                     </div>
                 </Resizable>
