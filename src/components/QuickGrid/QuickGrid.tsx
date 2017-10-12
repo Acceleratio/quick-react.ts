@@ -17,6 +17,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContextProvider, DragDropContext } from 'react-dnd';
 import { groupBy as arrayGroupBy } from '../../utilities/array';
 const createSelector = require('reselect').createSelector;
+import {GridFooter} from './QuickGridFooter';
 import './QuickGrid.scss';
 
 const getActionItems = (props: IQuickGridProps) => props.gridActions.actionItems;
@@ -444,6 +445,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     groupByToolboxHeight = () => {
         return 30 + (this.props.displayGroupContainer ? 62 : 0); // header height + Drag&Drop height+padding
     }
+
+    columnSummaryContainerHeight = () => {
+        return this.props.columnSummaries ? 40 : 0;
+    }
     setHeaderGridReference = (ref) => { this._headerGrid = ref; };
     setGridReference = (ref) => { this._grid = ref; };
 
@@ -481,7 +486,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
                                     <Grid
                                         ref={this.setGridReference}
-                                        height={height - this.groupByToolboxHeight()}
+                                        height={height - this.groupByToolboxHeight() - this.columnSummaryContainerHeight()}
                                         width={width}
                                         onScroll={onScroll}
                                         scrollLeft={scrollLeft}
@@ -495,6 +500,19 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         {...this.state} // force update on any state change
                                         {...this.props} // force update on any prop change
                                     />
+                                    {this.props.columnSummaries &&
+                                        <GridFooter
+                                            columns={this.props.columns}
+                                            height={this.columnSummaryContainerHeight()}
+                                            columnWidths={this.state.columnWidths}
+                                            rowData={this.props.columnSummaries}
+                                            width={width}
+                                            columnsToDisplay={this.state.columnsToDisplay}
+                                            scrollLeft={scrollLeft}
+                                            {...this.state}
+                                            {...this.props}
+                                        />
+                                    }
                                 </div>
                             )}
                         </AutoSizer>
