@@ -162,6 +162,12 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         // left margin is 25px
         return width - 25 - scrollbarSize();
     }
+
+    getGridHeight = (height: number) => {
+        return height - this.groupByToolboxHeight()
+            - this.gridFooterContainerHeight();
+    }
+
     onRowExpandToggle(name, shouldExpand) {
         this.setState((oldState) => {
             let collapsedRows = [...oldState.collapsedRows];
@@ -410,8 +416,30 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     gridFooterContainerHeight = () => {
-        return this.props.columnSummaries ? 40 : 0;
+        if (this.props.columnSummaries) {
+            return 40 + (this.verticalScrollbarExists()
+                ? scrollbarSize()
+                : 0);
+        } else {
+            return 0;
+        }
     }
+
+    sumColumnMinWidthCallback = (previousValue: number,
+        currentValue: GridColumn,
+        index: number,
+        columns: Array<GridColumn>) => {
+        return previousValue + currentValue.minWidth;
+    }
+
+    verticalScrollbarExists() {
+        const columnWidths = this.getColumnWidths(this.state.columnsToDisplay);
+        const gridWidth = this.getGridWidth();
+        return columnWidths.reduce((previous, current, index, columns) => {
+            return previous + current;
+        }, 0) >= gridWidth;
+    }
+
     setHeaderGridReference = (ref) => { this._headerGrid = ref; };
     setGridReference = (ref) => { this._grid = ref; };
 
@@ -448,7 +476,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
                                     <Grid
                                         ref={this.setGridReference}
-                                        height={height - this.groupByToolboxHeight() - this.gridFooterContainerHeight()}
+                                        height={this.getGridHeight(height)}
                                         width={width}
                                         onScroll={onScroll}
                                         scrollLeft={scrollLeft}
@@ -469,6 +497,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                             columnWidths={this.state.columnWidths}
                                             rowData={this.props.columnSummaries}
                                             width={width}
+                                            rowHeight={this.gridFooterContainerHeight() - 2}
                                             columns={this.state.columnsToDisplay}
                                             scrollLeft={scrollLeft}
                                             onScroll={onScroll}

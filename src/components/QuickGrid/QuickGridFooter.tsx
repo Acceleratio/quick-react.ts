@@ -9,6 +9,7 @@ export interface IGridFooterProps {
     columnWidths: Array<number>;
     columns: Array<GridColumn>;
     height: number;
+    rowHeight: number;
     width: number;
     rowData: any;
     scrollLeft: any;
@@ -75,7 +76,7 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
                     ref={this.setGridReference}
                     height={this.props.height}
                     width={this.props.width}
-                    rowHeight={this.props.height - 20}
+                    rowHeight={this.props.rowHeight}
                     rowCount={1}
                     columnCount={this.props.columns.length}
                     cellRenderer={this.columnSummaryCellRenderer}
