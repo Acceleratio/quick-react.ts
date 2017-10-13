@@ -94,6 +94,7 @@ $drag-handle-width: 5px;
     .grid-column-footer {
         overflow-y: hidden !important;
         .grid-footer-cell {
+            box-sizing: border-box;
             overflow-y: hidden !important;
             border-top: 2px solid $gray-light-color;
             padding-top: 10px;
