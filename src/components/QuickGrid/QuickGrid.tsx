@@ -271,7 +271,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
         const actionOptions = getActionItemOptions(this.props);
         const { actionIconName } = this.props.gridActions;
-        const title = actionsTooltip;
+        const title = this.props.tooltipsEnabled ? actionsTooltip : null;
         return (
             <div
                 key={key}
@@ -279,7 +279,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 className={'grid-component-cell'}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
-                {...this.props.tooltipsEnabled ? { title } : {} }
+                title={title}
             >
                 <Dropdown
                     dropdownKey={rowIndex}
@@ -382,6 +382,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 );
             }
         };
+        const title = this.props.tooltipsEnabled ? cellData : null; 
         return (
             <div
                 key={key}
@@ -391,7 +392,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
-                {...this.props.tooltipsEnabled ? { title: cellData } : {} }
+                title={title}
             >
                 {columnElement()}
             </div>

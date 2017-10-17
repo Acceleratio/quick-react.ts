@@ -47,12 +47,13 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
         const className = classNames(
             'grid-component-cell',
             'grid-footer-cell');
+        const title = this.props.tooltipsEnabled ? cellData : null;
         return (
             <div
                 key={key}
                 style={style}
                 className={className}
-                {...this.props.tooltipsEnabled ? { title: cellData } : {}}
+                title={title}
             >
                 {cellData}
             </div>

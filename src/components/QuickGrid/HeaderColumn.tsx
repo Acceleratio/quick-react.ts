@@ -37,6 +37,7 @@ class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
     render() {
         const { className, text, showSortIndicator, sortDirection, onClick, onKeyDown, tooltipsEnabled } = this.props;
         const sortIcon = sortDirection === SortDirection.Ascending ? 'icon-Arrow_up' : 'icon-arrow_down';
+        const title = tooltipsEnabled ? text : null;
         return (
             this.props.connectDragSource(this.props.connectDropTarget(
                 <div
@@ -48,7 +49,7 @@ class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
                     <div className="header-text">
                         <span
                             key="label"
-                            {...tooltipsEnabled ? {title: text} : {} } 
+                            title={title}
                         >
                             {text}
                         </span>
