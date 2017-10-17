@@ -18,6 +18,7 @@ export interface IGridHeaderProps {
     hasActionColumn: boolean;
     onCollapseAll: (event) => void;
     onExpandAll: (event) => void;
+    tooltipsEnabled?: boolean;
 }
 
 export interface IGridHeaderState {

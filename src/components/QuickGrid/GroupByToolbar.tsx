@@ -16,6 +16,7 @@ export interface IGroupByProps {
     onSort: (sortBy: string, sortDirection: SortDirection) => void;
     onCollapseAll: (event) => void;
     onExpandAll: (event) => void;
+    tooltipsEnabled?: boolean;
 
     // Drag&Drop props
     canDrop?: any;
@@ -77,6 +78,7 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
                             moveGroupByColumn={this.groupOrderChange}
                             itemArrayIndex={index}
                             removeGroupColumn={this.props.onGroupByRemoved}
+                            tooltipsEnabled={this.props.tooltipsEnabled}
                         />
                     </span>
                     <Icon iconName="icon-delete" className="icon-remove-group" onClick={removeGroup} />

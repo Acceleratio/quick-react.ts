@@ -70,6 +70,8 @@ export class Index extends React.Component<any, any> {
                             onGroupByChanged={this.groupByChanged}
                             gridActions={gridActions}
                             columnSummaries={columnSummaries}
+                            actionsTooltip="Act on these."
+                            tooltipsEnabled={true}
                         />
                     </div>
                 </Resizable>

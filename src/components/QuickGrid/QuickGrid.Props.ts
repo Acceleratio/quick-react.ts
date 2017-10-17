@@ -28,6 +28,8 @@ export interface IQuickGridProps {
     onGroupBySort?: (sortBy: string, sortDirection: SortDirection) => void;
     gridActions?: QuickGridActions;
     columnSummaries?: any;
+    actionsTooltip?: string;
+    tooltipsEnabled?: boolean;
 }
 
 export interface IQuickGridState {

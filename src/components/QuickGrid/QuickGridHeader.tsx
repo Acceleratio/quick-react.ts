@@ -40,7 +40,7 @@ export class GridHeader extends React.PureComponent<IGridHeaderProps, IGridHeade
 
     render() {
         const headerClass = classNames('grid-header', this.props.className);
-        const { allColumns, headerColumns, width, scrollLeft } = this.props;
+        const { allColumns, headerColumns, width, scrollLeft, tooltipsEnabled } = this.props;
         return (
             <div style={{ width }}>
                 {
@@ -53,6 +53,7 @@ export class GridHeader extends React.PureComponent<IGridHeaderProps, IGridHeade
                         onSort={this.props.onGroupBySort}
                         onCollapseAll={this.props.onCollapseAll}
                         onExpandAll={this.props.onExpandAll}
+                        tooltipsEnabled={tooltipsEnabled}
                     />
                 }
                 <Grid
@@ -166,6 +167,7 @@ export class GridHeader extends React.PureComponent<IGridHeaderProps, IGridHeade
                 isGroupable={column.isGroupable}
                 onClick={onClick}
                 onKeyDown={onKeyDown}
+                tooltipsEnabled={this.props.tooltipsEnabled}
             />
         );
     }

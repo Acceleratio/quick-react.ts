@@ -20,6 +20,7 @@ export interface IHeaderColumnProps {
     moveGroupByColumn?: (draggedColumn, hoverColumn) => void;
     itemArrayIndex?: number;
     removeGroupColumn?: (columnName) => void;
+    tooltipsEnabled?: boolean;
 
     // Drag&Drop props
     connectDragSource?: any;
@@ -28,9 +29,13 @@ export interface IHeaderColumnProps {
 }
 
 class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
+    public static defaultProps = {
+        tooltipsEnabled: true
+    };
+
     DragElement = <div style={{ height: 50, width: 30 }} > <span> Drag </span> </div>;
     render() {
-        const { className, text, showSortIndicator, sortDirection, onClick, onKeyDown } = this.props;
+        const { className, text, showSortIndicator, sortDirection, onClick, onKeyDown, tooltipsEnabled } = this.props;
         const sortIcon = sortDirection === SortDirection.Ascending ? 'icon-Arrow_up' : 'icon-arrow_down';
         return (
             this.props.connectDragSource(this.props.connectDropTarget(
@@ -43,7 +48,7 @@ class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
                     <div className="header-text">
                         <span
                             key="label"
-                            title={text}
+                            {...tooltipsEnabled ? {title: text} : {} } 
                         >
                             {text}
                         </span>
