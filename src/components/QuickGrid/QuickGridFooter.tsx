@@ -17,32 +17,15 @@ export interface IGridFooterProps {
 }
 
 export interface IGridFooterState {
-    columnWidths: Array<number>;
 }
 
 export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFooterState> {
     private _footerGrid: any;
-    private columnMinWidths: Array<number>;
     constructor(props: IGridFooterProps) {
         super(props);
-        this.state = {
-            columnWidths: props.columnWidths
-        };
-        this.columnMinWidths = this.getColumnMinWidths(props.columns);
-    }
-
-    getColumnMinWidths(columns) {
-        return columns.map((col) => { return col.minWidth || 20; });
     }
 
     getColumnWidth = ({ index }) => this.props.columnWidths[index];
-
-    componentWillReceiveProps(nextProps: IGridFooterProps) {
-        if (!shallowCompareArrayEqual(nextProps.columnWidths, this.props.columnWidths)) {
-            this.setState((prevState) => { return { ...prevState, columnWidths: nextProps.columnWidths }; });
-            this.columnMinWidths = this.getColumnMinWidths(nextProps.columns);
-        }
-    }
 
     componentDidUpdate(prevProps, prevState) {
         this._footerGrid.recomputeGridSize();
@@ -52,7 +35,6 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
 
     columnSummaryCellRenderer = ({ columnIndex, key, rowIndex, style }): JSX.Element => {
         const columns = this.props.columns;
-        const notLastIndex = columnIndex < (columns.length - 1);
         const column = columns[columnIndex];
         const dataKey = column.dataMember || column.valueMember;
         const cellData = this.props.rowData[dataKey];

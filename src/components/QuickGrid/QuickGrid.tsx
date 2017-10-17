@@ -426,7 +426,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
     gridFooterContainerHeight = () => {
         if (this.props.columnSummaries) {
-            return 40 + (this.verticalScrollbarExists()
+            return 40 + (this.horizontalScrollbarExists()
                 ? scrollbarSize()
                 : 0);
         } else {
@@ -434,7 +434,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    verticalScrollbarExists() {
+    horizontalScrollbarExists() {
         const columnWidths = this.state.columnWidths;
         const viewportWidth = this.getViewportWidth();
         const totalColumnsWidth = columnWidths.reduce((previous, current) => {
