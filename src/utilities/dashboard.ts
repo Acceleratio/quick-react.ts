@@ -131,6 +131,13 @@ function groupStatus(groups: Array<IGroup>): Array<IGroup> {
         type: GroupTypeEnum.Disabled,
         servers: new Array<IServer>()
     };
+    let countersDisabledGroupCheck: { [id: string]: IServer; } = {};
+    let countersDisabledGroup: IGroup = {
+        id: 'counters-disabled-group',
+        name: 'Counters Disabled',
+        type: GroupTypeEnum.CountersDisabled,
+        servers: new Array<IServer>()
+    };
 
     for (let i = 0; i < groups.length; i++) {
         let group = groups[i];
@@ -152,8 +159,11 @@ function groupStatus(groups: Array<IGroup>): Array<IGroup> {
                 case ServerStatus.Disabled:
                     doGroupCheck(disabledGroup, server, disabledGroupCheck);
                     break;
+                case ServerStatus.CountersDisabled:
+                    doGroupCheck(countersDisabledGroup, server, countersDisabledGroupCheck);
+                    break;
             }
         }
     }
-    return [criticalGroup, warningGroup, healthyGroup, offlineGroup, disabledGroup];
+    return [criticalGroup, warningGroup, healthyGroup, offlineGroup, disabledGroup, countersDisabledGroup];
 }

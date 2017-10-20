@@ -33,6 +33,7 @@ export class Index extends React.Component<any, any> {
                     }
                     if (Math.random() < 0.05) { status = ServerStatus.Offline; }
                     if (Math.random() < 0.05) { status = ServerStatus.Disabled; }
+                    if (Math.random() < 0.05) { status = ServerStatus.CountersDisabled; }
                     return {
                         id: server.id,
                         status: status,
