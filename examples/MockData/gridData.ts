@@ -20,7 +20,8 @@ export const gridColumns1: Array<GridColumn> = [
     {
         valueMember: 'Name',
         headerText: 'Name',
-        width: 100
+        width: 100,
+        headerTooltip: 'This is names column.'
     }, {
         dataType: DataTypeEnum.String,
         valueMember: 'Color',

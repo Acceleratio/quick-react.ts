@@ -79,6 +79,7 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
                             itemArrayIndex={index}
                             removeGroupColumn={this.props.onGroupByRemoved}
                             tooltipsEnabled={this.props.tooltipsEnabled}
+                            tooltip={columnDefinition.headerTooltip}
                         />
                     </span>
                     <Icon iconName="icon-delete" className="icon-remove-group" onClick={removeGroup} />

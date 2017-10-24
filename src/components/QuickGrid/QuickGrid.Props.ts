@@ -71,6 +71,7 @@ export interface GridColumn {
     cellFormatter?: (cellData) => any;
     cellClassName?: string;
     headerClassName?: string;
+    headerTooltip?: string;
 }
 
 export const lowercasedColumnPrefix = 'lowercase_';

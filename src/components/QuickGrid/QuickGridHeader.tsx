@@ -143,7 +143,7 @@ export class GridHeader extends React.PureComponent<IGridHeaderProps, IGridHeade
     }
 
     createHeaderColumn(column: GridColumn) {
-        const { headerText, isSortable, headerClassName, valueMember } = column;
+        const { headerText, isSortable, headerClassName, valueMember, headerTooltip } = column;
         const columnClassName = classNames('header-column-content', headerClassName, { 'header-column-sortable': isSortable !== false });
         const showSortIndicator = this.props.sortColumn === valueMember;
         const newSortDirection = this.props.sortColumn !== valueMember || this.props.sortDirection === SortDirection.Descending ? SortDirection.Ascending : SortDirection.Descending;
@@ -168,6 +168,7 @@ export class GridHeader extends React.PureComponent<IGridHeaderProps, IGridHeade
                 onClick={onClick}
                 onKeyDown={onKeyDown}
                 tooltipsEnabled={this.props.tooltipsEnabled}
+                tooltip={headerTooltip}
             />
         );
     }
