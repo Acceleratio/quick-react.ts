@@ -66,7 +66,7 @@ export class Index extends React.Component<any, any> {
                             id: 2
                         }
                     ]}
-                    roles={[{ display: 'WPF', iconName: 'icon-add' }, { display: 'Search', iconName: 'icon-alert' }]}
+                    roles={[{ display: 'WPF', iconName: 'icon-add', tooltip: 'WPF Role' }, { display: 'Search', iconName: 'icon-alert' }]}
                     countersData={[
                         { title: 'CPU', currentUsage: '43', usageUnit: '%', hoverText: [''], status: ServerStatus.OK },
                         { title: 'Memory', currentUsage: '7', usageUnit: 'GB', hoverText: ['7GB/10GB (70%)'], status: ServerStatus.Warning },

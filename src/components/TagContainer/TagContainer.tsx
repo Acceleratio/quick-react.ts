@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ITagContainerProps } from './TagContainer.Props';
+import { ITagContainerProps, ITag } from './TagContainer.Props';
 import { Icon } from '../Icon/Icon';
 import { autobind } from '../../utilities/autobind';
 import { Label } from '../Label/Label';
@@ -33,7 +33,11 @@ export class TagContainer extends React.Component<ITagContainerProps, any> {
                     tags.map((tag, tagIndex) => (
                         <div key={tag.display} className="tag">
                             {tag.iconName && <Icon iconName={tag.iconName}></Icon>}
-                            <span style={{ cursor: 'pointer' }} className={'tag-text'} title={tag.display}>
+                            <span 
+                                style={{ cursor: 'pointer' }} 
+                                className={'tag-text'} 
+                                title={getTooltipFromTag(tag)}
+                            >
                                 {tag.display}
                             </span>
                         </div>
@@ -44,7 +48,11 @@ export class TagContainer extends React.Component<ITagContainerProps, any> {
                     tags.map((i) => { return i; }).slice(0, 3).map((tag, tagIndex) => (
                         <div key={tag.display} className="tag">
                             {tag.iconName && <Icon iconName={tag.iconName}></Icon>}
-                            <span style={{ cursor: 'pointer' }} className={'tag-text'} title={tag.display}>
+                            <span 
+                                style={{ cursor: 'pointer' }} 
+                                className={'tag-text'} 
+                                title={getTooltipFromTag(tag)}
+                            >
                                 {tag.display}
                             </span>
                         </div>
@@ -57,4 +65,8 @@ export class TagContainer extends React.Component<ITagContainerProps, any> {
             </div>
         );
     }
+}
+
+function getTooltipFromTag(tag: ITag): string {
+    return tag.tooltip ? tag.tooltip : tag.display;
 }
