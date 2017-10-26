@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ITagContainerProps } from './TagContainer.Props';
+import { ITagContainerProps, ITag } from './TagContainer.Props';
 import { Icon } from '../Icon/Icon';
 import { autobind } from '../../utilities/autobind';
 import { Label } from '../Label/Label';
@@ -36,7 +36,7 @@ export class TagContainer extends React.Component<ITagContainerProps, any> {
                             <span 
                                 style={{ cursor: 'pointer' }} 
                                 className={'tag-text'} 
-                                title={tag.tooltip ? tag.tooltip : tag.display}
+                                title={getTooltipFromTag(tag)}
                             >
                                 {tag.display}
                             </span>
@@ -51,7 +51,7 @@ export class TagContainer extends React.Component<ITagContainerProps, any> {
                             <span 
                                 style={{ cursor: 'pointer' }} 
                                 className={'tag-text'} 
-                                title={tag.tooltip ? tag.tooltip : tag.display}
+                                title={getTooltipFromTag(tag)}
                             >
                                 {tag.display}
                             </span>
@@ -65,4 +65,8 @@ export class TagContainer extends React.Component<ITagContainerProps, any> {
             </div>
         );
     }
+}
+
+function getTooltipFromTag(tag: ITag): string {
+    return tag.tooltip ? tag.tooltip : tag.display;
 }
