@@ -51,6 +51,7 @@ export * from './components/ServerGridDashboard';
 export * from './components/TreeFilter';
 export * from './components/Wizard';
 export * from './components/MessageBox';
+export * from './components/Scheduler';
 export * from './utilities/autobind';
 export * from './utilities/KeyCodes';
 export * from './utilities/rtl';

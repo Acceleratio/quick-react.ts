@@ -47,7 +47,8 @@ module.exports = {
         QuickGrid: "./examples/src/QuickGrid.tsx",
         Tooltip: "./examples/src/Tooltip.tsx",
         Wizard: "./examples/src/Wizard.tsx",
-        MessageBox: "./examples/src/MessageBox.tsx"
+        MessageBox: "./examples/src/MessageBox.tsx",
+        Scheduler: "./examples/src/Scheduler.tsx",
     },
     output: {
         path: path.join(__dirname, '/dist'),
