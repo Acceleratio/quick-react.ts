@@ -12,6 +12,7 @@ export interface IDateTimeDropdownPickerProps {
     selectedDate: Date;
     onTimeSelectionChanged?: (selectedDateTime: Date) => void;
     className?: string;
+    includeTime?: boolean;
 }
 
 export interface IDateTimeDropDownPickerState {
@@ -52,6 +53,7 @@ export class DateTimeDropdownPicker extends React.PureComponent<IDateTimeDropdow
                         selectedDateTime={selectedDateCached}
                         is24HourFormat={false}
                         onTimeSelectionChanged={this._dateTimeChanged}
+                        includeTime={this.props.includeTime}
                     />
                     <div className="dropdown-buttons-container">
                         <Button className={'button-textual'} onClick={this._cancelClicked}>Close</Button>

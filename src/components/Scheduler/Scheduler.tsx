@@ -4,6 +4,10 @@ import { Dropdown } from '../Dropdown/Dropdown';
 import { DateTimeDropdownPicker } from '../DateTimeDropdownPicker/DateTimeDropdownPicker';
 import { HourlyScheduler } from './InnerSchedulers/HourlyScheduler';
 import * as classNames from 'classnames';
+import { DropdownType } from '../Dropdown/Dropdown.Props';
+import { DailyScheduler } from './InnerSchedulers/DailyScheduler';
+import { WeeklyScheduler } from './InnerSchedulers/WeeklyScheduler';
+import { MonthlyScheduler } from './InnerSchedulers/MonthlyScheduler';
 
 export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
     public static defaultProps = {
@@ -32,6 +36,13 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
             case ScheduleTypeEnum.OneTime:
                 component = null;
                 break;
+            case ScheduleTypeEnum.Minutely:
+                component = (
+                    <HourlyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged}
+                        {...schedule} />);
+                break;
             case ScheduleTypeEnum.Hourly:
                 component = (
                     <HourlyScheduler
@@ -39,9 +50,23 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
                         onScheduleChanged={onScheduleChanged}
                         {...schedule} />);
                 break;
-                case ScheduleTypeEnum.Minutely:
+            case ScheduleTypeEnum.Daily:
                 component = (
-                    <HourlyScheduler
+                    <DailyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged}
+                        {...schedule} />);
+                break;
+            case ScheduleTypeEnum.Weekly:
+                component = (
+                    <WeeklyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged}
+                        {...schedule} />);
+                break;
+            case ScheduleTypeEnum.Monthly:
+                component = (
+                    <MonthlyScheduler
                         schedule={schedule}
                         onScheduleChanged={onScheduleChanged}
                         {...schedule} />);
@@ -57,6 +82,7 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
                     onChanged={scheduleTypeChanged}
                     label={dropdownLabel}
                     selectedKey={selectedScheduleType}
+                    dropdownType={DropdownType.selectionDropdown}
 
                 />
                 <div>Start time:</div>
@@ -64,6 +90,7 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
                     selectedDate={schedule.startTime}
                     onTimeSelectionChanged={this.startDateTimeChanged}
                     className="date-time-picker-dropdown"
+                    includeTime={true}
                 />
                 {component}
             </div>

@@ -6,6 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { Scheduler } from './../../src/components/Scheduler/Scheduler';
+import { DaysOfWeekEnum } from '../../src/index';
 
 export class Index extends React.Component<any, any> {
     constructor(props) {
@@ -13,6 +14,7 @@ export class Index extends React.Component<any, any> {
         this.state = {
             schedule: {
                 recurrencePeriod: 2,
+                daysOfWeek: DaysOfWeekEnum.EveryDay,
                 startTime: new Date()
             },
             selectedScheduleType: 7
@@ -36,7 +38,7 @@ export class Index extends React.Component<any, any> {
     onScheduleChanged = (schedule) => {
         this.setState({
             ...this.state,
-            schedule: {...schedule}
+            schedule: schedule
         });
     }
 
