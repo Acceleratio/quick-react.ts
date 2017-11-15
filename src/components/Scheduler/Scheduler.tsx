@@ -8,6 +8,8 @@ import { DropdownType } from '../Dropdown/Dropdown.Props';
 import { DailyScheduler } from './InnerSchedulers/DailyScheduler';
 import { WeeklyScheduler } from './InnerSchedulers/WeeklyScheduler';
 import { MonthlyScheduler } from './InnerSchedulers/MonthlyScheduler';
+import { MinutelyScheduler } from './InnerSchedulers/MinutelyScheduler';
+import './Scheduler.scss';
 
 export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
     public static defaultProps = {
@@ -38,7 +40,7 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
                 break;
             case ScheduleTypeEnum.Minutely:
                 component = (
-                    <HourlyScheduler
+                    <MinutelyScheduler
                         schedule={schedule}
                         onScheduleChanged={onScheduleChanged}
                         {...schedule} />);
@@ -78,6 +80,7 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
         return (
             <div className={classNames('scheduler', className)}>
                 <Dropdown
+                    hasTitleBorder={true}
                     options={dropdownOptions}
                     onChanged={scheduleTypeChanged}
                     label={dropdownLabel}

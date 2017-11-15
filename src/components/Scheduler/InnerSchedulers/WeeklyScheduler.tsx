@@ -13,14 +13,16 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
         let { recurrencePeriod, daysOfWeek } = this.props.schedule as WeeklySchedule;
 
         return (
-            <div>
+            <div className="weekly-scheduler">
                 <TextField
                     type="number"
+                    min="1"
                     value={recurrencePeriod.toString()}
-                    onChange={this.onRecurrencePeriodChanged}
+                    onChanged={this.onRecurrencePeriodChanged}
+                    label="Recurrence period: "
+                    
                 />
                 <CheckboxList
-                    title={'Checkbox List'}
                     onCheckboxChanged={this.onCheckboxListChange}
                     items={[
                         { id: DaysOfWeekEnum.Sunday.toString(), text: 'Sunday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Sunday)},
@@ -36,8 +38,8 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
         );
     }
 
-    onRecurrencePeriodChanged = (e) => {
-        const value = parseInt(e.target.value, 10);
+    onRecurrencePeriodChanged = (input) => {
+        const value = parseInt(input, 10);
         const newSchedule = {
             ...this.props.schedule,
             recurrencePeriod: value
@@ -45,10 +47,10 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
         this.props.onScheduleChanged(newSchedule);
     }
 
-    onCheckboxListChange = (e, index: string, checked) => {
+    onCheckboxListChange = (e, index: string, checked: boolean) => {
         const schedule = this.props.schedule as WeeklySchedule;
-        const flipday = parseInt(index, 10);
-        const newDaysOfWeek = schedule.daysOfWeek ^ flipday;
+        const dayToFlip = parseInt(index, 10);
+        const newDaysOfWeek = schedule.daysOfWeek ^ dayToFlip;
         const newSchedule = {
             ...this.props.schedule,
             daysOfWeek: newDaysOfWeek
@@ -56,4 +58,3 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
         this.props.onScheduleChanged(newSchedule);
     }
 }
-

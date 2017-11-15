@@ -1,0 +1,31 @@
+.scheduler {
+    label.choiceField-field {
+        padding-bottom: 10px;
+    }
+
+    .choiceFieldGroup {
+        .choice-item-text {
+            display: flex;
+            align-items: center;
+
+            .dropdown {
+                margin-bottom: 0px;
+            }
+
+            > div, span {
+                padding-right: 10px;
+                margin-bottom: 0px;
+            }
+        }
+    }  
+
+    > .weekly-scheduler {
+        .checkboxlist {
+            display: flex;
+
+            > div {
+                padding-right: 10px;
+            }
+        }
+    }
+}

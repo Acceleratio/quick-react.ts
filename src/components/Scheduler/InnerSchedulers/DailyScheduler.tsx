@@ -9,31 +9,45 @@ export class DailyScheduler extends React.PureComponent<IInnerSchedulerProps, an
 
     render() {
         let { recurrencePeriod, daysOfWeek } = this.props.schedule as DailySchedule;
+        const choiceOptionText: any = (
+            <div className="choice-item-text">
+                <span>Every</span>
+                <TextField
+                    type="number"
+                    min="1"
+                    value={recurrencePeriod.toString()}
+                    onClick={this.onRecurrencePeriodChanged}
+                    onKeyUp={this.onRecurrencePeriodChanged}
+                />
+                <span>day(s)</span>
+            </div>
+        );
 
         return (
-            <div>
+            <div className="daily-scheduler">
                 <ChoiceGroup
                     options={[
-                        { key: DailySheduleOptionEnum.EveryAmountOfDays.toString(), text: 'Every', checked: daysOfWeek === DaysOfWeekEnum.EveryDay },
-                        { key: DailySheduleOptionEnum.EveryWeekday.toString(), text: 'Every weekday', checked: daysOfWeek === DaysOfWeekEnum.WorkDays }
+                        {
+                            key: DailySheduleOptionEnum.EveryAmountOfDays.toString(),
+                            text: choiceOptionText,
+                            checked: daysOfWeek === DaysOfWeekEnum.EveryDay
+                        },
+                        {
+                            key: DailySheduleOptionEnum.EveryWeekday.toString(),
+                            text: 'Every weekday',
+                            checked: daysOfWeek === DaysOfWeekEnum.WorkDays
+                        }
                     ]}
                     onChanged={this.onChoiceGroupOptionChanged}
 
                 />
-                <div>
-                    <TextField
-                        type="number"
-                        value={recurrencePeriod.toString()}
-                        onClick={this.onRecurrencePeriodChanged}
-                        onKeyUp={this.onRecurrencePeriodChanged}
-                    />
-                </div>
+
             </div>
         );
     }
 
-    onRecurrencePeriodChanged = (e) => {
-        const value = parseInt(e.target.value, 10);
+    onRecurrencePeriodChanged = (input) => {
+        const value = parseInt(input, 10);
         const newSchedule = {
             ...this.props.schedule,
             recurrencePeriod: value,
@@ -58,7 +72,6 @@ export class DailyScheduler extends React.PureComponent<IInnerSchedulerProps, an
                 recurrencePeriod: 1
             };
         }
-
         this.props.onScheduleChanged(newSchedule);
     }
 }

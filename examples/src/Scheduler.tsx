@@ -15,9 +15,13 @@ export class Index extends React.Component<any, any> {
             schedule: {
                 recurrencePeriod: 2,
                 daysOfWeek: DaysOfWeekEnum.EveryDay,
-                startTime: new Date()
+                startTime: new Date(),
+                sendOnSpecificDays: true,
+                sendOnSpecificWeekDays: false,
+                daysOfMonth: 1,
+                weeksOfMonth: 1
             },
-            selectedScheduleType: 7
+            selectedScheduleType: 7            
         };
     }
     public render() {
@@ -49,6 +53,5 @@ export class Index extends React.Component<any, any> {
         });
     }
 }
-
 
 ReactDOM.render(<Index />, document.getElementById('root'));
