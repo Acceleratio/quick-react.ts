@@ -19,6 +19,15 @@ $choiceField-transition-timing: cubic-bezier(.4, 0, .23, 1);
     opacity: 0;
   }
 
+  .contentBelow {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    &.is-unchecked {
+      opacity: 0.5;
+      pointer-events:none;
+    }
+  }
+
   .choiceField-field {
     display: flex;
     align-items: center;

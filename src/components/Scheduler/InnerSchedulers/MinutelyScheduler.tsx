@@ -10,14 +10,15 @@ export class MinutelyScheduler extends React.PureComponent<IInnerSchedulerProps,
         let { recurrencePeriod } = this.props.schedule as MinutelySchedule;
 
         return (
-            <div className="minutely-scheduler">
+            <div className="minutely-scheduler textField-container">
+                <span> Every </span>
                 <TextField
                     type="number"
                     min="1"
                     value={recurrencePeriod.toString()}
                     onChanged={this.onRecurrencePeriodChanged}
-                    label="Recurrence period: "
                 />
+                <span> minutes </span>
             </div>
         );
     }

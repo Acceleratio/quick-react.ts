@@ -14,18 +14,20 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
 
         return (
             <div className="weekly-scheduler">
-                <TextField
-                    type="number"
-                    min="1"
-                    value={recurrencePeriod.toString()}
-                    onChanged={this.onRecurrencePeriodChanged}
-                    label="Recurrence period: "
-                    
-                />
+                <div className="textField-container">
+                    <span> Recur every </span>
+                    <TextField
+                        type="number"
+                        min="1"
+                        value={recurrencePeriod.toString()}
+                        onChanged={this.onRecurrencePeriodChanged}
+                    />
+                    <span> minutes on: </span>
+                </div>
                 <CheckboxList
                     onCheckboxChanged={this.onCheckboxListChange}
                     items={[
-                        { id: DaysOfWeekEnum.Sunday.toString(), text: 'Sunday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Sunday)},
+                        { id: DaysOfWeekEnum.Sunday.toString(), text: 'Sunday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Sunday) },
                         { id: DaysOfWeekEnum.Monday.toString(), text: 'Monday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Monday) },
                         { id: DaysOfWeekEnum.Tuesday.toString(), text: 'Tuesday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Tuesday) },
                         { id: DaysOfWeekEnum.Wednesday.toString(), text: 'Wednesday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Wednesday) },

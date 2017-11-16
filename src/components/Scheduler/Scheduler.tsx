@@ -79,22 +79,25 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
 
         return (
             <div className={classNames('scheduler', className)}>
-                <Dropdown
-                    hasTitleBorder={true}
-                    options={dropdownOptions}
-                    onChanged={scheduleTypeChanged}
-                    label={dropdownLabel}
-                    selectedKey={selectedScheduleType}
-                    dropdownType={DropdownType.selectionDropdown}
-
-                />
-                <div>Start time:</div>
-                <DateTimeDropdownPicker
-                    selectedDate={schedule.startTime}
-                    onTimeSelectionChanged={this.startDateTimeChanged}
-                    className="date-time-picker-dropdown"
-                    includeTime={true}
-                />
+                <div className="dropdown-container">
+                    <span>{dropdownLabel}</span>
+                    <Dropdown
+                        hasTitleBorder={true}
+                        options={dropdownOptions}
+                        onChanged={scheduleTypeChanged}
+                        selectedKey={selectedScheduleType}
+                        dropdownType={DropdownType.selectionDropdown}
+                    />
+                </div>
+                <div className="dropdown-container">
+                    <span>Start time:</span>
+                    <DateTimeDropdownPicker
+                        selectedDate={schedule.startTime}
+                        onTimeSelectionChanged={this.startDateTimeChanged}
+                        className="date-time-picker-dropdown"
+                        includeTime={true}
+                    />
+                </div>
                 {component}
             </div>
         );

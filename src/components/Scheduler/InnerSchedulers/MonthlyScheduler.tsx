@@ -5,7 +5,7 @@ import { IInnerSchedulerProps } from './InnerScheduler.Props';
 import { TextField } from '../../TextField/TextField';
 import { MonthlySchedule, DaysOfWeekEnum, WeeksOfMonthEnum, DayOfMonthEnum } from '../Scheduler.Props';
 import { ChoiceGroup } from '../../ChoiceGroup/ChoiceGroup';
-import { DropdownType } from '../../Dropdown/Dropdown.Props';
+import { DropdownType, IDropdownOption } from '../../Dropdown/Dropdown.Props';
 import { Dropdown } from '../../Dropdown/Dropdown';
 
 export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, any> {
@@ -93,13 +93,15 @@ export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, 
                     options={[
                         {
                             key: MonthlySheduleOptionEnum.OnDayOfMonth,
-                            text: dayOfMonthChoiceText,
-                            checked: sendOnSpecificDays
+                            text: 'First option',
+                            checked: sendOnSpecificDays,
+                            contentBelow: dayOfMonthChoiceText
                         },
                         {
                             key: MonthlySheduleOptionEnum.OnDayOfWeek,
-                            text: dayOfWeekChoiceText,
-                            checked: sendOnSpecificWeekDays
+                            text: 'Second option',
+                            checked: sendOnSpecificWeekDays,
+                            contentBelow: dayOfWeekChoiceText
                         }
                     ]}
                     onChanged={this.onChoiceGroupOptionChanged}
@@ -168,7 +170,7 @@ export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, 
         { key: DayOfMonthEnum.Day6, text: '6' },
         { key: DayOfMonthEnum.Day7, text: '7' },
         { key: DayOfMonthEnum.Day8, text: '8' },
-        { key: DayOfMonthEnum.Day8, text: '9' },
+        { key: DayOfMonthEnum.Day9, text: '9' },
         { key: DayOfMonthEnum.Day10, text: '10' },
         { key: DayOfMonthEnum.Day11, text: '11' },
         { key: DayOfMonthEnum.Day12, text: '12' },

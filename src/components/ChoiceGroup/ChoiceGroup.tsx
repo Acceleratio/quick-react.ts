@@ -84,6 +84,13 @@ export class ChoiceGroup extends React.Component<IChoiceGroupProps, IChoiceGroup
                                 onBlur={this._onBlur.bind(this, option)}
                             />
                             {this._renderField(option)}
+                            {option.contentBelow &&
+                                <div className={classNames('contentBelow',
+                                    { 'is-unchecked': option.key !== keyChecked })}
+                                >
+                                    {option.contentBelow}
+                                </div>
+                            }
                         </div>
                     ))}
                 </div>

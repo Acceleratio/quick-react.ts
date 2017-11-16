@@ -1,20 +1,37 @@
 .scheduler {
-    label.choiceField-field {
-        padding-bottom: 10px;
+
+    div.dropdown-container, div.textField-container {
+        display: flex;
+        align-items: center;
+        margin: 10px 0px;
+
+        > span {
+            margin-right: 10px;
+        }
+    }
+
+    .dropdown {
+        margin: 0px 10px 0px 0px;
+    }
+    
+    .text-field{
+        margin-bottom: 0px;
+        width: 70px;
+        margin-right: 10px;
+
+        > .textField-field {
+            width: 100%;
+        }
     }
 
     .choiceFieldGroup {
+        margin-left: 10px;
         .choice-item-text {
             display: flex;
             align-items: center;
 
-            .dropdown {
-                margin-bottom: 0px;
-            }
-
-            > div, span {
-                padding-right: 10px;
-                margin-bottom: 0px;
+            > span {
+                margin-right: 10px;
             }
         }
     }  
@@ -22,7 +39,7 @@
     > .weekly-scheduler {
         .checkboxlist {
             display: flex;
-
+            margin-left: 5px;
             > div {
                 padding-right: 10px;
             }
