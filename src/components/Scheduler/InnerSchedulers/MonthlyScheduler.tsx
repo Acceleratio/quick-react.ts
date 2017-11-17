@@ -29,6 +29,7 @@ export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, {}> 
                     onChanged={this.onDayOfMonthChanged}
                     selectedKey={daysOfMonth}
                     dropdownType={DropdownType.selectionDropdown}
+                    calloutClassName="day-of-month-dropdown-callout"
                 />
                 <span>of every</span>
                 <TextField
