@@ -25,15 +25,7 @@ export class WeeklyScheduler extends React.Component<IInnerSchedulerProps, any> 
                 </div>
                 <CheckboxList
                     onCheckboxChanged={this.onCheckboxListChange}
-                    items={[
-                        { id: DaysOfWeekEnum.Sunday.toString(), text: 'Sunday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Sunday) },
-                        { id: DaysOfWeekEnum.Monday.toString(), text: 'Monday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Monday) },
-                        { id: DaysOfWeekEnum.Tuesday.toString(), text: 'Tuesday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Tuesday) },
-                        { id: DaysOfWeekEnum.Wednesday.toString(), text: 'Wednesday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Wednesday) },
-                        { id: DaysOfWeekEnum.Thursday.toString(), text: 'Thursday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Thursday) },
-                        { id: DaysOfWeekEnum.Friday.toString(), text: 'Friday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Friday) },
-                        { id: DaysOfWeekEnum.Saturday.toString(), text: 'Saturday', checked: Boolean(daysOfWeek & DaysOfWeekEnum.Saturday) }
-                    ]}
+                    items={this.getWeeklyCheckboxListItems(daysOfWeek)}
                 />
             </div>
         );
@@ -61,5 +53,45 @@ export class WeeklyScheduler extends React.Component<IInnerSchedulerProps, any> 
             daysOfWeek: newDaysOfWeek
         };
         this.props.onScheduleChanged(newSchedule);
+    }
+
+    getWeeklyCheckboxListItems = (daysOfWeek) => {
+        return [
+            {
+                id: DaysOfWeekEnum.Sunday.toString(),
+                text: 'Sunday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Sunday)
+            },
+            {
+                id: DaysOfWeekEnum.Monday.toString(),
+                text: 'Monday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Monday)
+            },
+            {
+                id: DaysOfWeekEnum.Tuesday.toString(),
+                text: 'Tuesday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Tuesday)
+            },
+            {
+                id: DaysOfWeekEnum.Wednesday.toString(),
+                text: 'Wednesday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Wednesday)
+            },
+            {
+                id: DaysOfWeekEnum.Thursday.toString(),
+                text: 'Thursday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Thursday)
+            },
+            {
+                id: DaysOfWeekEnum.Friday.toString(),
+                text: 'Friday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Friday)
+            },
+            {
+                id: DaysOfWeekEnum.Saturday.toString(),
+                text: 'Saturday',
+                checked: Boolean(daysOfWeek & DaysOfWeekEnum.Saturday)
+            }
+        ];
     }
 }
