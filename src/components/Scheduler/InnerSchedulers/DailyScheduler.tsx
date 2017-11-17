@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as NumericInput from 'react-numeric-input';
-import { IInnerSchedulerProps } from './InnerScheduler.Props';
+import { IInnerSchedulerProps, DailySheduleOptionEnum } from './InnerScheduler.Props';
 import { ChoiceGroup } from '../../ChoiceGroup/ChoiceGroup';
 import { DaysOfWeekEnum, TextField } from '../../../index';
 
@@ -37,9 +37,7 @@ export class DailyScheduler extends React.Component<IInnerSchedulerProps, {}> {
                         }
                     ]}
                     onChanged={this.onChoiceGroupOptionChanged}
-
                 />
-
             </div>
         );
     }
@@ -76,9 +74,4 @@ export class DailyScheduler extends React.Component<IInnerSchedulerProps, {}> {
         }
         this.props.onScheduleChanged(newSchedule);
     }
-}
-
-export enum DailySheduleOptionEnum {
-    EveryAmountOfDays,
-    EveryWeekday
 }

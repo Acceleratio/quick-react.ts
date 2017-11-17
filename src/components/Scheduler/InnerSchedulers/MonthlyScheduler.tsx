@@ -1,7 +1,7 @@
 /* tslint:disable:no-bitwise */
 import * as React from 'react';
 import * as NumericInput from 'react-numeric-input';
-import { IInnerSchedulerProps } from './InnerScheduler.Props';
+import { IInnerSchedulerProps, MonthlySheduleOptionEnum } from './InnerScheduler.Props';
 import { TextField } from '../../TextField/TextField';
 import { DaysOfWeekEnum, WeeksOfMonthEnum, DayOfMonthEnum } from '../Scheduler.Props';
 import { ChoiceGroup } from '../../ChoiceGroup/ChoiceGroup';
@@ -198,9 +198,4 @@ export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, {}> 
         { key: DayOfMonthEnum.Day30, text: '30' },
         { key: DayOfMonthEnum.Day31, text: '31' }
     ];
-}
-
-export enum MonthlySheduleOptionEnum {
-    OnDayOfMonth = '1',
-    OnDayOfWeek = '2'
 }
