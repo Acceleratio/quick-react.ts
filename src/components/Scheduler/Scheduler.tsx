@@ -11,7 +11,7 @@ import { MonthlyScheduler } from './InnerSchedulers/MonthlyScheduler';
 import { MinutelyScheduler } from './InnerSchedulers/MinutelyScheduler';
 import './Scheduler.scss';
 
-export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
+export class Scheduler extends React.Component<ISchedulerProps, any> {
     public static defaultProps = {
         dropdownOptions: [
             { key: ScheduleTypeEnum.OneTime, text: 'One time' },
@@ -32,50 +32,6 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
             dropdownLabel,
             className,
             onScheduleChanged } = this.props;
-
-        let component;
-        switch (selectedScheduleType) {
-            case ScheduleTypeEnum.OneTime:
-                component = null;
-                break;
-            case ScheduleTypeEnum.Minutely:
-                component = (
-                    <MinutelyScheduler
-                        schedule={schedule}
-                        onScheduleChanged={onScheduleChanged}
-                        {...schedule} />);
-                break;
-            case ScheduleTypeEnum.Hourly:
-                component = (
-                    <HourlyScheduler
-                        schedule={schedule}
-                        onScheduleChanged={onScheduleChanged}
-                        {...schedule} />);
-                break;
-            case ScheduleTypeEnum.Daily:
-                component = (
-                    <DailyScheduler
-                        schedule={schedule}
-                        onScheduleChanged={onScheduleChanged}
-                        {...schedule} />);
-                break;
-            case ScheduleTypeEnum.Weekly:
-                component = (
-                    <WeeklyScheduler
-                        schedule={schedule}
-                        onScheduleChanged={onScheduleChanged}
-                        {...schedule} />);
-                break;
-            case ScheduleTypeEnum.Monthly:
-                component = (
-                    <MonthlyScheduler
-                        schedule={schedule}
-                        onScheduleChanged={onScheduleChanged}
-                        {...schedule} />);
-                break;
-            default:
-                component = null;
-        }
 
         return (
             <div className={classNames('scheduler', className)}>
@@ -98,9 +54,44 @@ export class Scheduler extends React.PureComponent<ISchedulerProps, any> {
                         includeTime={true}
                     />
                 </div>
-                {component}
+                {this.renderInnerComponent(selectedScheduleType,
+                    schedule, onScheduleChanged)}
             </div>
         );
+    }
+
+    renderInnerComponent = (selectedScheduleType, schedule, onScheduleChanged) => {
+        switch (selectedScheduleType) {
+            case ScheduleTypeEnum.OneTime:
+                return null;
+            case ScheduleTypeEnum.Minutely:
+                return (
+                    <MinutelyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged} />);
+            case ScheduleTypeEnum.Hourly:
+                return (
+                    <HourlyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged} />);
+            case ScheduleTypeEnum.Daily:
+                return (
+                    <DailyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged} />);
+            case ScheduleTypeEnum.Weekly:
+                return (
+                    <WeeklyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged} />);
+            case ScheduleTypeEnum.Monthly:
+                return (
+                    <MonthlyScheduler
+                        schedule={schedule}
+                        onScheduleChanged={onScheduleChanged} />);
+            default:
+                return null;
+        }
     }
 
     startDateTimeChanged = (date: Date) => {

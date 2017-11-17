@@ -3,17 +3,16 @@ import * as React from 'react';
 import * as NumericInput from 'react-numeric-input';
 import { IInnerSchedulerProps } from './InnerScheduler.Props';
 import { TextField } from '../../TextField/TextField';
-import { WeeklySchedule } from '../Scheduler.Props';
 import { CheckboxList } from '../../CheckboxList/CheckboxList';
 import { DaysOfWeekEnum } from '../../../index';
 
-export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, any> {
+export class WeeklyScheduler extends React.Component<IInnerSchedulerProps, any> {
 
     render() {
-        let { recurrencePeriod, daysOfWeek } = this.props.schedule as WeeklySchedule;
+        let { recurrencePeriod, daysOfWeek } = this.props.schedule;
 
         return (
-            <div className="weekly-scheduler">
+            <div className="weekly-scheduler inner-scheduler">
                 <div className="textField-container">
                     <span> Recur every </span>
                     <TextField
@@ -42,6 +41,10 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
 
     onRecurrencePeriodChanged = (input) => {
         const value = parseInt(input, 10);
+        if (value === this.props.schedule.recurrencePeriod) {
+            return;
+        }
+
         const newSchedule = {
             ...this.props.schedule,
             recurrencePeriod: value
@@ -50,7 +53,7 @@ export class WeeklyScheduler extends React.PureComponent<IInnerSchedulerProps, a
     }
 
     onCheckboxListChange = (e, index: string, checked: boolean) => {
-        const schedule = this.props.schedule as WeeklySchedule;
+        const schedule = this.props.schedule;
         const dayToFlip = parseInt(index, 10);
         const newDaysOfWeek = schedule.daysOfWeek ^ dayToFlip;
         const newSchedule = {

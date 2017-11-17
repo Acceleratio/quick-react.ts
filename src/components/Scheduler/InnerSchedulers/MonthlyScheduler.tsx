@@ -3,12 +3,12 @@ import * as React from 'react';
 import * as NumericInput from 'react-numeric-input';
 import { IInnerSchedulerProps } from './InnerScheduler.Props';
 import { TextField } from '../../TextField/TextField';
-import { MonthlySchedule, DaysOfWeekEnum, WeeksOfMonthEnum, DayOfMonthEnum } from '../Scheduler.Props';
+import { DaysOfWeekEnum, WeeksOfMonthEnum, DayOfMonthEnum } from '../Scheduler.Props';
 import { ChoiceGroup } from '../../ChoiceGroup/ChoiceGroup';
 import { DropdownType, IDropdownOption } from '../../Dropdown/Dropdown.Props';
 import { Dropdown } from '../../Dropdown/Dropdown';
 
-export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, any> {
+export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, any> {
 
     render() {
         let {
@@ -18,10 +18,10 @@ export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, 
             weeksOfMonth,
             daysOfWeek,
             recurrencePeriod
-        } = this.props.schedule as MonthlySchedule;
+        } = this.props.schedule;
 
         const dayOfMonthChoiceText: any = (
-            <div className="choice-item-text">
+            <div className="choice-item-content">
                 <span>Day</span>
                 <Dropdown
                     hasTitleBorder={true}
@@ -42,7 +42,7 @@ export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, 
         );
 
         const dayOfWeekChoiceText: any = (
-            <div className="choice-item-text">
+            <div className="choice-item-content">
                 <span>The</span>
                 <Dropdown
                     hasTitleBorder={true}
@@ -88,18 +88,18 @@ export class MonthlyScheduler extends React.PureComponent<IInnerSchedulerProps, 
 
 
         return (
-            <div className="monthly-scheduler">
+            <div className="monthly-scheduler inner-scheduler">
                 <ChoiceGroup
                     options={[
                         {
                             key: MonthlySheduleOptionEnum.OnDayOfMonth,
-                            text: 'First option',
+                            text: 'On specific day of month',
                             checked: sendOnSpecificDays,
                             contentBelow: dayOfMonthChoiceText
                         },
                         {
                             key: MonthlySheduleOptionEnum.OnDayOfWeek,
-                            text: 'Second option',
+                            text: 'On specific day of week',
                             checked: sendOnSpecificWeekDays,
                             contentBelow: dayOfWeekChoiceText
                         }

@@ -84,13 +84,7 @@ export class ChoiceGroup extends React.Component<IChoiceGroupProps, IChoiceGroup
                                 onBlur={this._onBlur.bind(this, option)}
                             />
                             {this._renderField(option)}
-                            {option.contentBelow &&
-                                <div className={classNames('contentBelow',
-                                    { 'is-unchecked': option.key !== keyChecked })}
-                                >
-                                    {option.contentBelow}
-                                </div>
-                            }
+                            {this._renderContentBelowOption(option, keyChecked)}
                         </div>
                     ))}
                 </div>
@@ -130,6 +124,16 @@ export class ChoiceGroup extends React.Component<IChoiceGroupProps, IChoiceGroup
                     {option.text}
                 </span>
             </label>
+        );
+    }
+
+    private _renderContentBelowOption(option, keyChecked) {
+        return (
+            <div className={classNames('contentBelow',
+                { 'is-unchecked': option.key !== keyChecked })}
+            >
+                {option.contentBelow}
+            </div>
         );
     }
 

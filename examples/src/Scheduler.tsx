@@ -21,7 +21,7 @@ export class Index extends React.Component<any, any> {
                 daysOfMonth: 1,
                 weeksOfMonth: 1
             },
-            selectedScheduleType: 7            
+            selectedScheduleType: 7
         };
     }
     public render() {
@@ -36,6 +36,8 @@ export class Index extends React.Component<any, any> {
                     {...this.state.schedule}
                 />
             </div>
+
+
         );
     }
 

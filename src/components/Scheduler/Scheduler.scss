@@ -3,7 +3,7 @@
     div.dropdown-container, div.textField-container {
         display: flex;
         align-items: center;
-        margin: 10px 0px;
+        margin: 15px 0px;
 
         > span {
             margin-right: 10px;
@@ -24,24 +24,27 @@
         }
     }
 
-    .choiceFieldGroup {
-        margin-left: 10px;
-        .choice-item-text {
-            display: flex;
-            align-items: center;
+    > .inner-scheduler {
+        margin: 10px;
 
-            > span {
-                margin-right: 10px;
+        .choiceFieldGroup {
+            .choice-item-content {
+                display: flex;
+                align-items: center;
+
+                > span {
+                    margin-right: 10px;
+                }
             }
-        }
-    }  
+        }  
 
-    > .weekly-scheduler {
-        .checkboxlist {
-            display: flex;
-            margin-left: 5px;
-            > div {
-                padding-right: 10px;
+        &.weekly-scheduler {
+            .checkboxlist {
+                display: flex;
+                margin-left: 5px;
+                > div {
+                    padding-right: 10px;
+                }
             }
         }
     }

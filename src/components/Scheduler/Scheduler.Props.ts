@@ -12,31 +12,6 @@ export interface ISchedulerProps {
 
 export interface Schedule {
     startTime: Date;
-}
-
-export interface OneTimeSchedule extends Schedule {
-
-}
-
-export interface MinutelySchedule extends Schedule {
-    recurrencePeriod: number;
-}
-
-export interface HourlySchedule extends Schedule {
-    recurrencePeriod: number;
-}
-
-export interface DailySchedule extends Schedule {
-    recurrencePeriod: number;
-    daysOfWeek: DaysOfWeekEnum;
-}
-
-export interface WeeklySchedule extends Schedule {
-    recurrencePeriod: number;
-    daysOfWeek: DaysOfWeekEnum;
-}
-
-export interface MonthlySchedule extends Schedule {
     sendOnSpecificDays: boolean;
     daysOfMonth: DayOfMonthEnum; 
     sendOnSpecificWeekDays: boolean; 
