@@ -13,5 +13,5 @@ export interface IChoiceGroupOption {
     isChecked?: boolean;
     disabled?: boolean;
     isDisabled?: boolean;
-    contentBelow?: JSX.Element;
+    additionalContent?: JSX.Element;
 }

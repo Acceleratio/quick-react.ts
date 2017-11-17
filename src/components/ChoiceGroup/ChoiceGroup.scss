@@ -19,7 +19,7 @@ $choiceField-transition-timing: cubic-bezier(.4, 0, .23, 1);
     opacity: 0;
   }
 
-  .contentBelow {
+  .option-additional-content {
     margin-left: 20px;
     margin-bottom: 10px;
     &.is-unchecked {

@@ -6,7 +6,7 @@ import { TextField } from '../../TextField/TextField';
 import { CheckboxList } from '../../CheckboxList/CheckboxList';
 import { DaysOfWeekEnum } from '../../../index';
 
-export class WeeklyScheduler extends React.Component<IInnerSchedulerProps, any> {
+export class WeeklyScheduler extends React.Component<IInnerSchedulerProps, {}> {
 
     render() {
         let { recurrencePeriod, daysOfWeek } = this.props.schedule;

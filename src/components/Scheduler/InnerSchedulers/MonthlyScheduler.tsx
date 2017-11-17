@@ -8,7 +8,7 @@ import { ChoiceGroup } from '../../ChoiceGroup/ChoiceGroup';
 import { DropdownType, IDropdownOption } from '../../Dropdown/Dropdown.Props';
 import { Dropdown } from '../../Dropdown/Dropdown';
 
-export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, any> {
+export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, {}> {
 
     render() {
         let {
@@ -46,31 +46,14 @@ export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, any>
                 <span>The</span>
                 <Dropdown
                     hasTitleBorder={true}
-                    options={[
-                        { key: WeeksOfMonthEnum.First, text: 'First' },
-                        { key: WeeksOfMonthEnum.Second, text: 'Second' },
-                        { key: WeeksOfMonthEnum.Third, text: 'Third' },
-                        { key: WeeksOfMonthEnum.Fourth, text: 'Fourth' },
-                        { key: WeeksOfMonthEnum.Last, text: 'Last' }
-                    ]}
+                    options={this.weekOfMonthDropdownOptions}
                     onChanged={this.onWeeksOfMonthChanged}
                     selectedKey={weeksOfMonth}
                     dropdownType={DropdownType.selectionDropdown}
                 />
                 <Dropdown
                     hasTitleBorder={true}
-                    options={[
-                        { key: DaysOfWeekEnum.EveryDay, text: 'Day' },
-                        { key: DaysOfWeekEnum.WorkDays, text: 'Weekday' },
-                        { key: DaysOfWeekEnum.WeekendDays, text: 'Weekend day' },
-                        { key: DaysOfWeekEnum.Sunday, text: 'Sunday' },
-                        { key: DaysOfWeekEnum.Monday, text: 'Monday' },
-                        { key: DaysOfWeekEnum.Tuesday, text: 'Tuesday' },
-                        { key: DaysOfWeekEnum.Wednesday, text: 'Wednesday' },
-                        { key: DaysOfWeekEnum.Thursday, text: 'Thursday' },
-                        { key: DaysOfWeekEnum.Friday, text: 'Friday' },
-                        { key: DaysOfWeekEnum.Saturday, text: 'Saturday' }
-                    ]}
+                    options={this.dayOfWeekDropdownOptions}
                     onChanged={this.onSelectedDayOfWeekChanged}
                     selectedKey={daysOfWeek}
                     dropdownType={DropdownType.selectionDropdown}
@@ -95,13 +78,13 @@ export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, any>
                             key: MonthlySheduleOptionEnum.OnDayOfMonth,
                             text: 'On specific day of month',
                             checked: sendOnSpecificDays,
-                            contentBelow: dayOfMonthChoiceText
+                            additionalContent: dayOfMonthChoiceText
                         },
                         {
                             key: MonthlySheduleOptionEnum.OnDayOfWeek,
                             text: 'On specific day of week',
                             checked: sendOnSpecificWeekDays,
-                            contentBelow: dayOfWeekChoiceText
+                            additionalContent: dayOfWeekChoiceText
                         }
                     ]}
                     onChanged={this.onChoiceGroupOptionChanged}
@@ -160,6 +143,27 @@ export class MonthlyScheduler extends React.Component<IInnerSchedulerProps, any>
         };
         this.props.onScheduleChanged(newSchedule);
     }
+
+    private dayOfWeekDropdownOptions = [
+        { key: DaysOfWeekEnum.EveryDay, text: 'Day' },
+        { key: DaysOfWeekEnum.WorkDays, text: 'Weekday' },
+        { key: DaysOfWeekEnum.WeekendDays, text: 'Weekend day' },
+        { key: DaysOfWeekEnum.Sunday, text: 'Sunday' },
+        { key: DaysOfWeekEnum.Monday, text: 'Monday' },
+        { key: DaysOfWeekEnum.Tuesday, text: 'Tuesday' },
+        { key: DaysOfWeekEnum.Wednesday, text: 'Wednesday' },
+        { key: DaysOfWeekEnum.Thursday, text: 'Thursday' },
+        { key: DaysOfWeekEnum.Friday, text: 'Friday' },
+        { key: DaysOfWeekEnum.Saturday, text: 'Saturday' }
+    ];
+
+    private weekOfMonthDropdownOptions = [
+        { key: WeeksOfMonthEnum.First, text: 'First' },
+        { key: WeeksOfMonthEnum.Second, text: 'Second' },
+        { key: WeeksOfMonthEnum.Third, text: 'Third' },
+        { key: WeeksOfMonthEnum.Fourth, text: 'Fourth' },
+        { key: WeeksOfMonthEnum.Last, text: 'Last' }
+    ];
 
     private dayOfMonthDropdownOptions = [
         { key: DayOfMonthEnum.Day1, text: '1' },

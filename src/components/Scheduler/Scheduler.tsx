@@ -11,7 +11,7 @@ import { MonthlyScheduler } from './InnerSchedulers/MonthlyScheduler';
 import { MinutelyScheduler } from './InnerSchedulers/MinutelyScheduler';
 import './Scheduler.scss';
 
-export class Scheduler extends React.Component<ISchedulerProps, any> {
+export class Scheduler extends React.Component<ISchedulerProps, {}> {
     public static defaultProps = {
         dropdownOptions: [
             { key: ScheduleTypeEnum.OneTime, text: 'One time' },

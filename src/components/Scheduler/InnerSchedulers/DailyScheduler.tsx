@@ -4,7 +4,7 @@ import { IInnerSchedulerProps } from './InnerScheduler.Props';
 import { ChoiceGroup } from '../../ChoiceGroup/ChoiceGroup';
 import { DaysOfWeekEnum, TextField } from '../../../index';
 
-export class DailyScheduler extends React.Component<IInnerSchedulerProps, any> {
+export class DailyScheduler extends React.Component<IInnerSchedulerProps, {}> {
 
     render() {
         let { recurrencePeriod, daysOfWeek } = this.props.schedule;

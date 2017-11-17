@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as NumericInput from 'react-numeric-input';
 import { IInnerSchedulerProps } from './InnerScheduler.Props';
 import { TextField } from '../../TextField/TextField';
-export class HourlyScheduler extends React.Component<IInnerSchedulerProps, any> {
+export class HourlyScheduler extends React.Component<IInnerSchedulerProps, {}> {
 
     render() {
         let { recurrencePeriod } = this.props.schedule;
