@@ -25,4 +25,5 @@ export interface ITreeviewItem {
     hoverOverBtn?: Array<IHoverOverBtn>;
     className?: string;
     title?: string;
+    iconClassName?: string;
 }

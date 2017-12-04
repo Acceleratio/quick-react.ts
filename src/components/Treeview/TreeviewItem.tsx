@@ -65,6 +65,7 @@ export class TreeviewItem extends CommonComponent<ITreeviewItemProps, any> {
                                 onChange={this._onItemSelect}
                                 checked={checked}
                                 className={selectedClassName}
+                                iconClassName={item.iconClassName}
                             />
                         }
                         {
@@ -73,6 +74,9 @@ export class TreeviewItem extends CommonComponent<ITreeviewItemProps, any> {
                                 onClick={this.onItemClick}
                                 title={item.title}
                             >
+                                {item.iconClassName &&
+                                    <Icon
+                                        iconName={item.iconClassName} />}
                                 {item.text}
                             </span>
                         }

@@ -1882,7 +1882,7 @@ disposables@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/disposables/-/disposables-1.0.1.tgz#064727a25b54f502bd82b89aa2dfb8df9f1b39e3"
 
-dnd-core@^2.4.0:
+dnd-core@^2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-2.5.4.tgz#0c70a8dcbb609c0b222e275fcae9fa83e5897397"
   dependencies:
@@ -2864,9 +2864,9 @@ hoek@4.x.x:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.0.tgz#72d9d0754f7fe25ca2d01ad8f8f9a9449a89526d"
 
-hoist-non-react-statics@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+hoist-non-react-statics@^2.1.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.3.1.tgz#343db84c6018c650778898240135a1420ee22ce0"
 
 home-or-tmp@^2.0.0:
   version "2.0.0"
@@ -4685,7 +4685,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8:
+prop-types@^15.5.10, prop-types@^15.5.4:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
@@ -4791,22 +4791,22 @@ react-datetime@2.8.9:
     object-assign "^3.0.0"
     react-onclickoutside "^5.9.0"
 
-react-dnd-html5-backend@2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-2.4.1.tgz#439d2bcaf8bd8b87a51386beb51c128826182ddd"
+react-dnd-html5-backend@^2.4.1:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-2.5.4.tgz#974ad083f67b12d56977a5b171f5ffeb29d78352"
   dependencies:
     lodash "^4.2.0"
 
-react-dnd@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-2.4.0.tgz#96f0042cd4cd375b4f0c3413f6ec84d267b7d792"
+react-dnd@^2.4.0:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-2.5.4.tgz#0b6dc5e9d0dfc2909f4f4fe736e5534f3afd1bd9"
   dependencies:
     disposables "^1.0.1"
-    dnd-core "^2.4.0"
-    hoist-non-react-statics "^1.2.0"
+    dnd-core "^2.5.4"
+    hoist-non-react-statics "^2.1.0"
     invariant "^2.1.0"
     lodash "^4.2.0"
-    prop-types "^15.5.8"
+    prop-types "^15.5.10"
 
 react-dom@15.6.1:
   version "15.6.1"
