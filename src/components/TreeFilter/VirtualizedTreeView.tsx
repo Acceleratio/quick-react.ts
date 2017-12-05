@@ -198,7 +198,14 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         const ItemCheckboxElement = () => {
             if (this.props.isSingleSelect) {
                 return (
-                    <span className="virtualized-tree-single-select-item" onClick={onSingleSelectItemClick} title={treeItem.value}>{treeItem.value}</span>
+                    <span
+                        className="virtualized-tree-single-select-item"
+                        onClick={onSingleSelectItemClick}
+                        title={treeItem.value}
+                    >
+                        <Icon iconName={treeItem.iconClassName} />
+                        {treeItem.value}
+                    </span>
                 );
             } else {
                 let checked = itemChecked ? CheckStatus.Checked : CheckStatus.NotChecked;
@@ -211,6 +218,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         text={treeItem.value}
                         checked={checked}
                         onChange={onItemCheckedChange}
+                        iconClassName={treeItem.iconClassName}
                     />
                 );
             }

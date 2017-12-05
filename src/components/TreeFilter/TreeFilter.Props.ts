@@ -87,4 +87,5 @@ export interface TreeItem {
     expanded?: boolean;
     children?: Array<TreeItem>;
     className?: string;
+    iconClassName?: string;
 }

@@ -31,7 +31,8 @@ export function createRandomizedData(numOfItems, maxDepth) {
             id: key,
             value: key + ' ' + name,
             expanded: false,
-            children: children
+            children: children,
+            iconClassName: Math.random() > 0.8 ? 'icon-edit_user color' : ''
         };
     };
 
