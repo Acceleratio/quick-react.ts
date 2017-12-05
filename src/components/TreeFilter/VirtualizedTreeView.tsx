@@ -203,7 +203,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         onClick={onSingleSelectItemClick}
                         title={treeItem.value}
                     >
-                        <Icon iconName={treeItem.iconClassName} />
+                        <Icon iconName={treeItem.iconName} className={treeItem.iconClassName} />
                         {treeItem.value}
                     </span>
                 );
@@ -218,7 +218,9 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         text={treeItem.value}
                         checked={checked}
                         onChange={onItemCheckedChange}
+                        iconName={treeItem.iconName}
                         iconClassName={treeItem.iconClassName}
+                        
                     />
                 );
             }
