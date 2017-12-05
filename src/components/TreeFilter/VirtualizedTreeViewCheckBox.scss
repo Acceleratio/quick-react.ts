@@ -1,16 +1,13 @@
 @import '../../index.scss';
-
 .virtualized-tree-filter-checkbox {
     display: inline-block;
     box-sizing: border-box;
     width: 100%;
     cursor: pointer;
-    
     .checkbox-input {
         position: absolute;
         opacity: 0;
     }
-
     .virtualized-tree-filter-checkbox-label {
         display: inline-block;
         box-sizing: border-box;
@@ -20,17 +17,16 @@
         user-select: none;
         height: 21px;
         width: 100%;
-
         .label {
             padding: 0 0 0 20px;
-            display: inline-block;
+            display: flex;
+            align-items: center;
             box-sizing: border-box;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 95%;
         }
-
         &:before {
             content: '';
             display: inline-block;
@@ -38,11 +34,10 @@
             width: 16px;
             height: 16px;
             border-radius: 4px;
-            top: 1px;
+            top: 2px;
             position: absolute;
             box-sizing: border-box;
         }
-
         &.is-checked {
             &:before {
                 background-color: $primary-color;
@@ -50,7 +45,6 @@
             }
         }
     }
-
     &.partial-selected {
         label:after {
             content: '\25FC';
@@ -61,7 +55,6 @@
             top: -1px;
         }
     }
-
     .virtualized-tree-filter-checkbox-checkmark {
         color: $white-color;
         position: absolute;

@@ -196,6 +196,10 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
         // tslint:disable-next-line:variable-name
         const ItemCheckboxElement = () => {
+            const iconClassName = classNames(
+                'virtualized-tree-item-icon',
+                treeItem.iconClassName
+            );
             if (this.props.isSingleSelect) {
                 return (
                     <span
@@ -203,7 +207,9 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         onClick={onSingleSelectItemClick}
                         title={treeItem.value}
                     >
-                        <Icon iconName={treeItem.iconName} className={treeItem.iconClassName} />
+                        {treeItem.iconName &&
+                            <Icon iconName={treeItem.iconName} className={iconClassName} />
+                        }
                         {treeItem.value}
                     </span>
                 );
@@ -219,7 +225,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         checked={checked}
                         onChange={onItemCheckedChange}
                         iconName={treeItem.iconName}
-                        iconClassName={treeItem.iconClassName}
+                        iconClassName={iconClassName}
                     />
                 );
             }
