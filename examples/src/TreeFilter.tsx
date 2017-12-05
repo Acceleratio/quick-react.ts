@@ -57,7 +57,7 @@ export class Index extends React.Component<any, DemoState> {
 
                 <TreeFilter
                     title="Tree Filter - depth 4"
-                    disabled={false}
+                    disabled={true}
                     filterId={'f2'}
                     items={deeperTreeData}
                     onValuesSelected={this.onValuesSelected}

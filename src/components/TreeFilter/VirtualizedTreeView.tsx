@@ -220,7 +220,6 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         onChange={onItemCheckedChange}
                         iconName={treeItem.iconName}
                         iconClassName={treeItem.iconClassName}
-                        
                     />
                 );
             }
