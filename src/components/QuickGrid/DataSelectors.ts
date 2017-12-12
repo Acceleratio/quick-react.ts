@@ -41,7 +41,7 @@ const getColumnNameAndSortFunction = (columns: Array<GridColumn>, sortColumnName
 const sortRows = (rows: Array<any>, sortColumnName: string,
     sortDirection: SortDirection, groupedColumn: Array<IGroupBy>, columns: Array<GridColumn>) => {
     const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
-    if (groupedColumn.length > 0) {
+    if (groupedColumn && groupedColumn.length > 0) {
         let sortOptions = [];
         for (let groupColumn of groupedColumn) {
             const groupSortModifier = groupColumn.sortDirection === SortDirection.Descending ? -1 : 1;

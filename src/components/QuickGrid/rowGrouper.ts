@@ -54,7 +54,7 @@ class RowGrouper {
 }
 
 export const groupRows = (rows, groupedColumns, expandedRows, columns) => {
-    if (groupedColumns.length === 0) {
+    if (!groupedColumns || groupedColumns.length === 0) {
         return rows;
     }
     let rowGrouper = new RowGrouper(groupedColumns, expandedRows, columns);

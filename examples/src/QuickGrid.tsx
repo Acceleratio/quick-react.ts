@@ -5,6 +5,7 @@ import * as ReactDOM from 'react-dom';
 import Resizable from 'react-resizable-box';
 import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
+import { QuickTreeGrid } from '../../src/components/QuickTreeGrid/QuickTreeGrid';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, QuickGridActions } from '../../src/components/QuickGrid';
 import { gridColumns1, getGridData1, gridColumns2, getGridData2 } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
@@ -63,15 +64,11 @@ export class Index extends React.Component<any, any> {
 
                 <Resizable width={1000} height={700} >
                     <div className="viewport-height" style={{ height: '100%' }} >
-                        <QuickGrid
+                        <QuickTreeGrid
                             rows={this.state.data}
                             columns={this.state.columns}
-                            groupBy={this.state.groupBy}
-                            displayGroupContainer={true}
-                            onGroupByChanged={this.groupByChanged}
                             gridActions={gridActions}
                             columnSummaries={columnSummaries}
-                            actionsTooltip="Act on these."
                             tooltipsEnabled={true}
                         />
                     </div>
