@@ -84,9 +84,11 @@ const getRowsWithLowerCase = createSelector(getInputRows, getColumns, (rows, col
 const getSortedRows = createSelector(getRowsWithLowerCase, getSortColumn, getSortDirection, getGroupBy, getColumns,
     (rows, sortColumn, sortDirection, groupBy, columns) => {
         return sortRows(rows, sortColumn, sortDirection, groupBy, columns);
-    });
+    }
+);
 
 export const getRowsSelector = createSelector(getSortedRows, getGroupBy, getCollapsedRows, getColumns,
     (rows, groupedColumns, collapsedRows, columns) => {
         return groupRows(rows, groupedColumns, collapsedRows, columns);
-    });
+    }
+);

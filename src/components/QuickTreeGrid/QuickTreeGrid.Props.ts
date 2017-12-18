@@ -3,6 +3,7 @@ import { GridColumn, DataTypeEnum, SortDirection } from '../QuickGrid/QuickGrid.
 
 export interface IQuickTreeGridProps {
     rows: Array<any>;
+    tree: Array<any>;
     columns: Array<GridColumn>;
     gridClassName?: string;
     headerClassName?: string;
