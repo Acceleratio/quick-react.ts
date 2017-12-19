@@ -9,12 +9,12 @@ export interface TreeEntry {
     order: number;
 }
 
-const flatten = (tree) => {
+const flatten = (tree: Array<TreeEntry>) => {
     let result = [];      
     for (let leaf of tree) {
         result.push(leaf.gridData);
-        if (leaf.children && leaf.children.length > 0) {
-            const leaves = flatten(leaf.children);
+        if (leaf.leaves && leaf.leaves.length > 0) {
+            const leaves = flatten(leaf.leaves);
             result = result.concat(leaves);
         }
     }

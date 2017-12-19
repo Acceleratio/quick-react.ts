@@ -52,25 +52,6 @@ export class QuickTreeGridInner extends React.Component<IQuickTreeGridProps, IQu
         this.finalGridRows = getRows(this.state, props);
     }
 
-    expandAll = (event) => {
-        this.setState((prevState) => {
-            return {
-                ...prevState,
-                collapsedRows: []
-            };
-        });
-    }
-
-    collapseAll = (event) => {
-        let collapsedRows = []; // this.getAllGroupKeys(this.props.rows);
-        this.setState((prevState) => {
-            return {
-                ...prevState,
-                collapsedRows: collapsedRows
-            };
-        });
-    }
-
     getColumnsToDisplay(columns: Array<GridColumn>, hasActionColumn: boolean) {
         let emptyArray = new Array();
         if (hasActionColumn) {
@@ -107,7 +88,6 @@ export class QuickTreeGridInner extends React.Component<IQuickTreeGridProps, IQu
         }
     }
 
-
     getViewportWidth() {
         let width = 0;
         if (document.getElementsByClassName('viewport-height')[0] !== undefined) {
@@ -127,21 +107,6 @@ export class QuickTreeGridInner extends React.Component<IQuickTreeGridProps, IQu
         return height - 30 - this.gridFooterContainerHeight();
     }
 
-    onRowExpandToggle(name, shouldExpand) {
-        this.setState((oldState) => {
-            let collapsedRows = [...oldState.collapsedRows];
-            if (shouldExpand) {
-                let index: number = collapsedRows.indexOf(name, 0);
-                if (index > -1) {
-                    collapsedRows.splice(index, 1);
-                }
-            } else {
-                collapsedRows.push(name);
-            }
-            return { ...oldState, collapsedRows: collapsedRows };
-        });
-    }
-
     onGridHeaderColumnsResize = (newColumnWidths: Array<number>) => {
         this.setState((oldState) => ({ ...oldState, columnWidths: newColumnWidths }));
     }
@@ -152,23 +117,44 @@ export class QuickTreeGridInner extends React.Component<IQuickTreeGridProps, IQu
 
     cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
         const rowData = this.finalGridRows[rowIndex];        
+        const rowID: string = !rowData.Test ? '' : rowData.Test;
+        const indentSize = 20;
         let indent = 0;
-        const test: string = !rowData.Test ? '' : rowData.Test;
-        if (columnIndex === 1) {
-            return this.rednerHiddenCell(key, columnIndex, test);     
+        let level = 0;
+        if (rowID.length > 0)  {
+            level = rowID.split('.').length;
         }
-        if (columnIndex === 0 || columnIndex === 2) {
-            indent = test.split('.').length * 20;     
-            if (columnIndex === 2) {
-                style.width -= indent;
+        if ((columnIndex === 0 || columnIndex === 2)) {
+            indent = level * indentSize;     
+        }
+        let shouldIndent: boolean = false;
+        if (columnIndex === 0) {
+            if (level === 0) {
+                shouldIndent = false;
+            } else if (style.left < indent) {
+                shouldIndent = true;
             }
+        } else if (columnIndex === 2) {
+            if (level === 0) {
+                shouldIndent = false;
+            } else if (style.left < (indent + indentSize)) {
+                shouldIndent = true;
+            }
+        }
+        if (columnIndex === 1) {
+            return this.rednerHiddenCell(key, columnIndex, rowID);     
+        }
+        if (columnIndex === 2 && shouldIndent) {
+                style.width -= indent;            
         }      
-        style.left += indent;  
+        if (shouldIndent) {
+            style.left += indent;  
+        }
         if (columnIndex === 0 && this.props.gridActions != null) {
-            if (test.endsWith('*')) {
+            if (rowID.endsWith('*')) {
                 return this.renderEmptyCell(key, rowIndex, rowData, style);
             }
-            return this.renderActionCell(key, test, rowIndex, rowData, style);
+            return this.renderActionCell(key, rowID, rowIndex, rowData, style);
         }
         return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);        
     }
@@ -404,8 +390,6 @@ export class QuickTreeGridInner extends React.Component<IQuickTreeGridProps, IQu
                                         className={headerClass}
                                         displayGroupContainer={false}
                                         hasActionColumn={this.props.gridActions != null}
-                                        onCollapseAll={this.collapseAll}
-                                        onExpandAll={this.expandAll}
                                         tooltipsEnabled={this.props.tooltipsEnabled}
                                     />
 
