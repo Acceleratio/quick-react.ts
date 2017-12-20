@@ -14,6 +14,8 @@ export interface IMessageBoxProps {
     message: string | JSX.Element;
     title?: string;
     level?: MessageLevel;
+    iconName?: string;
+    className?: string;
     onDismiss?(): void;
     onClose?(): void;
     onAccept?(): void;
