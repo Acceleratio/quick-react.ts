@@ -54,3 +54,36 @@ export function createRandomizedData(numOfItems, maxDepth) {
     return data;
 }
 
+export function createAsyncLoadRandomizedData(numOfItems, maxDepth) {
+    let asynclyLoadableIds = [];
+    const createRandomizedItem = (key, depth) => {
+        let children = [];
+        let hasChildren;
+        let name = RANDOM_WORDS[Math.floor(Math.random() * RANDOM_WORDS.length)];
+        if (Math.random() > 0.5) {
+            hasChildren = true;
+            asynclyLoadableIds.push(key);
+        } else {
+            let numChildren = depth < maxDepth ? 4 : 0;
+            for (let i = 0; i < numChildren; i++) {
+                children.push(createRandomizedItem(key + '-' + i, depth + 1));
+            }
+        }
+        return {
+            id: key,
+            value: key + ' ' + name,
+            expanded: false,
+            children: children,
+            iconName: Math.random() > 0.8 ? 'icon-edit_user' : '',
+            iconClassName: 'color',
+            hasChildren: hasChildren
+        };
+    };
+
+    let data = [];
+    for (let i = 0; i < numOfItems; i++) {
+        data.push(createRandomizedItem(i, 0));
+    }
+    return [data, asynclyLoadableIds];
+
+}

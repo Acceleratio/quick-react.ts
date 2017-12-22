@@ -1,0 +1,112 @@
+@import '../../index.scss';
+
+.people-picker {
+    .label {
+        margin-left: 2px;
+    }
+
+    &.is-disabled {
+        .label {        
+            color: $secondary-disabled-color;
+        }
+    }
+
+    .people-picker-input {
+        box-sizing: border-box;
+        border: 1px solid $white-background-lines;
+        border-radius: 8px;
+        padding: 5px 10px 6px 10px;
+        width: calc(100% - 30px);
+        outline: 0;
+    
+        &:hover {
+            border-color: $white-background-lines-hover;
+        }
+    
+        &:active,
+        &:focus {
+            border-color: $primary-color;
+        }
+    
+        &.is-disabled {
+            background-color: $disabled-field;
+            border-color: $white-background-lines;
+            color: $secondary-disabled-color;
+            pointer-events: none;
+            cursor: default;
+        }
+    }
+
+    .people-picker-suggestions {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        border: 1px solid $white-background-lines;
+        border-radius: 8px;
+        border-color: $primary-color;
+        width: calc(100% - 30px);
+        outline: 0;
+    }
+
+    .people-picker-selected {
+        box-sizing: border-box;
+        border: 1px solid $white-background-lines;
+        border-radius: 8px;
+        padding: 5px 10px 6px 10px;
+        width: calc(100% - 30px);
+        outline: 0;
+        
+        .people-picker-selected-input{
+            border: none!important;        
+            outline: 0!important;
+            padding-left: 5px!important;
+        }
+
+        &:hover {
+            border-color: $white-background-lines-hover;
+        }
+        
+        &:active,
+        &:focus {
+            border-color: $primary-color;
+        }
+
+        &.is-active {
+            border-color: $primary-color;
+        }
+    }
+
+    .people-picker-error-icon {
+        position: relative;
+        left: -20px;
+        font-size: 12px;
+        color: $error-color;
+    }
+
+    .people-picker-input-error-container {
+        .people-picker-input-error-info-container {
+            float: right;
+            position: relative;
+            top: -25px;
+            left: -1px;
+        }
+    }
+
+    .people-picker-input-error {
+        box-sizing: border-box;
+        border: 1px solid $error-color;
+        border-radius: 8px;
+        padding: 5px 10px 6px 10px;
+        width: calc(100% - 30px);
+        outline: 0;
+    
+        &:hover {
+            border-color: $error-color;
+        }
+    
+        &:active,
+        &:focus {
+            border-color: $error-color;
+        }
+    }
+}

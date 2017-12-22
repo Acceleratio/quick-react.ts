@@ -26,6 +26,7 @@ export * from './components/LeftNavigation';
 export * from './components/MainNavigation';
 export * from './components/MessageBar';
 export * from './components/Overlay';
+export * from './components/PeoplePicker';
 export * from './components/Pivot';
 export * from './components/Popup';
 export * from './components/Search';

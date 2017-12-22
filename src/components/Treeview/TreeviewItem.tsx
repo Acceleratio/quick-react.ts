@@ -47,7 +47,7 @@ export class TreeviewItem extends CommonComponent<ITreeviewItemProps, any> {
         const arrowIcon = isOpen ? expandedIcon : collapsedIcon;
         const itemClassName = isOpen ? 'expanded' : 'collapsed';
         const parentItemClassName = item.children.length > 0 ? 'treeveiw-parent-item' : '';
-        const treeveiwItemClassName = 'treeveiw-content';
+        const treeveiwItemClassName = item.children.length > 0 ? 'treeview-content' : 'treeview-content without-children';
         const selectedClassName = (recursive && checkedStatus.hasCheckedChild && !checked) ? 'partial-selected' : '';
 
         return (

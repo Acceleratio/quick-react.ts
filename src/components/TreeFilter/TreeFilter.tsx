@@ -93,7 +93,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
     public componentWillReceiveProps(nextProps: ITreeFilterProps) {
         if (nextProps.items !== this.props.items) {
             this.lookups = ItemOperator.getLookupTableAndParentLookup(nextProps.items);
-            this.allItemIds = ItemOperator.getAllItemIds(nextProps.items);
+            this.allItemIds = Object.keys(this.lookups.itemLookup);
         }
 
         const selectionStrings = this.getSelectedText(nextProps.filterSelection, this.lookups.itemLookup);

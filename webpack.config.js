@@ -51,6 +51,7 @@ module.exports = {
         MessageBox: "./examples/src/MessageBox.tsx",
         Compare: "./examples/src/Compare.tsx",
         Scheduler: "./examples/src/Scheduler.tsx",
+        PeoplePicker: "./examples/src/PeoplePicker.tsx"
     },
     output: {
         path: path.join(__dirname, '/dist'),
