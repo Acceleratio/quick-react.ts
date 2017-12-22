@@ -35,6 +35,7 @@ import {
 
 import './VirtualizedTreeView.scss';
 import { Button } from '../Button/Button';
+import addHoverableButtons from '../HoverableButton/HoverableButton';
 
 export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeViewProps, IVirtualizedTreeViewState> {
 
@@ -201,26 +202,32 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 'virtualized-tree-item-icon',
                 treeItem.iconClassName
             );
+
+            let {id, hoverOverBtn} = treeItem;
+
             if (this.props.isSingleSelect) {
-                return (
+                const SingleSelectItem = ({}) => 
                     <span
                         className="virtualized-tree-single-select-item"
                         onClick={onSingleSelectItemClick}
-                        title={treeItem.value}
-                    >
+                        title={treeItem.value}>
                         {treeItem.iconName &&
                             <Icon iconName={treeItem.iconName} className={iconClassName} />
                         }
                         {treeItem.value}
-                    </span>
-                );
+                    </span>;
+                const SingleSelectItemWithButtons = addHoverableButtons({id, hoverOverBtn})(SingleSelectItem);
+
+                return <SingleSelectItemWithButtons />;
             } else {
                 let checked = itemChecked ? CheckStatus.Checked : CheckStatus.NotChecked;
                 if (this.isItemInList(this.state.partiallyCheckedItemIds, treeItem)) {
                     checked = CheckStatus.ChildChecked;
                 }
+
+                const ItemWithButtons = addHoverableButtons({id, hoverOverBtn})(VirtualizedTreeViewCheckBox);
                 return (
-                    <VirtualizedTreeViewCheckBox
+                    <ItemWithButtons
                         itemId={treeItem.id}
                         text={treeItem.value}
                         checked={checked}

@@ -1,4 +1,5 @@
 import { DirectionalHint } from '../../utilities/DirectionalHint';
+import { IHoverOverBtn } from '../Treeview';
 
 export enum FilterSelectionEnum {
     All,
@@ -102,4 +103,5 @@ export interface TreeItem {
     className?: string;
     iconName?: string;
     iconClassName?: string;
+    hoverOverBtn?: Array<IHoverOverBtn>;
 }

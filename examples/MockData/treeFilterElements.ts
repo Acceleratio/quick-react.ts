@@ -33,7 +33,17 @@ export function createRandomizedData(numOfItems, maxDepth) {
             expanded: false,
             children: children,
             iconName: Math.random() > 0.8 ? 'icon-edit_user' : '',
-            iconClassName: 'color'
+            iconClassName: 'color',
+            hoverOverBtn: [{
+                iconName: 'icon-edit',
+                // tslint:disable-next-line:no-console
+                callback: (id) => console.log(id)
+            },
+            {
+                iconName: 'icon-trash',
+                // tslint:disable-next-line:no-console
+                callback: (id) => console.log(id)
+            }]
         };
     };
 
