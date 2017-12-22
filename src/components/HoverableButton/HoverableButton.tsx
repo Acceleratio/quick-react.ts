@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TreeviewItemHoverBtn } from '../Treeview/treeviewItemHoverBtn';
 import { IHoverOverBtn } from '../Treeview';
-import './HoverableButtons.scss';
+import './HoverableButton.scss';
 
 export interface IHoverableButtonsProps {
     id: string;
