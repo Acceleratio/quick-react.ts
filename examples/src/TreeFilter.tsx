@@ -157,6 +157,7 @@ export class Index extends React.Component<any, DemoState> {
                     showSelectAll={false}
                     emptySelectionText="Select role"
                     showStatusBar={false}
+                    validated={false}
                 />
             </div>
         );

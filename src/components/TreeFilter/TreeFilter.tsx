@@ -261,6 +261,14 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
             }
         );
 
+        const treeFilterTitleClass = classNames(
+            'tree-filter-title',
+            {
+                'tree-filter-title-with-border': this.props.hasTitleBorder,
+                'tree-filter-title-validation-error': !this.props.validated
+            }
+        );
+
         return (
             <div className={treeFilterClassName} ref={this.setAnchorRef}>
                 {
@@ -275,18 +283,27 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
                     this.props.title && !isDefaultSelected &&
                     <Icon iconName="icon-delete" title="Reset selection" className="reset-filter-icon" onClick={this.onFilterReset} />
                 }
-                <Tooltip content={this.state.titleText} delayMs={500} directionalHint={DirectionalHint.rightCenter} ref={this._setTooltipRef}>
+                <Tooltip
+                    content={this.props.validated ? this.state.titleText : this.props.validationErrorMessage}
+                    delayMs={500}
+                    directionalHint={DirectionalHint.rightCenter}
+                    ref={this._setTooltipRef}
+                    className={this.props.validated ? undefined : 'tooltip-error'}>
                     <div
-                        className={classNames('tree-filter-title', { 'tree-filter-title-with-border': this.props.hasTitleBorder })}
+                        className={treeFilterTitleClass}
                         onClick={this.toggleOpenState}>
                         <span>{this.state.selectionText}</span>
                         {
+                            !this.props.validated &&
+                            <Icon className="validation-error-icon" iconName="icon-warning2" />
+                        }
+                        {
                             hasItems && isOpen &&
-                            <Icon className="dropdown-icon" iconName={'icon-Arrow_up'} />
+                            <Icon className="dropdown-icon" iconName="icon-Arrow_up" />
                         }
                         {
                             hasItems && !isOpen &&
-                            <Icon className="dropdown-icon" iconName={'icon-arrow_down'} />
+                            <Icon className="dropdown-icon" iconName="icon-arrow_down" />
                         }
                     </div>
                 </Tooltip>

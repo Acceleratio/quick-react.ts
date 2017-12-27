@@ -104,8 +104,14 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
         }
     }
 
+    @autobind
     private _toggleTooltip(isTooltipVisible: boolean) {
-        this.setState({ isTooltipVisible }, () => this.props.onTooltipToggle(this.state.isTooltipVisible));
+        let showTooltipProp = this.props.showTooltip !== undefined ? this.props.showTooltip : true;
+
+        this.setState({
+            isTooltipVisible: showTooltipProp && isTooltipVisible
+        }, () => this.props.onTooltipToggle(this.state.isTooltipVisible));
+        
         this.timer = null;
     }
 }

@@ -123,13 +123,6 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 {label && <Label htmlFor={this._id}>{label}</Label>}
                 {iconClass && <i className={iconClass}></i>}
                 {multiline ? this._renderTextArea() : this._renderInput()}
-                {!errorMessage && description &&
-                    <span id={this._descriptionId} className={'text-field-info-container'}>
-                        <Tooltip content={description} directionalHint={DirectionalHint.rightCenter}>
-                            <Icon iconName={'icon-Info_krug'} className={'text-field-info'}></Icon>
-                        </Tooltip>
-                    </span>
-                }
             </div>
         );
     }
@@ -282,20 +275,12 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
     private _renderTextArea(): React.ReactElement<React.HTMLProps<HTMLAreaElement>> {
         let textAreaProps = getNativeAttributes(this.props, textAreaAttributes, ['defaultValue']);
 
-        if (!this.props.errorMessage) {
-            return (
-                <textarea
-                    { ...textAreaProps }
-                    id={this._id}
-                    ref={(c): HTMLTextAreaElement => this._field = c}
-                    value={this.state.value}
-                    onChange={this._onInputChange}
-                    onKeyUp={this._onKeyUp}
-                    className={this._fieldClassName}
-                    onFocus={this._onFocus}
-                    onBlur={this._onBlur}
-                />
-            );
+        let showTooltip = false;
+        if (this.props.errorMessage !== undefined) {
+            showTooltip = this.props.errorMessage !== '' && this.state.isFocused;
+
+        } else {
+            showTooltip = this.state.isFocused;
         }
 
         return (
@@ -303,7 +288,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 <Tooltip
                     content={this.props.errorMessage}
                     className="tooltip-error"
-                    showTooltip={this.state.isFocused}
+                    showTooltip={showTooltip}
                     directionalHint={DirectionalHint.bottomLeftEdge}>
                     <div className="text-field-textarea-error-content">
                         <textarea
@@ -333,21 +318,12 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
     private _renderInput(): React.ReactElement<React.HTMLProps<HTMLInputElement>> {
         let inputProps = getNativeAttributes<React.HTMLProps<HTMLInputElement>>(this.props, inputAttributes, ['defaultValue']);
 
-        if (!this.props.errorMessage) {
-            return (
-                <input
-                    type={'text'}
-                    { ...inputProps }
-                    id={this._id}
-                    ref={(c): HTMLInputElement => this._field = c}
-                    value={this.state.value}
-                    onChange={this._onInputChange}
-                    onKeyUp={this._onKeyUp}
-                    className={this._fieldClassName}
-                    onFocus={this._onFocus}
-                    onBlur={this._onBlur}
-                />
-            );
+        let showTooltip = false;
+        if (this.props.errorMessage !== undefined) {
+            showTooltip = this.props.errorMessage !== '' && this.state.isFocused;
+
+        } else {
+            showTooltip = this.state.isFocused;
         }
 
         return (
@@ -355,7 +331,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 <Tooltip
                     content={this.props.errorMessage}
                     className="tooltip-error"
-                    showTooltip={this.state.isFocused}
+                    showTooltip={showTooltip}
                     directionalHint={DirectionalHint.bottomLeftEdge}>
                     <div className="text-field-input-error-content">
                         <input
@@ -370,9 +346,11 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                             onFocus={this._onFocus}
                             onBlur={this._onBlur}
                         />
-                        <span className="textField-error-icon">
-                            <Icon iconName={'icon-warning2'}></Icon>
-                        </span>
+                        {this.props.errorMessage &&
+                            <span className="textField-error-icon">
+                                <Icon iconName={'icon-warning2'}></Icon>
+                            </span>
+                        }
                     </div>
                 </Tooltip>
                 {this.props.description &&

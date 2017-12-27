@@ -89,14 +89,13 @@ export class ProgressBar extends React.Component<IProgressBarProps, any> {
             index = 1;
         }
 
-        const dimensions = element.getBoundingClientRect();
-        let width = dimensions.width;
+        let width = element.offsetWidth;
 
-        const height = dimensions.height;
+        const height = element.offsetHeight;
         this.labelHeight = element.children[0].getBoundingClientRect().height;
 
         this.percentageWidth = element.children[index].getBoundingClientRect().width + 3;
-        width = dimensions.width - this.percentageWidth;
+        width = element.offsetWidth - this.percentageWidth;
 
         if (width !== this.state.width || (height - this.labelHeight) !== this.state.height) {
             this.setState({ width: width, height: height - this.labelHeight, isParentMounted: true });

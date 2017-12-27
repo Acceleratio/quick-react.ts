@@ -11,12 +11,18 @@
         line-height: 22px;
     }
 
+    .tree-filter-title.tree-filter-title-validation-error {
+        border-color: $error-color !important;
+    }
+
     .tree-filter-title {
         box-sizing: border-box;
         width: 200px;
         height: 22px;
         border-bottom: 1px solid $secondary-color-20;
         cursor: pointer;
+        display: flex;
+        align-items: center;
 
         span {
             width: calc(100% - 20px);
@@ -24,6 +30,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .validation-error-icon {
+            float: right;
+            color: $error-color;
         }
 
         .dropdown-icon {

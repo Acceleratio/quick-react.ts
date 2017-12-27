@@ -57,6 +57,8 @@ export interface ITreeFilterProps {
         topLeft: boolean
     };
     onCalloutClose?(): void;
+    validated?: boolean;
+    validationErrorMessage?: string;
 }
 
 export const defaultTreeFilterProps: Partial<ITreeFilterProps> = {
@@ -78,7 +80,9 @@ export const defaultTreeFilterProps: Partial<ITreeFilterProps> = {
     onCalloutClose: () => { },
     showSelectAll: true,
     emptySelectionText: 'Please select...',
-    showStatusBar: true
+    showStatusBar: true,
+    validated: true,
+    validationErrorMessage: 'This field is required'
 };
 
 export interface ITreeFilterState {
