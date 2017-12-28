@@ -65,7 +65,8 @@ export class Index extends React.Component<any, any> {
                 <Resizable width={1000} height={700} >
                     <div className="viewport-height" style={{ height: '100%' }} >
                         <QuickTreeGrid
-                            rows={this.state.data}
+                            rows={this.state.data.grid}
+                            tree={this.state.data.tree}
                             columns={this.state.columns}
                             gridActions={gridActions}
                             columnSummaries={columnSummaries}
