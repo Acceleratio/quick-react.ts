@@ -8,6 +8,9 @@ import {
 } from './QuickGrid.Props';
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 import { getRowsSelector } from './DataSelectors';
+
+import { getTreeRowsSelector } from './TreegridDataSelectors';
+
 import { groupRows } from './rowGrouper';
 import { GridHeader } from './QuickGridHeader';
 import { Dropdown, DropdownType, IDropdownOption } from '../Dropdown';
@@ -55,7 +58,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         };
         this.columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         this.onGridResize = _.debounce(this.onGridResize, 100);
-        this.finalGridRows = getRowsSelector(this.state, props);
+        this.finalGridRows = this.getRows(this.state, props);
     }
 
     expandAll = (event) => {
@@ -146,7 +149,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentWillUpdate(nextProps, nextState) {
-        this.finalGridRows = getRowsSelector(nextState, nextProps);
+        this.finalGridRows = this.getRows(nextState, nextProps);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -157,6 +160,13 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
+    getRows(state, props) {
+        if (props.tree == null) {
+            return getRowsSelector(state, props);
+        } else {
+            return getTreeRowsSelector(state, props);
+        }
+    }
 
     getViewportWidth() {
         let width = 0;
@@ -212,17 +222,72 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
     cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
         const rowData = this.finalGridRows[rowIndex];
-        if (rowData.type === 'GroupRow') { // todo Different member - > true
-            return this.renderGroupCell(columnIndex, key, rowIndex, rowData, style);
-        } else {
-            if (columnIndex === 0 && this.props.gridActions != null) {
-                return this.renderActionCell(key, rowIndex, rowData, style);
+
+        if (this.props.tree == null) {
+            if (rowData.type === 'GroupRow') { // todo Different member - > true
+                return this.renderGroupCell(columnIndex, key, rowIndex, rowData, style);
+            } else {
+                if (columnIndex === 0 && this.props.gridActions != null) {
+                    return this.renderActionCell(key, rowIndex, rowData, style);
+                }
+                if (columnIndex < this.props.groupBy.length) {
+                    return this.renderEmptyCell(key, rowIndex, rowData, style);
+                }
+                return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);
             }
-            if (columnIndex < this.props.groupBy.length) {
+        } else {
+            const rowID: string = !rowData.Test ? '' : rowData.Test;
+        const indentSize = 20;
+        let indent = 0;
+        let level = 0;
+        if (rowID.length > 0)  {
+            level = rowID.split('.').length;
+        }
+        if ((columnIndex === 0 || columnIndex === 2)) {
+            indent = level * indentSize;     
+        }
+        let shouldIndent: boolean = false;
+        if (columnIndex === 0) {
+            if (level === 0) {
+                shouldIndent = false;
+            } else if (style.left < indent) {
+                shouldIndent = true;
+            }
+        } else if (columnIndex === 2) {
+            if (level === 0) {
+                shouldIndent = false;
+            } else if (style.left < (indent + indentSize)) {
+                shouldIndent = true;
+            }
+        }
+        if (columnIndex === 1) {
+            return this.renderHiddenCell(key, columnIndex, rowID);     
+        }
+        if (columnIndex === 2 && shouldIndent) {
+                style.width -= indent;            
+        }      
+        if (shouldIndent) {
+            style.left += indent;  
+        }
+        if (columnIndex === 0 && this.props.gridActions != null) {
+            if (rowID.endsWith('*')) {
                 return this.renderEmptyCell(key, rowIndex, rowData, style);
             }
-            return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);
+            return this.renderActionCell(key, rowIndex, rowData, style, rowID);
         }
+        return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);        
+        }
+
+    }
+
+    renderHiddenCell(key, columnIndex, rowData) {
+        const style = {
+            display: 'none'
+        };
+        return (
+        <div key={key} style={style}> 
+            {rowData}
+        </div>);
     }
 
     renderEmptyCell(key, rowIndex, rowData, style) {
@@ -265,8 +330,32 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    renderActionCell(key, rowIndex: number, rowData, style) {
-        let { tooltipsEnabled, actionsTooltip } = this.props;
+    onActionTreeItemClick = (shouldExpand, name) => {return () => {
+        this.setState((oldState) => {
+            let collapsedRows = [...oldState.collapsedRows];
+            if (shouldExpand) {
+                let index: number = collapsedRows.indexOf(name, 0);
+                if (index > -1) {
+                    collapsedRows.splice(index, 1);
+                }
+            } else {
+                collapsedRows.push(name);
+            }
+            return { ...oldState, collapsedRows: collapsedRows };
+            });
+        };
+    }
+
+    renderActionCell(key, rowIndex: number, rowData, style, name?) {
+        let actionsTooltip: string;
+        let iconName: string;
+        if (name == null) {
+            actionsTooltip = this.props.actionsTooltip;
+        } else {
+            actionsTooltip = rowData.isExpanded ? 'Collapse' : 'Expand';
+            iconName = rowData.isExpanded ? 'icon-arrow_down_right' : 'icon-arrow_right';	
+        }
+
         const rowClass = 'grid-row-' + rowIndex;
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
         const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
@@ -278,7 +367,27 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             rowClass,
             { 'is-selected': rowIndex === this.state.selectedRowIndex }
         );
-
+        if (name == null) {
+            return (
+                <div
+                    key={key}
+                    style={style}
+                    className={className}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    title={title}
+                >
+                    <Dropdown
+                        dropdownKey={rowIndex}
+                        icon={actionIconName}
+                        dropdownType={DropdownType.actionDropdown}
+                        displaySelection={false}
+                        onClick={this.onActionItemClick}
+                        options={actionOptions}
+                    />
+                </div>
+            );
+        }
         return (
             <div
                 key={key}
@@ -287,17 +396,12 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 title={title}
+                onClick={this.onActionTreeItemClick(false, '||' + 'C')}
             >
-                <Dropdown
-                    dropdownKey={rowIndex}
-                    icon={actionIconName}
-                    dropdownType={DropdownType.actionDropdown}
-                    displaySelection={false}
-                    onClick={this.onActionItemClick}
-                    options={actionOptions}
-                />
+                <Icon iconName={iconName} className="expand-colapse-action-icon" />
             </div>
         );
+
     }
 
     renderGroupCell(columnIndex: number, key, rowIndex: number, rowData: GroupRow, style) {

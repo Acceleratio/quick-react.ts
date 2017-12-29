@@ -13,6 +13,7 @@ export interface IGroupBy {
 export interface IQuickGridProps {
     rows: Array<any>;
     columns: Array<GridColumn>;
+    tree?: Array<any>;
     groupBy?: Array<string | IGroupBy>;
     gridClassName?: string;
     headerClassName?: string;

@@ -1,5 +1,4 @@
-import { SortDirection } from '../QuickGrid/QuickGrid.Props';
-import { IQuickTreeGridState, IQuickTreeGridProps } from './QuickTreeGrid.Props';
+import { SortDirection,  IQuickGridState, IQuickGridProps } from '../QuickGrid/QuickGrid.Props';
 const createSelector = require('reselect').createSelector;
 
 export interface TreeEntry {   
@@ -54,11 +53,11 @@ const sort = (input, sortDirection, sortColumn) => {
     return [...input].sort(sortFunction);
 };
 
-const getSortColumn = (state: IQuickTreeGridState, props: IQuickTreeGridProps) => state.sortColumn;
-const getSortDirection = (state: IQuickTreeGridState, props: IQuickTreeGridProps) => state.sortDirection;
-const getTreeData = (state: IQuickTreeGridState, props: IQuickTreeGridProps) => props.tree;
+const getSortColumn = (state: IQuickGridState, props: IQuickGridProps) => state.sortColumn;
+const getSortDirection = (state: IQuickGridState, props: IQuickGridProps) => state.sortDirection;
+const getTreeData = (state: IQuickGridState, props: IQuickGridProps) => props.tree;
 
-export const getRows = createSelector(getTreeData, getSortColumn, getSortDirection,
+export const getTreeRowsSelector = createSelector(getTreeData, getSortColumn, getSortDirection,
     (treeData, sortColumn, sortDirection) => {
         return sortData(treeData, sortColumn, sortDirection);
     }

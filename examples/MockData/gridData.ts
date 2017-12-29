@@ -23,15 +23,15 @@ export interface TreeEntry {
     gridData: GridData1;
 }
 
-const resultich = [];
+const testResult = [];
 
 const pad = (num, size) => {
     let s = '000000000000000' + num;
     return s.substr(s.length - size);
 };
 
-const testarosa = () => {
-    if (!this.resultich || this.resultich.length === 0) {
+const generateTreeData = () => {
+    if (!this.testResult || this.testResult.length === 0) {
     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
     const entry = (id): GridData1 => {
         return {
@@ -65,9 +65,9 @@ const testarosa = () => {
         const firstTreeEnty: TreeEntry = {ID: '', leaves: fistLevelChildren, gridData: gridData1};
         result.push(firstTreeEnty);
     }
-    this.resultich = result;
+    this.testResult = result;
     }
-    return this.resultich;
+    return this.testResult;
 };
 
 const flatten = (data) => {
@@ -83,10 +83,9 @@ const flatten = (data) => {
 };
 
 export const sortData = (sortColumn: string, sortDirection: SortDirection) => {
-    const mirko = testarosa();
-    const noviMirko = sortTree(mirko, sortColumn, sortDirection);
-    const marko = flatten(noviMirko);
-    return marko;
+    const sortedTree = sortTree(generateTreeData(), sortColumn, sortDirection);
+    const gridData = flatten(sortedTree);
+    return gridData;
 };
 
 const sortTree = (tree: Array<TreeEntry>, sortColumn: string, sortDirection: SortDirection): Array<TreeEntry> => {
@@ -159,42 +158,9 @@ export const gridColumns1: Array<GridColumn> = [
 
 
 export function getGridData1(numberOfElements) {
-    let data = [];
-    const mirko = testarosa();
-    const marko = flatten(mirko);
-    return { tree: mirko, grid: marko };
-    // for (let i = 0; i < numberOfElements; i++) {
-    //     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
-    //     let test = '';
-    //     let parent = '';
-    //     const res = i % 7;
-    //     if (res === 0) {
-    //         test = pad(Math.floor(i / 7), 7);
-    //         parent = '';
-    //     } else if (res === 1 || res === 3) {
-    //         const sufix = res === 1 ? pad(0, 7) : pad(1, 7);
-    //         parent = pad(Math.floor(i / 7), 7);
-    //         test =  parent + '.' + sufix; 
-    //     } else {
-    //         const sufix2 = res < 3 ? pad(0, 7) : pad(1, 7);
-    //         parent = pad(Math.floor(i / 7), 7) + '.' + sufix2;                 
-    //         const sufix3 = res < 3 ? pad(0, 7) : pad((i - 4) % 4, 7);     
-    //         test = parent + '.' + sufix3;
-    //     }
-    //     data.push(
-    //         {
-    //             Test: test,
-    //             // Parent: parent,
-    //             Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
-    //             Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
-    //             Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
-    //             Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
-    //             Numbers: Math.floor(Math.random() * 30),
-    //             Order: i
-    //         }
-    //     );
-    // }
-    // return data;
+    const treeData = generateTreeData();
+    const gridData = flatten(treeData);
+    return { tree: treeData, grid: gridData };
 }
 
 
