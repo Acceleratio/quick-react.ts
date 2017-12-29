@@ -65,11 +65,11 @@ export class Index extends React.Component<any, any> {
                     <div className="viewport-height" style={{ height: '100%' }} >
                         <QuickGrid
                             rows={this.state.data.grid}
-                             tree={this.state.data.tree}
+                            // tree={this.state.data.tree}
                             columns={this.state.columns}
-                            // groupBy={this.state.groupBy}
-                            // displayGroupContainer={true}
-                            // onGroupByChanged={this.groupByChanged}
+                             groupBy={this.state.groupBy}
+                             displayGroupContainer={true}
+                             onGroupByChanged={this.groupByChanged}
                             gridActions={gridActions}
                             columnSummaries={columnSummaries}
                              actionsTooltip="Act on these."
