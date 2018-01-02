@@ -237,45 +237,45 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             }
         } else {
             const rowID: string = !rowData.Test ? '' : rowData.Test;
-        const indentSize = 20;
-        let indent = 0;
-        let level = 0;
-        if (rowID.length > 0)  {
-            level = rowID.split('.').length;
-        }
-        if ((columnIndex === 0 || columnIndex === 2)) {
-            indent = level * indentSize;     
-        }
-        let shouldIndent: boolean = false;
-        if (columnIndex === 0) {
-            if (level === 0) {
-                shouldIndent = false;
-            } else if (style.left < indent) {
-                shouldIndent = true;
+            const indentSize = 20;
+            let indent = 0;
+            let level = 0;
+            if (rowID.length > 0)  {
+                level = rowID.split('.').length;
             }
-        } else if (columnIndex === 2) {
-            if (level === 0) {
-                shouldIndent = false;
-            } else if (style.left < (indent + indentSize)) {
-                shouldIndent = true;
+            if ((columnIndex === 0 || columnIndex === 2)) {
+                indent = level * indentSize;     
             }
-        }
-        if (columnIndex === 1) {
-            return this.renderHiddenCell(key, columnIndex, rowID);     
-        }
-        if (columnIndex === 2 && shouldIndent) {
-                style.width -= indent;            
-        }      
-        if (shouldIndent) {
-            style.left += indent;  
-        }
-        if (columnIndex === 0 && this.props.gridActions != null) {
-            if (rowID.endsWith('*')) {
-                return this.renderEmptyCell(key, rowIndex, rowData, style);
+            let shouldIndent: boolean = false;
+            if (columnIndex === 0) {
+                if (level === 0) {
+                    shouldIndent = false;
+                } else if (style.left < indent) {
+                    shouldIndent = true;
+                }
+            } else if (columnIndex === 2) {
+                if (level === 0) {
+                    shouldIndent = false;
+                } else if (style.left < (indent + indentSize)) {
+                    shouldIndent = true;
+                }
             }
-            return this.renderActionCell(key, rowIndex, rowData, style, rowID);
-        }
-        return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);        
+            if (columnIndex === 1) {
+                return this.renderHiddenCell(key, columnIndex, rowID);     
+            }
+            if (columnIndex === 2 && shouldIndent) {
+                    style = {...style, width: style.width - indent};
+            }      
+            if (shouldIndent) {
+                style = {...style, left: style.left + indent};
+            }
+            if (columnIndex === 0 && this.props.gridActions != null) {
+                if (rowID.endsWith('*')) {
+                    return this.renderEmptyCell(key, rowIndex, rowData, style);
+                }
+                return this.renderActionCell(key, rowIndex, rowData, style, rowID);
+            }
+            return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);        
         }
 
     }

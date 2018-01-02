@@ -6,7 +6,7 @@ import Resizable from 'react-resizable-box';
 import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, QuickGridActions } from '../../src/components/QuickGrid';
-import { gridColumns1, getGridData1, gridColumns2, getGridData2 } from '../MockData/gridData';
+import { gridColumns1, getTreeGridData, gridColumns2, getGridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 
@@ -36,7 +36,7 @@ const columnSummaries = {
 
 export class Index extends React.Component<any, any> {
     state = {
-        data: getGridData1(numOfRows),
+        data: getTreeGridData(),
         columns: gridColumns1,
         groupBy: [],
         selectedData: 1
@@ -54,8 +54,8 @@ export class Index extends React.Component<any, any> {
                         selectedKey={this.state.selectedData}
                         options={
                             [
-                                { key: 1, text: '5 Columns' },
-                                { key: 2, text: '2 Columns' }
+                                { key: 1, text: 'Tree Grid' },
+                                { key: 2, text: 'Grid' }
                             ]}
                     />
                 </div>
@@ -65,14 +65,14 @@ export class Index extends React.Component<any, any> {
                     <div className="viewport-height" style={{ height: '100%' }} >
                         <QuickGrid
                             rows={this.state.data.grid}
-                            // tree={this.state.data.tree}
+                            tree={this.state.data.tree}
                             columns={this.state.columns}
-                             groupBy={this.state.groupBy}
-                             displayGroupContainer={true}
-                             onGroupByChanged={this.groupByChanged}
+                            groupBy={this.state.groupBy}
+                            displayGroupContainer={this.state.data.tree == null} // group by is hidden for tree grid
+                            onGroupByChanged={this.groupByChanged}
                             gridActions={gridActions}
                             columnSummaries={columnSummaries}
-                             actionsTooltip="Act on these."
+                            actionsTooltip="Act on these."
                             tooltipsEnabled={true}
                         />
                     </div>
@@ -84,7 +84,7 @@ export class Index extends React.Component<any, any> {
     onDropdownDataChange = (option, index) => {
         if (option.key === 1) {
             this.setState({
-                data: getGridData1(numOfRows),
+                data: getTreeGridData(),
                 columns: gridColumns1,
                 selectedData: 1,
                 groupBy: []
@@ -92,7 +92,7 @@ export class Index extends React.Component<any, any> {
 
         } else {
             this.setState({
-                data: getGridData2(numOfRows),
+                data: getGridData(numOfRows),
                 columns: gridColumns2,
                 groupBy: [],
                 selectedData: 2
@@ -101,7 +101,7 @@ export class Index extends React.Component<any, any> {
     }
 
     refreshData = () => {
-        const newData = this.state.selectedData === 1 ? getGridData1(numOfRows) : getGridData2(numOfRows);
+        const newData = this.state.selectedData === 1 ? getTreeGridData() : getGridData(numOfRows);
         this.setState({ ...this.state, data: newData });
     }
 

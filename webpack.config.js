@@ -62,7 +62,7 @@ module.exports = {
         inline: true,
         port: 3000
     },
-    devtool: 'source-map',
+    devtool: 'cheap-module-eval-source-map',
     resolve: {
         extensions: [
             '',

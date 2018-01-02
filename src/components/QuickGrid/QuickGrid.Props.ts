@@ -89,3 +89,10 @@ export interface ActionItem {
     iconName?: string;
     parameters?: any;
 }
+
+export interface TreeEntry<T> {   
+    ID: string; 
+    leaves: Array<TreeEntry<T>>;
+    gridData: T;
+}
+

@@ -1,33 +1,23 @@
-import { SortDirection,  IQuickGridState, IQuickGridProps } from '../QuickGrid/QuickGrid.Props';
+import { SortDirection,  IQuickGridState, IQuickGridProps, TreeEntry } from './QuickGrid.Props';
 const createSelector = require('reselect').createSelector;
 
-export interface TreeEntry {   
-    ID: string; 
-    leaves: Array<TreeEntry>;
-    gridData: any;
-    order: number;
-}
 
-const flatten = (tree: Array<TreeEntry>) => {
-    let result = [];      
-    for (let leaf of tree) {
-        result.push(leaf.gridData);
-        if (leaf.leaves && leaf.leaves.length > 0) {
-            const leaves = flatten(leaf.leaves);
-            result = result.concat(leaves);
-        }
-    }
-    return result;      
-};
 
-const sortData = (treeData: Array<TreeEntry>, sortColumn: string, sortDirection: SortDirection) => {
+const getSortColumn = (state: IQuickGridState, props: IQuickGridProps) => state.sortColumn;
+const getSortDirection = (state: IQuickGridState, props: IQuickGridProps) => state.sortDirection;
+const getTreeData = (state: IQuickGridState, props: IQuickGridProps) => props.tree;
+
+interface TreeEntryGrid extends TreeEntry<{}> {}
+
+
+const sortData = (treeData: Array<TreeEntryGrid>, sortColumn: string, sortDirection: SortDirection) => {
     const sortedTree = sortTree(treeData, sortColumn, sortDirection);
-    const flattenData = flatten(sortedTree);
-    return flattenData;
+    const flattenedData = flattenTree(sortedTree);
+    return flattenedData;
 };
 
-const sortTree = (tree: Array<TreeEntry>, sortColumn: string, sortDirection: SortDirection): Array<TreeEntry> => {
-    let newTree: Array<TreeEntry> = [];
+const sortTree = (tree: Array<TreeEntryGrid>, sortColumn: string, sortDirection: SortDirection): Array<TreeEntryGrid> => {
+    let newTree: Array<TreeEntryGrid> = [];
     for (let leaf of tree) {        
         if (leaf.leaves && leaf.leaves.length > 0) {
             leaf.leaves = sortTree(leaf.leaves, sortColumn, sortDirection);
@@ -53,9 +43,18 @@ const sort = (input, sortDirection, sortColumn) => {
     return [...input].sort(sortFunction);
 };
 
-const getSortColumn = (state: IQuickGridState, props: IQuickGridProps) => state.sortColumn;
-const getSortDirection = (state: IQuickGridState, props: IQuickGridProps) => state.sortDirection;
-const getTreeData = (state: IQuickGridState, props: IQuickGridProps) => props.tree;
+
+export const flattenTree = (tree: Array<TreeEntryGrid>) => {
+    let result = [];      
+    for (let leaf of tree) {
+        result.push(leaf.gridData);
+        if (leaf.leaves && leaf.leaves.length > 0) {
+            const leaves = flattenTree(leaf.leaves);
+            result = result.concat(leaves);
+        }
+    }
+    return result;      
+};
 
 export const getTreeRowsSelector = createSelector(getTreeData, getSortColumn, getSortDirection,
     (treeData, sortColumn, sortDirection) => {
