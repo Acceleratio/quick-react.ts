@@ -4,14 +4,13 @@ import * as classNames from 'classnames';
 import { AutoSizer, Table, Column, ColumnProps, ScrollSync, Grid } from 'react-virtualized';
 import {
     IQuickGridProps, IQuickGridState, GridColumn, GroupRow,
-    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix
+    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix, TreeEntry, GridData
 } from './QuickGrid.Props';
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 import { getRowsSelector } from './DataSelectors';
 
 import { getTreeRowsSelector } from './TreegridDataSelectors';
 
-import { groupRows } from './rowGrouper';
 import { GridHeader } from './QuickGridHeader';
 import { Dropdown, DropdownType, IDropdownOption } from '../Dropdown';
 import { Icon } from '../Icon/Icon';
@@ -236,14 +235,21 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);
             }
         } else {
-            const rowID: string = !rowData.Test ? '' : rowData.Test;
+            const rowID: string = !rowData.TreeId ? '' : rowData.TreeId;
             const indentSize = 20;
             let indent = 0;
             let level = 0;
+
+            let treeIndex: string = '';
+
             if (rowID.length > 0)  {
-                level = rowID.split('.').length;
+                level = rowID.split('.').length - 1;
             }
+
+            
+
             if ((columnIndex === 0 || columnIndex === 2)) {
+    
                 indent = level * indentSize;     
             }
             let shouldIndent: boolean = false;
@@ -261,7 +267,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 }
             }
             if (columnIndex === 1) {
-                return this.renderHiddenCell(key, columnIndex, rowID);     
+                return this.renderHiddenTreeCell(key, columnIndex, rowID);     
             }
             if (columnIndex === 2 && shouldIndent) {
                     style = {...style, width: style.width - indent};
@@ -273,14 +279,14 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 if (rowID.endsWith('*')) {
                     return this.renderEmptyCell(key, rowIndex, rowData, style);
                 }
-                return this.renderActionCell(key, rowIndex, rowData, style, rowID);
+                return this.renderActionTreeCell(key, rowIndex, rowData, style);
             }
             return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);        
         }
 
     }
 
-    renderHiddenCell(key, columnIndex, rowData) {
+    renderHiddenTreeCell(key, columnIndex, rowData) {
         const style = {
             display: 'none'
         };
@@ -330,31 +336,28 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    onActionTreeItemClick = (shouldExpand, name) => {return () => {
+    // probaj pronac sve treeEntries koji se nalaze ispod ovog selectanog i sakrit ih
+    // foreach rowdata gdje treerowId begins with treeRowId -> sakrij ga
+    onTreeExpandToggleClick = (rowData: GridData) => {return () => {
         this.setState((oldState) => {
             let collapsedRows = [...oldState.collapsedRows];
-            if (shouldExpand) {
-                let index: number = collapsedRows.indexOf(name, 0);
+            const rows = this.finalGridRows.filter(row => String(row.TreeId).startsWith(rowData.TreeId));
+
+            if (!rowData.IsExpanded) {
+                let index: number = collapsedRows.indexOf(rowData.TreeId, 0);
                 if (index > -1) {
                     collapsedRows.splice(index, 1);
                 }
             } else {
-                collapsedRows.push(name);
+                collapsedRows.push(...rows);
             }
             return { ...oldState, collapsedRows: collapsedRows };
             });
         };
     }
 
-    renderActionCell(key, rowIndex: number, rowData, style, name?) {
-        let actionsTooltip: string;
-        let iconName: string;
-        if (name == null) {
-            actionsTooltip = this.props.actionsTooltip;
-        } else {
-            actionsTooltip = rowData.isExpanded ? 'Collapse' : 'Expand';
-            iconName = rowData.isExpanded ? 'icon-arrow_down_right' : 'icon-arrow_right';	
-        }
+    renderActionCell(key, rowIndex: number, rowData, style) {        
+        let actionsTooltip = this.props.actionsTooltip;
 
         const rowClass = 'grid-row-' + rowIndex;
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
@@ -388,6 +391,24 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 </div>
             );
         }
+    }
+
+    renderActionTreeCell(key, rowIndex: number, rowData: GridData, style) {
+        let actionsTooltip = rowData.IsExpanded ? 'Collapse' : 'Expand';
+        let iconName = rowData.IsExpanded ? 'icon-arrow_down' : 'icon-arrow_right';	
+        let treeEntry = this.props.tree.find(entry => entry.gridData === rowData);
+        if (treeEntry && !treeEntry.leaves.length) {
+            iconName = '';
+        }
+        const rowClass = 'grid-row-' + rowIndex;
+        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
+        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const title = this.props.tooltipsEnabled ? actionsTooltip : null;
+        const className = classNames(
+            'grid-component-cell',
+            rowClass,
+            { 'is-selected': rowIndex === this.state.selectedRowIndex }
+        );
         return (
             <div
                 key={key}
@@ -396,12 +417,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 title={title}
-                onClick={this.onActionTreeItemClick(false, '||' + 'C')}
+                onClick={this.onTreeExpandToggleClick(rowData)}
             >
                 <Icon iconName={iconName} className="expand-colapse-action-icon" />
             </div>
         );
-
     }
 
     renderGroupCell(columnIndex: number, key, rowIndex: number, rowData: GroupRow, style) {

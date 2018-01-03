@@ -13,7 +13,7 @@ export interface IGroupBy {
 export interface IQuickGridProps {
     rows: Array<any>;
     columns: Array<GridColumn>;
-    tree?: Array<any>;
+    tree?: Array<TreeEntry>;
     groupBy?: Array<string | IGroupBy>;
     gridClassName?: string;
     headerClassName?: string;
@@ -90,9 +90,14 @@ export interface ActionItem {
     parameters?: any;
 }
 
-export interface TreeEntry<T> {   
+export interface TreeEntry {   
     ID: string; 
-    leaves: Array<TreeEntry<T>>;
-    gridData: T;
+    leaves: Array<TreeEntry>;
+    gridData: GridData;
+}
+
+export interface GridData {
+    TreeId?: string;
+    IsExpanded?: boolean;
 }
 
