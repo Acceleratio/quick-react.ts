@@ -43,15 +43,15 @@ const generateTreeData = (): TreeEntry[] => {
         };
     };
     let result: Array<TreeEntry> = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 11; i++) {
         const id1 = String(i);
         const gridData1 = entry(id1);
         let firstLevelChildren: Array<TreeEntry> = [];
-        for (let j = 0; j < 30; j++) {
+        for (let j = 0; j < 100; j++) {
             const id2 = i + '.' + j;
             const gridData2 = entry(id2);
             let secondLevelChildren: Array<TreeEntry> = [];
-            for (let k = 0; k < 45; k++) {
+            for (let k = 0; k < 25; k++) {
                 const id3 = i + '.' + j + '.' + k;
                 const gridData3 = entry(id3);
                 const thirdTreeEntry: TreeEntry = {ID: id2, leaves: [], gridData: gridData3};

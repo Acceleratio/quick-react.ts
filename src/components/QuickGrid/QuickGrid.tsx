@@ -50,6 +50,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             columnWidths: this.getColumnWidths(columnsToDisplay),
             columnsToDisplay: columnsToDisplay,
             collapsedRows: [],
+            collapsedTreeNodes: [],
             selectedRowIndex: undefined,
             sortColumn: props.sortColumn,
             sortDirection: props.sortDirection,
@@ -336,24 +337,24 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    // probaj pronac sve treeEntries koji se nalaze ispod ovog selectanog i sakrit ih
-    // foreach rowdata gdje treerowId begins with treeRowId -> sakrij ga
-    onTreeExpandToggleClick = (rowData: GridData) => {return () => {
+    onTreeExpandToggleClick = (rowData: GridData) => {
         this.setState((oldState) => {
-            let collapsedRows = [...oldState.collapsedRows];
-            const rows = this.finalGridRows.filter(row => String(row.TreeId).startsWith(rowData.TreeId));
-
-            if (!rowData.IsExpanded) {
-                let index: number = collapsedRows.indexOf(rowData.TreeId, 0);
+            let collapsedTreeNodes = [...oldState.collapsedTreeNodes];
+            let index: number;
+            let rows: Array<GridData> = this.finalGridRows.filter(row => String(row.TreeId).startsWith(rowData.TreeId) && row.TreeId !== rowData.TreeId);
+            rowData.IsExpanded = !rowData.IsExpanded;
+         
+            for (let i = 0; i < rows.length; i++) {
+                index = collapsedTreeNodes.indexOf(rows[i], 0);
                 if (index > -1) {
-                    collapsedRows.splice(index, 1);
-                }
-            } else {
-                collapsedRows.push(...rows);
+                    collapsedTreeNodes.splice(index, 1);
+                } else {
+                    collapsedTreeNodes.push(rows[i]);
+                }            
             }
-            return { ...oldState, collapsedRows: collapsedRows };
-            });
-        };
+
+            return { ...oldState, collapsedTreeNodes: collapsedTreeNodes };
+        });
     }
 
     renderActionCell(key, rowIndex: number, rowData, style) {        
@@ -403,6 +404,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const rowClass = 'grid-row-' + rowIndex;
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
         const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const onToggleTreeRow = () => { this.onTreeExpandToggleClick(rowData); };
         const title = this.props.tooltipsEnabled ? actionsTooltip : null;
         const className = classNames(
             'grid-component-cell',
@@ -417,7 +419,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 title={title}
-                onClick={this.onTreeExpandToggleClick(rowData)}
+                onClick={onToggleTreeRow}
             >
                 <Icon iconName={iconName} className="expand-colapse-action-icon" />
             </div>
