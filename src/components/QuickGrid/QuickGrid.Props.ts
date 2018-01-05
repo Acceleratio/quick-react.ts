@@ -92,7 +92,6 @@ export interface ActionItem {
 }
 
 export interface TreeEntry {   
-    ID: string; 
     leaves: Array<TreeEntry>;
     gridData: GridData;
 }

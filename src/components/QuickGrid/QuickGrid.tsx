@@ -9,7 +9,7 @@ import {
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 import { getRowsSelector } from './DataSelectors';
 
-import { getTreeRowsSelector } from './TreegridDataSelectors';
+import { getTreeRowsSelector, flatten } from './TreegridDataSelectors';
 
 import { GridHeader } from './QuickGridHeader';
 import { Dropdown, DropdownType, IDropdownOption } from '../Dropdown';
@@ -236,6 +236,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);
             }
         } else {
+            // this whole indent thing should be moved to a function
             const rowID: string = !rowData.TreeId ? '' : rowData.TreeId;
             const indentSize = 20;
             let indent = 0;
@@ -246,8 +247,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             if (rowID.length > 0)  {
                 level = rowID.split('.').length - 1;
             }
-
-            
 
             if ((columnIndex === 0 || columnIndex === 2)) {
     
@@ -341,8 +340,13 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         this.setState((oldState) => {
             let collapsedTreeNodes = [...oldState.collapsedTreeNodes];
             let index: number;
-            let rows: Array<GridData> = this.finalGridRows.filter(row => String(row.TreeId).startsWith(rowData.TreeId) && row.TreeId !== rowData.TreeId);
-            rowData.IsExpanded = !rowData.IsExpanded;
+            let rows: Array<GridData>;
+
+            if (rowData.IsExpanded) {
+                rows = this.finalGridRows.filter(row => String(row.TreeId).startsWith(rowData.TreeId) && row.TreeId !== rowData.TreeId);
+            } else {
+                rows = collapsedTreeNodes.filter(row => String(row.TreeId).startsWith(rowData.TreeId) && row.TreeId !== rowData.TreeId);
+            }
          
             for (let i = 0; i < rows.length; i++) {
                 index = collapsedTreeNodes.indexOf(rows[i], 0);
@@ -350,8 +354,12 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                     collapsedTreeNodes.splice(index, 1);
                 } else {
                     collapsedTreeNodes.push(rows[i]);
-                }            
+                }
+                rows[i].IsExpanded = !rowData.IsExpanded;            
             }
+
+            rowData.IsExpanded = !rowData.IsExpanded;
+
 
             return { ...oldState, collapsedTreeNodes: collapsedTreeNodes };
         });
@@ -397,7 +405,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     renderActionTreeCell(key, rowIndex: number, rowData: GridData, style) {
         let actionsTooltip = rowData.IsExpanded ? 'Collapse' : 'Expand';
         let iconName = rowData.IsExpanded ? 'icon-arrow_down' : 'icon-arrow_right';	
-        let treeEntry = this.props.tree.find(entry => entry.gridData === rowData);
+        let treeEntry = this.props.tree.find(entry => entry.gridData === rowData); // ovo je expensive i gadno
         if (treeEntry && !treeEntry.leaves.length) {
             iconName = '';
         }
@@ -421,7 +429,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 title={title}
                 onClick={onToggleTreeRow}
             >
-                <Icon iconName={iconName} className="expand-colapse-action-icon" />
+                <Icon iconName={iconName} className="expand-collapse-action-icon" />
             </div>
         );
     }

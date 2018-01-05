@@ -8,14 +8,6 @@ const RANDOM_City = ['Zagreb', 'Vienna', 'London', 'Amsterdam', 'Barcelona'];
 const RANDOM_CarBrand = ['Audi', 'BMW', 'Mercedes', 'Opel', 'VW', 'Lada', 'Ford', 'Mazda'];
 const RANDOM_Mix = ['1', 2, '3', 4, 'A', 'B', 'C', '10'];
 
-// export interface GridData {
-//     TreeId: string;
-//     Name: string;
-//     Color: string;
-//     Animal: string;
-//     Mixed: string | number;
-//     Numbers: number;
-// }
 export interface GridDataFull extends GridData {
     Name: string;
     Color: string;
@@ -27,7 +19,6 @@ export interface GridDataFull extends GridData {
 const testResult: Array<TreeEntry> = [];
 
 const generateTreeData = (): TreeEntry[] => {
-    let treeEntryGrid = this.TreeEntryGrid;
     if (!this.testResult || this.testResult.length === 0) {
     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
     const entry = (id): GridDataFull => {
@@ -44,23 +35,23 @@ const generateTreeData = (): TreeEntry[] => {
     };
     let result: Array<TreeEntry> = [];
     for (let i = 0; i < 11; i++) {
-        const id1 = String(i);
+        const id1  = i + '';
         const gridData1 = entry(id1);
         let firstLevelChildren: Array<TreeEntry> = [];
-        for (let j = 0; j < 100; j++) {
+        for (let j = 0; j < 10; j++) {
             const id2 = i + '.' + j;
             const gridData2 = entry(id2);
             let secondLevelChildren: Array<TreeEntry> = [];
-            for (let k = 0; k < 25; k++) {
+            for (let k = 0; k < 250; k++) {
                 const id3 = i + '.' + j + '.' + k;
                 const gridData3 = entry(id3);
-                const thirdTreeEntry: TreeEntry = {ID: id2, leaves: [], gridData: gridData3};
+                const thirdTreeEntry: TreeEntry = {leaves: [], gridData: gridData3};
                 secondLevelChildren.push(thirdTreeEntry);             
             }
-            const secondTreeEntry: TreeEntry = {ID: id1, leaves: secondLevelChildren, gridData: gridData2};
+            const secondTreeEntry: TreeEntry = {leaves: secondLevelChildren, gridData: gridData2};
             firstLevelChildren.push(secondTreeEntry);            
         }
-        const firstTreeEntry: TreeEntry = {ID: '', leaves: firstLevelChildren, gridData: gridData1};
+        const firstTreeEntry: TreeEntry = {leaves: firstLevelChildren, gridData: gridData1};
         result.push(firstTreeEntry);
     }
     this.testResult = result;
@@ -86,15 +77,18 @@ export const gridColumns1: Array<GridColumn> = [
         valueMember: 'Color',
         headerText: 'Color',
         width: 100
-    }, {
+    }, 
+    {
         valueMember: 'Animal',
         headerText: 'Animal - with very long header name',
         width: 100
-    }, {
+    }, 
+    {
         valueMember: 'Mixed',
         headerText: 'Numbers and strings',
         width: 100
-    }, {
+    }, 
+    {
         valueMember: 'Numbers',
         headerText: 'Numbers',
         width: 100
@@ -112,10 +106,10 @@ export function getTreeGridData() {
 
 const flatten = (data): Array<GridData> => {
     let result = [];      
-    for (let leaf of data) {
-        result.push(leaf.gridData);
-        if (leaf.children && leaf.children.length > 0) {
-            const childrenRows = flatten(leaf.children);
+    for (let i = 0; i < data.length; i++) {
+        result.push(data[i].gridData);
+        if (data[i].children && data[i].children.length > 0) {
+            const childrenRows = flatten(data[i].children);
             result = result.concat(childrenRows);
         }
     }

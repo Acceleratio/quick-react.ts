@@ -14,11 +14,6 @@ const sortData = (treeData: Array<TreeEntry>, sortColumn: string, sortDirection:
     const sortedTree = sortTree(treeData, sortColumn, sortDirection);
     const flattenedData = flatten(sortedTree);
     return flattenedData.filter(row => { return collapsedTreeNodes.indexOf(row) < 0; } );
-    // uzmi flattened date i filtriraj one koji se nalaze u collapsed objektu. 
-    // leaf.gridData.IsExpanded = collapsedTreeNodes.length > 0 ? isRowExpanded(leaf.gridData.TreeId, collapsedTreeNodes) : true;
-    // if (!leaf.gridData.IsExpanded)  {
-    //     continue; 
-    // }
 };
 
 
@@ -41,7 +36,6 @@ const sortData = (treeData: Array<TreeEntry>, sortColumn: string, sortDirection:
 // };
 
 
-// ili mozda ovdje provjerit dal je treeEntry u collapsedTreeNodes i ako je samo ga maknut?
 const sortTree = (tree: Array<TreeEntry>, sortColumn: string, sortDirection: SortDirection): Array<TreeEntry> => {
     let newTree: Array<TreeEntry> = [];
     for (let leaf of tree) {               
@@ -82,15 +76,8 @@ export const flatten = (tree) => {
     return result;      
 };
 
-// ovo modificirat kao u dataSelectors sa grupiranjem, te metode mozemo i tu dodat
 export const getTreeRowsSelector = createSelector(getTreeData, getSortColumn, getSortDirection, getCollapsedTreeNodes,
     (treeData, sortColumn, sortDirection, collapsedTreeNodes) => {
         return sortData(treeData, sortColumn, sortDirection, collapsedTreeNodes);
     }
 );
-
-/*export const getRowsSelector = createSelector(getSortedRows, getGroupBy, getCollapsedRows, getColumns,
-    (rows, groupedColumns, collapsedRows, columns) => {
-        return groupRows(rows, groupedColumns, collapsedRows, columns);
-    }
-);*/
