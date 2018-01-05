@@ -13,7 +13,7 @@ export interface IGroupBy {
 export interface IQuickGridProps {
     rows: Array<any>;
     columns: Array<GridColumn>;
-    tree?: Array<TreeEntry>;
+    tree?: Array<TreeEntry>; // If given the grid will be in treeGrid format
     groupBy?: Array<string | IGroupBy>;
     gridClassName?: string;
     headerClassName?: string;
@@ -21,7 +21,7 @@ export interface IQuickGridProps {
     overscanRowCount?: number;
     onSelectedRowChanged?: (selectedRowIndex: number) => void;
     onRowDoubleClicked?: (row: any) => void;
-    displayGroupContainer?: boolean;
+    displayGroupContainer?: boolean; // Group by is not compatible with treeGrid
     sortColumn?: string;
     sortDirection?: SortDirection;
     onGroupByChanged?: (groupBy: Array<IGroupBy>) => void;
@@ -38,7 +38,7 @@ export interface IQuickGridState {
     sortDirection?: SortDirection;
     groupBy?: Array<IGroupBy>;
     collapsedRows: Array<string>;
-    collapsedTreeNodes: Array<GridData>;
+    collapsedTreeNodes: Array<TreeGridData>;
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;
@@ -93,10 +93,10 @@ export interface ActionItem {
 
 export interface TreeEntry {   
     leaves: Array<TreeEntry>;
-    gridData: GridData;
+    gridData: TreeGridData;
 }
 
-export interface GridData {
+export interface TreeGridData {
     TreeId?: string;
     IsExpanded?: boolean;
 }

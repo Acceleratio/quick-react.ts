@@ -4,16 +4,5 @@
 	"recommendations": [
 		// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 		
-	],
-	"auto-close-tag.activationOnLanguage": [
-        "xml",
-        "php",
-        "blade",
-        "jinja",
-        "markdown",
-        "liquid",
-        "erb",
-        "lang-cfml",
-        "cfml"
-    ]
+	]
 }

@@ -4,12 +4,12 @@ import * as classNames from 'classnames';
 import { AutoSizer, Table, Column, ColumnProps, ScrollSync, Grid } from 'react-virtualized';
 import {
     IQuickGridProps, IQuickGridState, GridColumn, GroupRow,
-    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix, TreeEntry, GridData
+    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix, TreeEntry, TreeGridData
 } from './QuickGrid.Props';
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 import { getRowsSelector } from './DataSelectors';
 
-import { getTreeRowsSelector, flatten } from './TreegridDataSelectors';
+import { getTreeRowsSelector } from './treeGridDataSelectors';
 
 import { GridHeader } from './QuickGridHeader';
 import { Dropdown, DropdownType, IDropdownOption } from '../Dropdown';
@@ -240,14 +240,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             const rowID: string = !rowData.TreeId ? '' : rowData.TreeId;
             const indentSize = 20;
             let indent = 0;
-            let level = 0;
-
-            let treeIndex: string = '';
-
+            let level: number;
             if (rowID.length > 0)  {
                 level = rowID.split('.').length - 1;
             }
-
             if ((columnIndex === 0 || columnIndex === 2)) {
     
                 indent = level * indentSize;     
@@ -277,7 +273,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             }
             if (columnIndex === 0 && this.props.gridActions != null) {
                 if (rowID.endsWith('*')) {
-                    return this.renderEmptyCell(key, rowIndex, rowData, style);
+                    return this.renderEmptyCell(key, rowIndex, rowData, style); // ovo mozda iskoristiti kod resizea? jer trenutno nikad ne koristimo
                 }
                 return this.renderActionTreeCell(key, rowIndex, rowData, style);
             }
@@ -336,12 +332,13 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    onTreeExpandToggleClick = (rowData: GridData) => {
+    onTreeExpandToggleClick = (rowData: TreeGridData) => {
         this.setState((oldState) => {
             let collapsedTreeNodes = [...oldState.collapsedTreeNodes];
             let index: number;
-            let rows: Array<GridData>;
+            let rows: Array<TreeGridData>;
 
+            // get all children rows and push them to collapsedTreeNodes
             if (rowData.IsExpanded) {
                 rows = this.finalGridRows.filter(row => String(row.TreeId).startsWith(rowData.TreeId) && row.TreeId !== rowData.TreeId);
             } else {
@@ -402,12 +399,17 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    renderActionTreeCell(key, rowIndex: number, rowData: GridData, style) {
+    renderActionTreeCell(key, rowIndex: number, rowData: TreeGridData, style) {
         let actionsTooltip = rowData.IsExpanded ? 'Collapse' : 'Expand';
-        let iconName = rowData.IsExpanded ? 'icon-arrow_down' : 'icon-arrow_right';	
-        let treeEntry = this.props.tree.find(entry => entry.gridData === rowData); // ovo je expensive i gadno
-        if (treeEntry && !treeEntry.leaves.length) {
-            iconName = '';
+        let iconName = rowData.IsExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
+        let icon = null;
+        const hasChildren = this.finalGridRows.some(row => String(row.TreeId).startsWith(rowData.TreeId) && row.TreeId !== rowData.TreeId);
+        
+        if (!hasChildren && rowData.IsExpanded) {
+            icon = null;
+            actionsTooltip = null;
+        } else {
+            icon = <Icon iconName={iconName} className="expand-collapse-action-icon" />;
         }
         const rowClass = 'grid-row-' + rowIndex;
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
@@ -427,9 +429,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 title={title}
-                onClick={onToggleTreeRow}
+                onClick={icon ? onToggleTreeRow : null}
             >
-                <Icon iconName={iconName} className="expand-collapse-action-icon" />
+                {icon}
             </div>
         );
     }
