@@ -13,7 +13,7 @@ export interface IGroupBy {
 export interface IQuickGridProps {
     rows: Array<any>;
     columns: Array<GridColumn>;
-    tree?: Array<TreeEntry>; // If given the grid will be in treeGrid format
+    tree?: Array<TreeNode>; // If given the grid will be in treeGrid format
     groupBy?: Array<string | IGroupBy>;
     gridClassName?: string;
     headerClassName?: string;
@@ -38,7 +38,7 @@ export interface IQuickGridState {
     sortDirection?: SortDirection;
     groupBy?: Array<IGroupBy>;
     collapsedRows: Array<string>;
-    collapsedTreeNodes: Array<TreeGridData>;
+    collapsedTreeNodes: Array<TreeNode>;
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;
@@ -69,6 +69,7 @@ export interface GridColumn {
     sortByValueGetter?: (cellData, sortDirection: SortDirection) => any;
     width: number;
     minWidth?: number;
+    fixedWidth?: boolean;
     dataMember?: string;
     cellFormatter?: (cellData) => any;
     cellClassName?: string;
@@ -91,13 +92,9 @@ export interface ActionItem {
     parameters?: any;
 }
 
-export interface TreeEntry {   
-    leaves: Array<TreeEntry>;
-    gridData: TreeGridData;
+export interface TreeNode { // extend this interface to grid data structure for tree implementation
+    TreeId: string;
+    Parent: string;   
+    IsExpanded: boolean;
+    leaves: Array<TreeNode>;
 }
-
-export interface TreeGridData {
-    TreeId?: string;
-    IsExpanded?: boolean;
-}
-

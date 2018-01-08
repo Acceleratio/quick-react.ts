@@ -1,4 +1,4 @@
-import { GridColumn, DataTypeEnum, SortDirection, TreeEntry, TreeGridData } from '../../src/components/QuickGrid/QuickGrid.Props';
+import { GridColumn, DataTypeEnum, SortDirection, TreeNode } from '../../src/components/QuickGrid/QuickGrid.Props';
 
 
 const RANDOM_WORDS = ['abstrusity', 'advertisable', 'bellwood', 'benzole', 'disputative', 'djilas', 'ebracteate', 'zonary'];
@@ -9,7 +9,7 @@ const RANDOM_City = ['Zagreb', 'Vienna', 'London', 'Amsterdam', 'Barcelona'];
 const RANDOM_CarBrand = ['Audi', 'BMW', 'Mercedes', 'Opel', 'VW', 'Lada', 'Ford', 'Mazda'];
 const RANDOM_Mix = ['1', 2, '3', 4, 'A', 'B', 'C', '10'];
 
-export interface GridData extends TreeGridData {
+export interface GridData extends TreeNode {
     Name: string;
     Color: string;
     Animal: string;
@@ -17,18 +17,10 @@ export interface GridData extends TreeGridData {
     Numbers: number;
 }
 
-function newTreeEntry(data: TreeGridData, parent: TreeEntry, id: number): TreeEntry {
-    data.IsExpanded = true;
-    data.TreeId = parent ? parent.gridData.TreeId + id + '.' : id + '.';
-    // sta cemo s ovim id-em, potreban je da nadjemo njegovu djecu preko njega zbog startsWith
-    // i ovaj parent ovdje uopce nije potreban ako ga samo za id koristimo
-    return { gridData: data, leaves: [] };
-}
-
-function flatten(tree): Array<TreeGridData> {
+function flatten(tree): Array<TreeNode> {
     let result = [];      
     for (let leaf of tree) {
-        result.push(leaf.gridData);
+        result.push(leaf);
         if (leaf.leaves && leaf.leaves.length > 0) {
             const leaves = flatten(leaf.leaves);
             result = result.concat(leaves);
@@ -38,12 +30,16 @@ function flatten(tree): Array<TreeGridData> {
 }
 
 
-const generateTreeData = (): TreeEntry[] => {
-    let result: Array<TreeEntry> = [];
+const generateTreeData = (): TreeNode[] => {
+    let result: Array<TreeNode> = [];
     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
 
-    const generateEntry = (): GridData => {
+    const generateEntry = (id: string, parent: string): GridData => {
         return {
+            TreeId: id,
+            Parent: parent,
+            IsExpanded: true,
+            leaves: [],
             Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
             Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
             Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
@@ -52,13 +48,12 @@ const generateTreeData = (): TreeEntry[] => {
 
         };
     };
-
-    for (let i = 0; i < 110; i++) {
-        let treeEntry = newTreeEntry(generateEntry(), null, i);
+    for (let i = 0; i < 101; i++) {
+        let treeEntry = generateEntry(i + '.', null);
         for (let j = 0; j < 20; j++) {
-            let treeEntry1 = newTreeEntry(generateEntry(), treeEntry, j);
+            let treeEntry1 = generateEntry(treeEntry.TreeId + j + '.', treeEntry.TreeId);
             for (let k = 0; k < 20; k++) {
-                let treeEntry2 = newTreeEntry(generateEntry(), treeEntry1, k);
+                let treeEntry2 = generateEntry(treeEntry1.TreeId + k + '.', treeEntry1.TreeId);
                 treeEntry1.leaves.push(treeEntry2);
             }
             treeEntry.leaves.push(treeEntry1);
