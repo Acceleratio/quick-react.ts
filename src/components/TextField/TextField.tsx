@@ -15,6 +15,7 @@ import { Icon } from '../Icon/Icon';
 export interface ITextFieldState {
     value?: string;
     isFocused?: boolean;
+    isHovered?: boolean;
     errorMessage?: string;
 }
 
@@ -277,7 +278,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
 
         let showTooltip = false;
         if (this.props.errorMessage !== undefined) {
-            showTooltip = this.props.errorMessage !== '' && this.state.isFocused;
+            showTooltip = this.props.errorMessage !== '' && (this.state.isFocused || this.state.isHovered);
 
         } else {
             showTooltip = this.state.isFocused;
@@ -290,19 +291,19 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                     className="tooltip-error"
                     showTooltip={showTooltip}
                     directionalHint={DirectionalHint.bottomLeftEdge}>
-                    <div className="text-field-textarea-error-content">
-                        <textarea
-                            { ...textAreaProps }
-                            id={this._id}
-                            ref={(c): HTMLTextAreaElement => this._field = c}
-                            value={this.state.value}
-                            onChange={this._onInputChange}
-                            onKeyUp={this._onKeyUp}
-                            className={this._fieldClassName}
-                            onFocus={this._onFocus}
-                            onBlur={this._onBlur}
-                        />
-                    </div>
+                    <textarea
+                        { ...textAreaProps }
+                        id={this._id}
+                        ref={(c): HTMLTextAreaElement => this._field = c}
+                        value={this.state.value}
+                        onChange={this._onInputChange}
+                        onKeyUp={this._onKeyUp}
+                        className={classNames(this._fieldClassName, { 'with-description': !!this.props.description })}
+                        onFocus={this._onFocus}
+                        onBlur={this._onBlur}
+                        onMouseOver={this._onMouseOver}
+                        onMouseOut={this._onMouseOut}
+                    />
                 </Tooltip>
                 {this.props.description &&
                     <span id={this._descriptionId} className={'text-field-textarea-error-info-container'}>
@@ -320,7 +321,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
 
         let showTooltip = false;
         if (this.props.errorMessage !== undefined) {
-            showTooltip = this.props.errorMessage !== '' && this.state.isFocused;
+            showTooltip = this.props.errorMessage !== '' && (this.state.isFocused || this.state.isHovered);
 
         } else {
             showTooltip = this.state.isFocused;
@@ -341,6 +342,8 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                             ref={(c): HTMLInputElement => this._field = c}
                             value={this.state.value}
                             onChange={this._onInputChange}
+                            onMouseOver={this._onMouseOver}
+                            onMouseOut={this._onMouseOut}
                             onKeyUp={this._onKeyUp}
                             className={this._fieldClassName}
                             onFocus={this._onFocus}
@@ -362,6 +365,16 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                 }
             </div>
         );
+    }
+
+    @autobind
+    private _onMouseOver() {
+        this.setState({ isHovered: true });
+    }
+
+    @autobind
+    private _onMouseOut() {
+        this.setState({ isHovered: false });
     }
 
     @autobind

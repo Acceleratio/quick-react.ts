@@ -1,0 +1,25 @@
+@import '../../index.scss';
+
+.hoverable-items__container{
+    .hoverable-items__component {
+        display: inline-block;
+        min-width: 65%;
+    }
+    .hoverable-items-container__btn{
+        margin-left: 8px;
+        display: inline-block;
+        position: relative;
+
+        .hoverable-items__btn {
+            display: inline-block;
+            margin-right: 8px;
+            z-index: 1;
+
+            .icon:hover {
+                color: $primary-color;
+            }
+        }
+    }
+    
+}
+

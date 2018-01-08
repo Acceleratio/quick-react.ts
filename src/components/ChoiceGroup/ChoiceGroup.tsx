@@ -84,7 +84,9 @@ export class ChoiceGroup extends React.Component<IChoiceGroupProps, IChoiceGroup
                                 onBlur={this._onBlur.bind(this, option)}
                             />
                             {this._renderField(option)}
-                            {this._renderAdditionalOptionContent(option, keyChecked)}
+                            {option.additionalContent &&
+                                this._renderAdditionalOptionContent(option, keyChecked)
+                            }
                         </div>
                     ))}
                 </div>

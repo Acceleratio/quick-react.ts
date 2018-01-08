@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Dialog } from '../Dialog/Dialog';
+import * as classNames from 'classnames';
 import { DialogFooter } from '../Dialog/DialogFooter';
 import { Button } from '../Button/Button';
 import { Icon } from '../Icon/Icon';
@@ -35,7 +36,9 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
             isOpen,
             errorMessage,
             acceptButtonDisabled,
-            bulletedList
+            bulletedList,
+            iconName,
+            className
         } = this.props;
 
         const mappedButtons = buttons && buttons.map((button, index) => {
@@ -57,19 +60,23 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
             );
         });
 
-        let iconName: string;
+        let iconToBeUsed = iconName;
 
-        switch (level) {
-            case MessageLevel.Information:
-                iconName = 'icon-details';
-                break;
-            case MessageLevel.Warning:
-                iconName = 'icon-warning';
-                break;
-            case MessageLevel.Error:
-                iconName = 'icon-error';
-                break;
+        if (!iconToBeUsed) {
+            switch (level) {
+                case MessageLevel.Information:
+                    iconToBeUsed = 'icon-details';
+                    break;
+                case MessageLevel.Warning:
+                    iconToBeUsed = 'icon-warning';
+                    break;
+                case MessageLevel.Error:
+                    iconToBeUsed = 'icon-error';
+                    break;
+            }
         }
+
+        let containerClassName = classNames('message-box-container', className);
 
         return (
             <Dialog
@@ -79,8 +86,8 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
                 hasCloseXButton={hasCloseXButton}
                 containerClassName="message-box-dialog"
             >
-                <div className="message-box-container">
-                    <Icon iconName={iconName} />
+                <div className={containerClassName}>
+                    <Icon iconName={iconToBeUsed} />
                     {message}
                 </div>
                 {this._renderBulletList()}
