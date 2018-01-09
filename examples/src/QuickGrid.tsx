@@ -36,8 +36,8 @@ const columnSummaries = {
 
 export class Index extends React.Component<any, any> {
     state = {
-        data: getTreeGridData(),
-        columns: gridColumns1,
+        data: getGridData(numOfRows),
+        columns: gridColumns2,
         groupBy: [],
         selectedData: 1
     };
@@ -54,8 +54,8 @@ export class Index extends React.Component<any, any> {
                         selectedKey={this.state.selectedData}
                         options={
                             [
-                                { key: 1, text: 'Tree Grid' },
-                                { key: 2, text: 'Grid' }
+                                { key: 1, text: '5 Columns' },
+                                { key: 2, text: '2 Columns' }
                             ]}
                     />
                 </div>
@@ -65,10 +65,9 @@ export class Index extends React.Component<any, any> {
                     <div className="viewport-height" style={{ height: '100%' }} >
                         <QuickGrid
                             rows={this.state.data.grid}
-                            tree={this.state.data.tree}
                             columns={this.state.columns}
                             groupBy={this.state.groupBy}
-                            displayGroupContainer={this.state.data.tree == null} // group by is hidden for tree grid
+                            displayGroupContainer={true}
                             onGroupByChanged={this.groupByChanged}
                             gridActions={gridActions}
                             columnSummaries={columnSummaries}
@@ -84,7 +83,7 @@ export class Index extends React.Component<any, any> {
     onDropdownDataChange = (option, index) => {
         if (option.key === 1) {
             this.setState({
-                data: getTreeGridData(),
+                data: getGridData(numOfRows),
                 columns: gridColumns1,
                 selectedData: 1,
                 groupBy: []
@@ -101,7 +100,7 @@ export class Index extends React.Component<any, any> {
     }
 
     refreshData = () => {
-        const newData = this.state.selectedData === 1 ? getTreeGridData() : getGridData(numOfRows);
+        const newData = getGridData(numOfRows);
         this.setState({ ...this.state, data: newData });
     }
 

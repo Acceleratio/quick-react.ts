@@ -51,6 +51,7 @@ export * from './components/DateTimePickerBar';
 export * from './components/QuickGrid';
 export * from './components/ServerGridDashboard';
 export * from './components/TreeFilter';
+export * from './components/TreeGrid';
 export * from './components/Wizard';
 export * from './components/MessageBox';
 export * from './components/Scheduler';

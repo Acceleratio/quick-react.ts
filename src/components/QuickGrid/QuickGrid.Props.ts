@@ -13,7 +13,6 @@ export interface IGroupBy {
 export interface IQuickGridProps {
     rows: Array<any>;
     columns: Array<GridColumn>;
-    tree?: Array<TreeNode>; // If given the grid will be in treeGrid format
     groupBy?: Array<string | IGroupBy>;
     gridClassName?: string;
     headerClassName?: string;
@@ -21,7 +20,7 @@ export interface IQuickGridProps {
     overscanRowCount?: number;
     onSelectedRowChanged?: (selectedRowIndex: number) => void;
     onRowDoubleClicked?: (row: any) => void;
-    displayGroupContainer?: boolean; // Group by is not compatible with treeGrid
+    displayGroupContainer?: boolean;
     sortColumn?: string;
     sortDirection?: SortDirection;
     onGroupByChanged?: (groupBy: Array<IGroupBy>) => void;
@@ -31,6 +30,9 @@ export interface IQuickGridProps {
     columnSummaries?: any;
     actionsTooltip?: string;
     tooltipsEnabled?: boolean;
+    customRowSelector?: any;
+    customCellRenderer?: ({}) => React.ReactNode;
+    hasStaticColumns?: boolean;
 }
 
 export interface IQuickGridState {
@@ -38,7 +40,6 @@ export interface IQuickGridState {
     sortDirection?: SortDirection;
     groupBy?: Array<IGroupBy>;
     collapsedRows: Array<string>;
-    collapsedTreeNodes: Array<TreeNode>;
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;
@@ -92,9 +93,3 @@ export interface ActionItem {
     parameters?: any;
 }
 
-export interface TreeNode { // extend this interface to grid data structure for tree implementation
-    TreeId: string;
-    Parent: string;   
-    IsExpanded: boolean;
-    leaves: Array<TreeNode>;
-}

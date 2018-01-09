@@ -1,12 +1,13 @@
-import { SortDirection,  IQuickGridState, IQuickGridProps, TreeNode } from './QuickGrid.Props';
+import { ITreeGridState, ITreeGridProps, TreeNode } from './TreeGrid.Props';
+import { SortDirection } from '../QuickGrid/QuickGrid.Props';
 const createSelector = require('reselect').createSelector;
 
 
 
-const getSortColumn = (state: IQuickGridState, props: IQuickGridProps) => state.sortColumn;
-const getSortDirection = (state: IQuickGridState, props: IQuickGridProps) => state.sortDirection;
-const getTreeData = (state: IQuickGridState, props: IQuickGridProps) => props.tree;
-const getCollapsedTreeNodes = (state: IQuickGridState, props: IQuickGridProps) => state.collapsedTreeNodes;
+const getSortColumn = (state: ITreeGridState, props: ITreeGridProps) => state.sortColumn;
+const getSortDirection = (state: ITreeGridState, props: ITreeGridProps) => state.sortDirection;
+const getTreeData = (state: ITreeGridState, props: ITreeGridProps) => props.tree;
+const getCollapsedTreeNodes = (state: ITreeGridState, props: ITreeGridProps) => state.collapsedTreeNodes;
 
 
 const sortData = (treeData: Array<TreeNode>, sortColumn: string, sortDirection: SortDirection, collapsedTreeNodes: Array<TreeNode>) => {
@@ -48,7 +49,7 @@ const sort = (input, sortDirection, sortColumn) => {
 export function getNodeChildrenRecursively(tree: Array<TreeNode>, id): Array<TreeNode> {
     let result = [];
     for (let leaf of tree) {
-        if (leaf.Parent === id) {
+        if (leaf.ParentId === id) {
             result.push(leaf);
             if (leaf.leaves.length > 0) {
                 result = result.concat(this.getNodeChildrenRecursively(leaf.leaves, leaf.TreeId));
@@ -60,9 +61,9 @@ export function getNodeChildrenRecursively(tree: Array<TreeNode>, id): Array<Tre
 
 export function getNodeLevel(node: TreeNode, tree: Array<TreeNode>): number {
     let level = 0;
-    while (node.Parent !== null) {
+    while (node.ParentId !== null) {
         level++;
-        node = tree.find(parent => parent.TreeId === node.Parent);
+        node = tree.find(parent => parent.TreeId === node.ParentId);
     }
     return level;
 }
