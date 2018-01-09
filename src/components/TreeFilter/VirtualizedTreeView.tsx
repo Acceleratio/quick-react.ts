@@ -293,10 +293,15 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
     }
 
     private renderAsyncLoadingNode(loadingTreeNodeKey) { 
+        const style = {
+            height: this.props.rowHeight,
+            marginLeft: 4
+        };
             return (
                 <div
                     key={loadingTreeNodeKey + '_Loading'}
                     className="item-container loading-container"
+                    style={style}
                 >
                     <Spinner className="tree-view-async-loading-spinner"
                         type={SpinnerType.small}
