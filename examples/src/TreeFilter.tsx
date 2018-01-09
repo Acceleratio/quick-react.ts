@@ -56,22 +56,13 @@ export class Index extends React.Component<any, DemoState> {
         const isNowExpanded = !treeItem.expanded;
         let expandedTreeItem = {
             ...treeItem,
-            expanded: !treeItem.expanded
+            expanded: !treeItem.expanded,
+            asyncChildrenLoadInProgress: treeItem.hasChildren && treeItem.children.length === 0
         };
 
         let newAsynclyLoadableItems = [...this.state.asynclyLoadableItemIds];
         if (isAsyncLoadItem) {
-            newAsynclyLoadableItems.splice(index, 1);
-
-            let loadingLabelTreeItem = {
-                id: treeItem.id + '-1'  ,
-                value: 'Loading...',
-                expanded: false,
-                children: [],
-                renderElement: this.renderLoadingLabel
-            };
-
-            expandedTreeItem.children = [loadingLabelTreeItem];
+            newAsynclyLoadableItems.splice(index, 1);            
         }
 
         this.setState({
@@ -88,6 +79,7 @@ export class Index extends React.Component<any, DemoState> {
             const newTreeItem = {
                 ...treeItem,
                 expanded: !treeItem.expanded,
+                asyncChildrenLoadInProgress: false,
                 children: [{
                     id: treeItem.id + '-' + '1',
                     value: 'asyncly loaded ' + randomNumber,
@@ -104,24 +96,7 @@ export class Index extends React.Component<any, DemoState> {
                 ...this.state,
                 asyncTreeData: newTreeData
             });
-        }, 1500);
-    }
-
-    private renderLoadingLabel(itemKey: string, style: any): JSX.Element {
-        return (
-            <div
-                key={itemKey}
-                className="item-container loading-container"
-                style={style}
-            >
-                <Spinner className="tree-view-async-loading-spinner"
-                    type={SpinnerType.small}
-                />
-                <span className="tree-view-async-loading-label">
-                    Loading...
-                </span>
-            </div>
-        );
+        }, 4500);
     }
 
     private onItemExpand = (treeItem: TreeItem, lookupTableGetter) => {
