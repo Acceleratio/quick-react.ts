@@ -30,7 +30,8 @@ export interface IQuickGridProps {
     columnSummaries?: any;
     actionsTooltip?: string;
     tooltipsEnabled?: boolean;
-    customRowSelector?: any;
+    hasCustomRowSelector?: boolean;
+    customRowSorter?: (sortBy, sortDirection) => void;
     customCellRenderer?: ({}) => React.ReactNode;
     hasStaticColumns?: boolean;
 }

@@ -56,7 +56,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         };
         this.columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         this.onGridResize = _.debounce(this.onGridResize, 100);
-        this.finalGridRows = props.customRowSelector(this.state.sortColumn, this.state.sortDirection) || getRowsSelector(this.state, props);
+        this.finalGridRows = props.hasCustomRowSelector ? props.rows : getRowsSelector(this.state, props);
     }
 
     expandAll = (event) => {
@@ -148,7 +148,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentWillUpdate(nextProps, nextState) {
-        this.finalGridRows = nextProps.customRowSelector(nextState.sortColumn, nextState.sortDirection) || getRowsSelector(nextState, nextProps);
+        // tu pozvati callback od parenta i predat mu novi sortcolumn i sortorder?
+        this.finalGridRows = nextProps.customRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -199,6 +200,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     onSortColumn = (sortBy, sortDirection) => {
+        if (this.props.customRowSorter) {
+            this.props.customRowSorter(sortBy, sortDirection);
+        }
         this.setState((oldState) => ({ ...oldState, sortColumn: sortBy, sortDirection: sortDirection }));
     }
 

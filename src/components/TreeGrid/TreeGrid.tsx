@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import * as classNames from 'classnames';
 import { ITreeGridProps, ITreeGridState, TreeNode } from './TreeGrid.Props';
 
-// import { getTreeRowsSelector, getNodeChildrenRecursively, getNodeLevel } from './treeGridDataSelectors';
+import { getTreeRowsSelector, getNodeChildrenRecursively, getNodeLevel, flatten } from './treeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
@@ -11,7 +11,7 @@ import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
 
-    private finalGridRows: Array<any>;
+    private finalGridRows: Array<TreeNode>;
     constructor(props: ITreeGridProps) {
         super(props);
         this.state = {
@@ -20,7 +20,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             sortColumn: props.sortColumn,
             sortDirection: props.sortDirection
         };
-        this.finalGridRows = this.getTreeRowsSelector(this.state, props);
+        this.finalGridRows = getTreeRowsSelector(this.state, props);
     }
 
     getTreeColumnsToDisplay(columns: Array<GridColumn>) {
@@ -42,7 +42,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     }
 
     componentWillUpdate(nextProps, nextState) {
-        this.finalGridRows = this.getTreeRowsSelector(nextState.sortColumn, nextState.sortDirection);
+        this.finalGridRows = getTreeRowsSelector(nextState, nextProps);
     }
 
     treeCellRenderer = ({ columnIndex, key, rowIndex, style }) => {
@@ -50,7 +50,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const rowID: string = !rowData.TreeId ? '' : rowData.TreeId;
         const indentSize = 20;
         let indent = 0;
-        let level = this.getNodeLevel(rowData, this.finalGridRows);
+        let level = getNodeLevel(rowData, this.finalGridRows);
         if ((columnIndex === 0 || columnIndex === 2)) {
 
             indent = level * indentSize;     
@@ -196,7 +196,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             let collapsedNodes = [...oldState.collapsedTreeNodes];
             let oldNodes = rowData.IsExpanded ? [...this.finalGridRows] : collapsedNodes;
 
-            rows = this.getNodeChildrenRecursively(oldNodes, rowData.TreeId);
+            rows = getNodeChildrenRecursively(oldNodes, rowData.TreeId);
 
             for (let i = 0; i < rows.length; i++) {
                 index = collapsedNodes.indexOf(rows[i], 0);
@@ -231,92 +231,22 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
-
-    sortData = (treeData: Array<TreeNode>, sortColumn: string, sortDirection: SortDirection, collapsedTreeNodes: Array<TreeNode>) => {
-        const sortedTree = this.sortTree(treeData, sortColumn, sortDirection);
-        const flattenedData = this.flatten(sortedTree);
-        return flattenedData.filter(row => { return collapsedTreeNodes.indexOf(row) < 0; } );
-    }
-    
-    sortTree = (tree: Array<TreeNode>, sortColumn: string, sortDirection: SortDirection): Array<TreeNode> => {
-        let newTree: Array<TreeNode> = [];
-        for (let leaf of tree) {
-            if (leaf.leaves && leaf.leaves.length > 0) {
-                leaf.leaves = this.sortTree(leaf.leaves, sortColumn, sortDirection);
-            }
-            newTree = this.sort([...tree], sortDirection, sortColumn);
-        }
-        return newTree;
-    }
-    
-    sort = (input, sortDirection, sortColumn) => {
-        const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
-        const sortFunction = (a, b) => {
-            if (sortColumn === undefined) {
-                sortColumn = 'TreeId';
-            }
-            let valueA = a[sortColumn];
-            let valueB = b[sortColumn];
-            if (valueA < valueB) {
-                return -1 * sortModifier;
-            }
-            if (valueA > valueB) {
-                return 1 * sortModifier;
-            }        
-            return 0;
-        };
-        return [...input].sort(sortFunction);
-    }
-    
-    getNodeChildrenRecursively(tree: Array<TreeNode>, id): Array<TreeNode> {
-        let result = [];
-        for (let leaf of tree) {
-            if (leaf.ParentId === id) {
-                result.push(leaf);
-                if (leaf.leaves.length > 0) {
-                    result = result.concat(this.getNodeChildrenRecursively(leaf.leaves, leaf.TreeId));
-                }
-            }
-        }
-        return result;
-    }
-    
-    getNodeLevel(node: TreeNode, tree: Array<TreeNode>): number {
-        let level = 0;
-        while (node.ParentId !== null) {
-            level++;
-            node = tree.find(parent => parent.TreeId === node.ParentId);
-        }
-        return level;
-    }
-    
-    flatten(tree): Array<TreeNode> {
-        let result = [];      
-        for (let leaf of tree) {
-            result.push(leaf);
-            if (leaf.leaves && leaf.leaves.length > 0) {
-                const leaves = this.flatten(leaf.leaves);
-                result = result.concat(leaves);
-            }
-        }
-        return result;         
-    }
-    
-    getTreeRowsSelector = (sortColumn, sortDirection) => {
-        return this.sortData(this.props.tree, sortColumn, sortDirection, this.state.collapsedTreeNodes);
+    getSortInfo = (newSortColumn, newSortDirection) => {
+        this.setState({ sortColumn: newSortColumn, sortDirection: newSortDirection });
     }
 
     public render(): JSX.Element {
         return (
                 <QuickGrid
-                    rows={this.finalGridRows}
+                    rows={getTreeRowsSelector(this.state, this.props)}
                     columns={this.state.columnsToDisplay}
                     sortDirection={this.state.sortDirection}
                     sortColumn={this.state.sortColumn}
                     tooltipsEnabled={false}
                     customCellRenderer={this.treeCellRenderer}
-                    customRowSelector={this.getTreeRowsSelector}
+                    hasCustomRowSelector={true}
                     hasStaticColumns={true}
+                    customRowSorter={this.getSortInfo}
                 />
         );
     }
