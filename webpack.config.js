@@ -63,7 +63,7 @@ module.exports = {
         inline: true,
         port: 3000
     },
-    devtool: 'source-map',
+    devtool: 'cheap-module-eval-source-map',
     resolve: {
         extensions: [
             '',
@@ -86,6 +86,7 @@ module.exports = {
             loaders.css,
             loaders.json,
             loaders.svg,
+            loaders.svgIcon,
             loaders.eot,
             loaders.woff,
             loaders.woff2,

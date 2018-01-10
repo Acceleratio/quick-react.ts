@@ -1,23 +1,26 @@
 @import '../../index.scss';
-
 @font-face {
-	font-family: 'icomoon';
-	src:url('/fonts/icomoon.eot');
-	src:url('/fonts/icomoon.eot?#iefix') format('embedded-opentype'),
-		url('/fonts/icomoon.woff') format('woff'),
-		url('/fonts/icomoon.ttf') format('truetype'),
-		url('/fonts/icomoon.svg?#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'icomoon';
+    src: url('/fonts/icomoon.eot');
+    src: url('/fonts/icomoon.eot?#iefix') format('embedded-opentype'), url('/fonts/icomoon.woff') format('woff'), url('/fonts/icomoon.ttf') format('truetype'), url('/fonts/icomoon.svg?#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 .icon {
     -moz-osx-font-smoothing: grayscale;
-	-webkit-font-smoothing: antialiased;
-	display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
     font-family: icomoon;
     font-style: normal;
-	margin-right: 5px;
+    margin-right: 5px;
+}
+
+.svg {
+    vertical-align: middle;
+    fill: #4D4D4F;
+    display: inline-block;
+    margin-right: 5px;
 }
 
 @import './Icon.Content.scss'

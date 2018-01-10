@@ -12,6 +12,14 @@ export const Icon: (props: IIconProps) => JSX.Element = (props: IIconProps) => {
             [props.iconName]: !customIcon
         }, [props.className]);
 
-    return <i { ...getNativeAttributes(props, htmlElementAttributes) } className={iconClassName} />;
+        if (props.iconName.startsWith('svg')) {
+            return <svg className = {'svg ' + props.iconName} width = {props.width} height= {props.height}>
+            <use xlinkHref= {'#symbol-defs_' + props.iconName} />
+        </svg>;
+        }else {
+            return <i { ...getNativeAttributes(props, htmlElementAttributes) } className={iconClassName} />;
+        }
+
+    
 
 };
