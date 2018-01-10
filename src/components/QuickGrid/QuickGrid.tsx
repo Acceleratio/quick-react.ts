@@ -148,7 +148,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentWillUpdate(nextProps, nextState) {
-        // tu pozvati callback od parenta i predat mu novi sortcolumn i sortorder?
         this.finalGridRows = nextProps.customRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
     }
 

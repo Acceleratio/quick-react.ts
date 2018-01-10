@@ -97,7 +97,6 @@ export const gridColumns1: Array<GridColumn> = [
 
 export function getTreeGridData(size: number) {
     const treeData = generateTreeData(size);
-    // const gridData = flatten(treeData);
     return treeData;
 }
 
