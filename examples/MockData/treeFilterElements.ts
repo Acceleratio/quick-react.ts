@@ -54,15 +54,13 @@ export function createRandomizedData(numOfItems, maxDepth) {
     return data;
 }
 
-export function createAsyncLoadRandomizedData(numOfItems, maxDepth) {
-    let asynclyLoadableIds = [];
+export function createAsyncLoadRandomizedData(numOfItems, maxDepth) {    
     const createRandomizedItem = (key, depth) => {
         let children = [];
         let hasChildren;
         let name = RANDOM_WORDS[Math.floor(Math.random() * RANDOM_WORDS.length)];
-        if (Math.random() > 0.5) {
+        if (Math.random() > 0.3) {
             hasChildren = true;
-            asynclyLoadableIds.push(key);
         } else {
             let numChildren = depth < maxDepth ? 4 : 0;
             for (let i = 0; i < numChildren; i++) {
@@ -84,6 +82,6 @@ export function createAsyncLoadRandomizedData(numOfItems, maxDepth) {
     for (let i = 0; i < numOfItems; i++) {
         data.push(createRandomizedItem(i, 0));
     }
-    return [data, asynclyLoadableIds];
+    return data;
 
 }

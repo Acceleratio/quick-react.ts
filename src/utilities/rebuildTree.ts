@@ -1,5 +1,5 @@
 import { TreeItem } from '../components/TreeFilter/TreeFilter.Props';
-import { ILookupTable } from '../components/TreeFilter/TreeItemOperators';
+import { ILookupTable, TreeLookups } from '../components/TreeFilter/TreeItemOperators';
 
 export function rebuildTree(newTreeItem: TreeItem, lookupGetter): TreeItem {
     let treeItem = { ...newTreeItem };
@@ -39,4 +39,41 @@ export function expandOrCollapseTreeItem(root: TreeItem[], treeItemToExpand: Tre
         expanded: !treeItemToExpand.expanded
     };
     return updateTree(root, flippedTreeItem, lookupGetter);
+}
+
+export function expandOrCollapseAsyncTreeItem(getRoots: () => TreeItem[], treeItemToExpand: TreeItem, lookupTableGetter: () => TreeLookups, onTreeUpdated: (newRoots: TreeItem[]) => void, asyncItemsGetter: () => Promise<TreeItem[]>): void {
+    const flippedTreeItem: TreeItem = {
+        ...treeItemToExpand,
+        expanded: !treeItemToExpand.expanded
+    };
+    if (flippedTreeItem.expanded && asyncItemsGetter) {
+        const willPerformAsyncLoad = flippedTreeItem.children.length === 0 && flippedTreeItem.hasChildren && !flippedTreeItem.asyncChildrenLoadInProgress;
+        if (willPerformAsyncLoad) {
+            flippedTreeItem.asyncChildrenLoadInProgress = true;
+
+            asyncItemsGetter().then(items => {
+                let currentItem = lookupTableGetter().itemLookup[flippedTreeItem.id];
+                currentItem = {
+                    ...currentItem,
+                    children: items,
+                    hasChildren: items.length > 0,
+                    asyncChildrenLoadInProgress: false
+                };
+
+                onTreeUpdated(updateTree(getRoots(), currentItem, lookupTableGetter));
+            }, () => {
+                let currentItem = lookupTableGetter().itemLookup[flippedTreeItem.id];
+                currentItem = {
+                    ...currentItem,
+                    children: [],
+                    hasChildren: false,
+                    asyncChildrenLoadInProgress: false
+                };
+                
+                onTreeUpdated(updateTree(getRoots(), currentItem, lookupTableGetter));
+            });
+        }
+    }
+
+    onTreeUpdated(updateTree(getRoots(), flippedTreeItem, lookupTableGetter));
 }

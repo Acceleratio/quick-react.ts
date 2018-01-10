@@ -295,7 +295,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
     private renderAsyncLoadingNode(loadingTreeNodeKey) { 
         const style = {
             height: this.props.rowHeight,
-            marginLeft: 4
+            marginLeft: this.props.isSingleSelect ? 6 : 18
         };
             return (
                 <div
