@@ -6,9 +6,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { Icon } from './../../src/components/Icon/Icon';
+import './../../src/components/Icon/symbol-defs.svg';
 
 export class Index extends React.Component<any, any> {
     public render() {
+        let symbols = Array.from(document.querySelector('defs').children);
         return (
             <div>
                 <div> <Icon iconName={'icon-disk'}></Icon> <span>   icon-disk</span></div>
@@ -165,6 +167,10 @@ export class Index extends React.Component<any, any> {
                 <div> <Icon iconName={'icon-verson_update'}></Icon> <span>   icon-verson_update</span></div>
                 <div> <Icon iconName={'icon-warning'}></Icon> <span>   icon-warning</span></div>
                 <div> <Icon iconName={'icon-world'}></Icon> <span>   icon-world</span></div>
+                {symbols.map(i => {
+                    let iconName = i.id.substring(i.id.indexOf('_') + 1); 
+                    return <div> <Icon iconName={iconName} width={'16px'} height={'16px'}></Icon> <span>   {iconName}</span></div>;
+                })}
             </div>
         );
     }
