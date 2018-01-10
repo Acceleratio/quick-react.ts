@@ -11,13 +11,20 @@ import { gridColumns1, getTreeGridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 
+
+const columnSummaries = {
+    Color: 'Best: Orange',
+    Animal: 'Fastest: Dog',
+    Numbers: 'Favorite: 7'
+};
+
 export class Index extends React.Component<any, any> {
     state = {
         data: getTreeGridData(0),
         columns: gridColumns1,
         selectedData: 1
     };
-
+    
     public render() {
         return (
             <div>
@@ -42,6 +49,7 @@ export class Index extends React.Component<any, any> {
                         <TreeGrid
                             tree={this.state.data}
                             columns={this.state.columns}
+                            columnSummaries={columnSummaries}
                         />
                     </div>
                 </Resizable>

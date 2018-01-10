@@ -427,9 +427,14 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     getColumnWidths(columnsToDisplay) {
-        const available = this.getGridWidth();
+        const fixedColumns = columnsToDisplay.filter(x => x.fixedWidth);
+        let fixedColumnsTotalWidth = 0;
+        if (fixedColumns.length > 0) {
+            fixedColumnsTotalWidth = fixedColumns.map(col => col.width).reduce((a, b) => a + b);
+        }
+        const available = this.getGridWidth() - fixedColumnsTotalWidth;
         if (available > this.columnsMinTotalWidth) {
-            const totalWidth = columnsToDisplay.map(x => x.width).reduce((a, b) => a + b, 0);
+            const totalWidth = columnsToDisplay.map(x => x.width).reduce((a, b) => a + b, 0) - fixedColumnsTotalWidth;
             return columnsToDisplay.map((col) => this.getColumnWidthInPx(available, totalWidth, col.width, col.fixedWidth));
         } else {
             return columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth);

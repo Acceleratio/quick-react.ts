@@ -8,6 +8,7 @@ export interface ITreeGridProps {
     onSelectedRowChanged?: (selectedRowIndex: number) => void;
     sortColumn?: string;
     sortDirection?: SortDirection;
+    columnSummaries?: any;
 }
 
 export interface ITreeGridState {

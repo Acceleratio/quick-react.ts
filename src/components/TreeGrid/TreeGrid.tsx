@@ -28,7 +28,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         emptyArray.push({
             isSortable: false,
             width: 18,
-            minWidth: 28,
+            minWidth: 30,
             fixedWidth: true
         });
         emptyArray.push({
@@ -238,7 +238,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     public render(): JSX.Element {
         return (
                 <QuickGrid
-                    rows={getTreeRowsSelector(this.state, this.props)}
+                    rows={this.finalGridRows}
                     columns={this.state.columnsToDisplay}
                     sortDirection={this.state.sortDirection}
                     sortColumn={this.state.sortColumn}
@@ -247,6 +247,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                     hasCustomRowSelector={true}
                     hasStaticColumns={true}
                     customRowSorter={this.getSortInfo}
+                    columnSummaries={this.props.columnSummaries}
                 />
         );
     }

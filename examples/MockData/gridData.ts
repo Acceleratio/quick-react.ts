@@ -67,6 +67,7 @@ export const gridColumns1: Array<GridColumn> = [
         valueMember: 'Name',
         headerText: 'Name',
         width: 100,
+        minWidth: 100,
         headerTooltip: 'This is names column.'
     }, 
     {
@@ -124,6 +125,19 @@ export const gridColumns2: Array<GridColumn> = [
     }
 ];
 
+export const gridColumns3: Array<GridColumn> = [
+    {
+        valueMember: 'Animal',
+        headerText: 'Animal - with very long header name',
+        width: 100
+    }, {
+        valueMember: 'Color',
+        headerText: 'Color',
+        width: 100
+    }
+];
+
+
 export function getGridData(numberOfElements) {
     let data = [];
     for (let i = 0; i < numberOfElements; i++) {
@@ -134,6 +148,19 @@ export function getGridData(numberOfElements) {
                 Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
                 Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
                 Numbers: Math.floor(Math.random() * 30)
+            }
+        );
+    }
+    return { grid: data };
+}
+
+export function getSmallGridData(numberOfElements) {
+    let data = [];
+    for (let i = 0; i < numberOfElements; i++) {
+        data.push(
+            {
+                Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
+                Color:  RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]
             }
         );
     }

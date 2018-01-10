@@ -6,7 +6,7 @@ import Resizable from 'react-resizable-box';
 import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, QuickGridActions } from '../../src/components/QuickGrid';
-import { gridColumns1, getTreeGridData, gridColumns2, getGridData } from '../MockData/gridData';
+import { gridColumns1, getTreeGridData, gridColumns2, getGridData, gridColumns3, getSmallGridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 
@@ -28,7 +28,6 @@ const gridActions: QuickGridActions = {
 };
 
 const columnSummaries = {
-    Name: 'Craziest: Vinko',
     Color: 'Best: Orange',
     Animal: 'Fastest: Dog',
     Numbers: 'Favorite: 7'
@@ -84,15 +83,15 @@ export class Index extends React.Component<any, any> {
         if (option.key === 1) {
             this.setState({
                 data: getGridData(numOfRows),
-                columns: gridColumns1,
+                columns: gridColumns2,
                 selectedData: 1,
                 groupBy: []
             });
 
         } else {
             this.setState({
-                data: getGridData(numOfRows),
-                columns: gridColumns2,
+                data: getSmallGridData(numOfRows),
+                columns: gridColumns3,
                 groupBy: [],
                 selectedData: 2
             });
