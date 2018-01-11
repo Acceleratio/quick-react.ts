@@ -12,7 +12,3 @@ export interface ICellElementProps {
     onRowDoubleClicked?: any;
     element?: any;
 }
-
-export interface ICellElementState {
-    element?: any;
-}

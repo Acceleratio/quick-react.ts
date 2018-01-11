@@ -1,22 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ICellElementProps, ICellElementState } from './CellElement.Props';
+import { ICellElementProps } from './CellElement.Props';
 import { autobind } from '../../utilities/autobind';
 
 
-export class CellElement extends React.PureComponent<ICellElementProps, ICellElementState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            element: props.element
-        };
-    }
-
-    componentWillReceiveProps(nextProps: ICellElementProps) {
-        if (nextProps.element !== this.props.element) {
-            this.setState((prevState) => { return { ...prevState, element: nextProps.element }; });
-        }
-    }
+export class CellElement extends React.PureComponent<ICellElementProps, {}> {
 
     @autobind
     private _onMouseEnter() { 
@@ -55,7 +43,7 @@ export class CellElement extends React.PureComponent<ICellElementProps, ICellEle
             onClick={this._onClick}
             onDoubleClick={this._onDoubleClick}
             >
-            {this.state.element}
+            {this.props.element}
             </div>
         );
     }
