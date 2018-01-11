@@ -21,8 +21,8 @@ export interface ITreeGridState {
 
 
 export interface TreeNode { // extend this interface on a data structure to be used for row data
-    TreeId: string;
-    ParentId: string; // treeId of the parent node
-    IsExpanded: boolean;
-    leaves: Array<TreeNode>;
+    treeId: string;
+    parentId: string; // treeId of the parent node
+    isExpanded: boolean;
+    children: Array<TreeNode>;
 }

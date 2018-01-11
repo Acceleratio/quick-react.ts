@@ -18,9 +18,9 @@ const sortData = (treeData: Array<TreeNode>, sortColumn: string, sortDirection: 
 
 const sortTree = (tree: Array<TreeNode>, sortColumn: string, sortDirection: SortDirection): Array<TreeNode> => {
     let newTree: Array<TreeNode> = [];
-    for (let leaf of tree) {
-        if (leaf.leaves && leaf.leaves.length > 0) {
-            leaf.leaves = sortTree(leaf.leaves, sortColumn, sortDirection);
+    for (let child of tree) {
+        if (child.children && child.children.length > 0) {
+            child.children = sortTree(child.children, sortColumn, sortDirection);
         }
         newTree = sort([...tree], sortDirection, sortColumn);
     }
@@ -48,11 +48,11 @@ const sort = (input, sortDirection, sortColumn) => {
 
 export function getNodeChildrenRecursively(tree: Array<TreeNode>, id): Array<TreeNode> {
     let result = [];
-    for (let leaf of tree) {
-        if (leaf.ParentId === id) {
-            result.push(leaf);
-            if (leaf.leaves.length > 0) {
-                result = result.concat(this.getNodeChildrenRecursively(leaf.leaves, leaf.TreeId));
+    for (let child of tree) {
+        if (child.parentId === id) {
+            result.push(child);
+            if (child.children.length > 0) {
+                result = result.concat(this.getNodeChildrenRecursively(child.children, child.treeId));
             }
         }
     }
@@ -61,20 +61,20 @@ export function getNodeChildrenRecursively(tree: Array<TreeNode>, id): Array<Tre
 
 export function getNodeLevel(node: TreeNode, tree: Array<TreeNode>): number {
     let level = 0;
-    while (node.ParentId !== null) {
+    while (node.parentId !== null) {
         level++;
-        node = tree.find(parent => parent.TreeId === node.ParentId);
+        node = tree.find(parent => parent.treeId === node.parentId);
     }
     return level;
 }
 
 export function flatten(tree): Array<TreeNode> {
     let result = [];      
-    for (let leaf of tree) {
-        result.push(leaf);
-        if (leaf.leaves && leaf.leaves.length > 0) {
-            const leaves = flatten(leaf.leaves);
-            result = result.concat(leaves);
+    for (let child of tree) {
+        result.push(child);
+        if (child.children && child.children.length > 0) {
+            const children = flatten(child.children);
+            result = result.concat(children);
         }
     }
     return result;         

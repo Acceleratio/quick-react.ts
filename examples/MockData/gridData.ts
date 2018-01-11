@@ -30,10 +30,10 @@ const generateTreeData = (size: number): TreeNode[] => {
 
     const generateEntry = (id: string, parent: string): GridData => {
         return {
-            TreeId: id,
-            ParentId: parent,
-            IsExpanded: true,
-            leaves: [],
+            treeId: id,
+            parentId: parent,
+            isExpanded: true,
+            children: [],
             Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
             Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
             Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
@@ -45,16 +45,16 @@ const generateTreeData = (size: number): TreeNode[] => {
     for (let i = 0; i < treeSize[0]; i++) {
         let treeEntry = generateEntry(i + '.', null);
         for (let j = 0; j < treeSize[1]; j++) {
-            let treeEntry1 = generateEntry(treeEntry.TreeId + j + '.', treeEntry.TreeId);
+            let treeEntry1 = generateEntry(treeEntry.treeId + j + '.', treeEntry.treeId);
             for (let k = 0; k < treeSize[2]; k++) {
-                let treeEntry2 = generateEntry(treeEntry1.TreeId + k + '.', treeEntry1.TreeId);
+                let treeEntry2 = generateEntry(treeEntry1.treeId + k + '.', treeEntry1.treeId);
                 for (let l = 0; l < treeSize[3]; l++) {
-                    let treeEntry3 = generateEntry(treeEntry2.TreeId + l + '.', treeEntry2.TreeId);
-                    treeEntry2.leaves.push(treeEntry3);
+                    let treeEntry3 = generateEntry(treeEntry2.treeId + l + '.', treeEntry2.treeId);
+                    treeEntry2.children.push(treeEntry3);
                 }
-                treeEntry1.leaves.push(treeEntry2);
+                treeEntry1.children.push(treeEntry2);
             }
-            treeEntry.leaves.push(treeEntry1);
+            treeEntry.children.push(treeEntry1);
         }
         result.push(treeEntry);
     }

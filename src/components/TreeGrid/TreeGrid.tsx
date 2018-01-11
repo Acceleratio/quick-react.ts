@@ -7,6 +7,7 @@ import { getTreeRowsSelector, getNodeChildrenRecursively, getNodeLevel, flatten 
 import { Icon } from '../Icon/Icon';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
+import { CellElement } from './CellElement';
 
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
@@ -47,7 +48,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     treeCellRenderer = ({ columnIndex, key, rowIndex, style }) => {
         const rowData = this.finalGridRows[rowIndex]; 
-        const rowID: string = !rowData.TreeId ? '' : rowData.TreeId;
+        const rowID: string = !rowData.treeId ? '' : rowData.treeId;
         const indentSize = 20;
         let indent = 0;
         let level = getNodeLevel(rowData, this.finalGridRows);
@@ -95,20 +96,17 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     }
 
     renderActionTreeCell(key, rowIndex: number, rowData: TreeNode, style) {
-        let actionsTooltip = rowData.IsExpanded ? 'Collapse' : 'Expand';
-        let iconName = rowData.IsExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
+        let actionsTooltip = rowData.isExpanded ? 'Collapse' : 'Expand';
+        let iconName = rowData.isExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
         let icon = null;
         
-        if (rowData.leaves.length <= 0 && rowData.IsExpanded) {
+        if (rowData.children.length <= 0 && rowData.isExpanded) {
             icon = null;
             actionsTooltip = null;
         } else {
             icon = <Icon iconName={iconName} className="expand-collapse-action-icon" />;
         }
         const rowClass = 'grid-row-' + rowIndex;
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
-        const onToggleTreeRow = () => { this.onTreeExpandToggleClick(rowData); };
         const title = actionsTooltip;
         const className = classNames(
             'grid-component-cell',
@@ -116,17 +114,20 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             { 'is-selected': rowIndex === this.state.selectedRowIndex }
         );
         return (
-            <div
+            <CellElement
                 key={key}
+                id={key}
                 style={style}
                 className={className}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 title={title}
-                onClick={icon ? onToggleTreeRow : null}
-            >
-                {icon}
-            </div>
+                onMouseEnter={this.onMouseEnterCell}
+                onMouseLeave={this.onMouseLeaveCell}
+                onClick={icon ? this.onTreeExpandToggleClick : null}
+                onClickParameter={rowData}
+                rowClass={rowClass}
+                rowData={rowData}
+                element={icon}
+            />
         );
     }
 
@@ -144,16 +145,6 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             { 'border-column-cell': notLastIndex },
             { 'is-selected': rowIndex === this.state.selectedRowIndex });
 
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
-        const onClick = () => { this.setSelectedRowIndex(rowIndex); };
-
-        const onDoubleClick = () => {
-            if (this.props.onRowDoubleClicked) {
-                this.props.onRowDoubleClicked(rowData);
-            }
-        };
-
         const columnElement = () => {
             if (column.cellFormatter) {
                 return column.cellFormatter(cellData);
@@ -167,18 +158,21 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         };
         const title = cellData;
         return (
-            <div
+            <CellElement
                 key={key}
+                id={key}
                 style={style}
                 className={className}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                onClick={onClick}
-                onDoubleClick={onDoubleClick}
                 title={title}
-            >
-                {columnElement()}
-            </div>
+                onMouseEnter={this.onMouseEnterCell}
+                onMouseLeave={this.onMouseLeaveCell}
+                onClick={this.setSelectedRowIndex}
+                onClickParameter={rowIndex}
+                onRowDoubleClicked={this.props.onRowDoubleClicked}
+                rowClass={rowClass}
+                rowData={rowData}
+                element={columnElement()}
+            />
         );
     }
 
@@ -194,21 +188,21 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             let index: number;
             let rows: Array<TreeNode>;
             let collapsedNodes = [...oldState.collapsedTreeNodes];
-            let oldNodes = rowData.IsExpanded ? [...this.finalGridRows] : collapsedNodes;
+            let oldNodes = rowData.isExpanded ? [...this.finalGridRows] : collapsedNodes;
 
-            rows = getNodeChildrenRecursively(oldNodes, rowData.TreeId);
+            rows = getNodeChildrenRecursively(oldNodes, rowData.treeId);
 
             for (let i = 0; i < rows.length; i++) {
                 index = collapsedNodes.indexOf(rows[i], 0);
-                if (!rowData.IsExpanded) {
+                if (!rowData.isExpanded) {
                     collapsedNodes.splice(index, 1);
                 } else if (index < 0) {
                     collapsedNodes.push(rows[i]);
                 }
-                rows[i].IsExpanded = !rowData.IsExpanded;            
+                rows[i].isExpanded = !rowData.isExpanded;            
             }
 
-            rowData.IsExpanded = !rowData.IsExpanded;
+            rowData.isExpanded = !rowData.isExpanded;
 
             return { ...oldState, collapsedTreeNodes: collapsedNodes };
         });

@@ -148,7 +148,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentWillUpdate(nextProps, nextState) {
-        this.finalGridRows = nextProps.customRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
+        this.finalGridRows = nextProps.hasCustomRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
     }
 
     componentDidUpdate(prevProps, prevState) {
