@@ -7,13 +7,15 @@ import './Icon.scss';
 
 export const Icon: (props: IIconProps) => JSX.Element = (props: IIconProps) => {
     const customIcon = props.iconName === '';
+    const svgIcon = props.iconName.startsWith('svg');
+    const iconPrefix = svgIcon ? 'icon svg' : 'icon';
     let iconClassName = classNames(
-        ['icon'], {
+        [iconPrefix], {
             [props.iconName]: !customIcon
         }, [props.className]);
 
-        if (props.iconName.startsWith('svg')) {
-            return <svg className = {'svg ' + props.iconName} width = {props.width} height= {props.height}>
+        if (svgIcon) {
+            return <svg className = {iconClassName} width = {props.width} height= {props.height}>
             <use xlinkHref= {'#symbol-defs_' + props.iconName} />
         </svg>;
         }else {

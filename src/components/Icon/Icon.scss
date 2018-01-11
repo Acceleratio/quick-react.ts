@@ -14,13 +14,10 @@
     font-family: icomoon;
     font-style: normal;
     margin-right: 5px;
-}
-
-.svg {
-    vertical-align: middle;
-    fill: #4D4D4F;
-    display: inline-block;
-    margin-right: 5px;
+    &.svg {
+        vertical-align: middle;
+        fill: #4D4D4F;
+    }
 }
 
 @import './Icon.Content.scss'
