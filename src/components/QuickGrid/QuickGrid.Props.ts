@@ -73,7 +73,7 @@ export interface GridColumn {
     minWidth?: number;
     fixedWidth?: boolean;
     dataMember?: string;
-    cellFormatter?: (cellData) => any;
+    cellFormatter?: (cellData, rowData) => any;
     cellClassName?: string;
     headerClassName?: string;
     headerTooltip?: string;
