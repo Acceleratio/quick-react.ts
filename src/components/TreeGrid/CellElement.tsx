@@ -15,7 +15,7 @@ export class CellElement extends React.PureComponent<ICellElementProps, {}> {
     @autobind
     private _onMouseLeave() { 
         if (this.props.onMouseLeave) {
-        this.props.onMouseLeave(this.props.rowClass); 
+            this.props.onMouseLeave(this.props.rowClass); 
         }
     }
     @autobind
