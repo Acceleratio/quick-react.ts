@@ -8,7 +8,7 @@ import './Icon.scss';
 export const Icon: (props: IIconProps) => JSX.Element = (props: IIconProps) => {
     const customIcon = props.iconName === '';
     const svgIcon = props.iconName.startsWith('svg');
-    const iconPrefix = svgIcon ? 'icon svg' : 'icon';
+    let iconPrefix = 'icon '.concat( svgIcon ? 'svg' : 'font');
     let iconClassName = classNames(
         [iconPrefix], {
             [props.iconName]: !customIcon

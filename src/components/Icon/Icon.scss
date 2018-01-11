@@ -8,12 +8,14 @@
 }
 
 .icon {
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
     display: inline-block;
-    font-family: icomoon;
-    font-style: normal;
     margin-right: 5px;
+    &.font {
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-family: icomoon;
+        font-style: normal;
+    }
     &.svg {
         vertical-align: middle;
         fill: #4D4D4F;
