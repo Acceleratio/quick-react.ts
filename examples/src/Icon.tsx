@@ -168,8 +168,8 @@ export class Index extends React.Component<any, any> {
                 <div> <Icon iconName={'icon-warning'}></Icon> <span>   icon-warning</span></div>
                 <div> <Icon iconName={'icon-world'}></Icon> <span>   icon-world</span></div>
                 {symbols.map(i => {
-                    let iconName = i.id.substring(i.id.indexOf('_') + 1); 
-                    return <div> <Icon iconName={iconName} width={'16px'} height={'16px'}></Icon> <span>   {iconName}</span></div>;
+                    let iconName = i.id.substring(i.id.indexOf('_') + 1);
+                    return <div> <Icon iconName={iconName}></Icon> <span>   {iconName}</span></div>;
                 })}
             </div>
         );

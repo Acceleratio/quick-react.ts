@@ -10,15 +10,18 @@
 .icon {
     display: inline-block;
     margin-right: 5px;
+
     &.font {
         -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;
         font-family: icomoon;
         font-style: normal;
     }
-    &.svg {
-        vertical-align: middle;
-        fill: #4D4D4F;
+
+    &.svg {  
+        position:relative;              
+        top: 1px;
+        fill: $secondary-color;
     }
 }
 
