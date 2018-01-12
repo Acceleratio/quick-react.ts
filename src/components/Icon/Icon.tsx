@@ -9,7 +9,7 @@ export const Icon: (props: IIconProps) => JSX.Element = (props: IIconProps) => {
     const customIcon = props.iconName === '';
     const svgIcon = props.iconName && props.iconName.startsWith('svg');
     let iconPrefix = 'icon '.concat(svgIcon ? 'svg' : 'font');
-    let iconClassName = classNames(        
+    let iconClassName = classNames(
         [iconPrefix], {
             [props.iconName]: !customIcon
         }, [props.className]);
