@@ -15,7 +15,8 @@ const getCollapsedTreeNodes = (state: ITreeGridState, props: ITreeGridProps) => 
 
 const sortData = (treeData: Array<TreeNode>, sortColumn: string, sortDirection: SortDirection, collapsedTreeNodes: Array<TreeNode>) => {
     const sortedTree = sortTree(treeData, sortColumn, sortDirection);
-    const flattenedData = flatten(sortedTree);
+    let flattenedData: Array<IFinalTreeNode> = [];
+    flatten(sortedTree, flattenedData);
 
     // collapsed tree nodes nam zapravo ne trebaju, koriste se samo za change detekciju zasad. trebalo bi ljepse to rijesiti
     //let dt = flattenedData.filter(row => { return collapsedTreeNodes.indexOf(row) < 0; } );
@@ -25,7 +26,8 @@ const sortData = (treeData: Array<TreeNode>, sortColumn: string, sortDirection: 
 const sortTree = (tree: Array<TreeNode>, sortColumn: string, sortDirection: SortDirection): Array<IFinalTreeNode> => {
     let newTree: Array<IFinalTreeNode> = [];
     for (let child of tree) {
-        if (child.children && child.children.length > 0) {
+        // no reason to sort children that will not be visible
+        if (child.children && child.children.length > 0 && child.isExpanded) {
             child.children = sortTree(child.children, sortColumn, sortDirection);
         }
     }
@@ -50,15 +52,15 @@ const sort = (input, sortDirection, sortColumn) => {
         if (valueA > valueB) {
             return 1 * sortModifier;
         }
-        // sortColumnFinal = 'treeId';
-        // valueA = a[sortColumnFinal];
-        // valueB = b[sortColumnFinal];
-        // if (valueA < valueB) {
-        //     return -1 * sortModifier;
-        // }        
-        // if (valueA > valueB) {
-        //     return 1 * sortModifier;
-        // }  
+        sortColumnFinal = 'treeId';
+        valueA = a[sortColumnFinal];
+        valueB = b[sortColumnFinal];
+        if (valueA < valueB) {
+            return -1 * sortModifier;
+        }        
+        if (valueA > valueB) {
+            return 1 * sortModifier;
+        }  
          return 0;
     };
     return [...input].sort(sortFunction);
@@ -86,18 +88,15 @@ export function getNodeChildrenRecursively(tree: Array<TreeNode>, id): Array<Tre
 //     return level;
 // }
 
-export function flatten(tree, level: number = 0): Array<TreeNode> {
-    let result = [];
+export function flatten(tree, resultArray: Array<TreeNode>, level: number = 0) {    
     level++;
     for (let child of tree) {
-        result.push(child);
+        resultArray.push(child);
         child.nodeLevel = level;
         if (child.children && child.children.length > 0 && child.isExpanded) {
-            const children = flatten(child.children, level);
-            result = result.concat(children);
+            flatten(child.children, resultArray, level);
         }
-    }
-    return result;
+    }    
 }
 
 export const getTreeRowsSelector = createSelector(getTreeData, getSortColumn, getSortDirection, getCollapsedTreeNodes,

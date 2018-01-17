@@ -101,7 +101,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         let iconName = rowData.isExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
         let icon = null;
         
-        if (rowData.children.length <= 0 && rowData.isExpanded) {
+        if (rowData.children.length <= 0) {
             icon = null;
             actionsTooltip = null;
         } else {

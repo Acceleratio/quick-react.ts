@@ -18,10 +18,11 @@ export interface GridData extends TreeNode {
     Numbers: number;
 }
 
+let totalItems = 0;
 const generateTreeData = (size: number): TreeNode[] => {
     let treeSize: Array<number>;
     if (size === 0) {
-        treeSize = [50, 1000, 1, 10];
+        treeSize = [100000, 2, 2, 1];
     } else {
         treeSize = [10, 1000, 1, 10];
     }
@@ -29,12 +30,13 @@ const generateTreeData = (size: number): TreeNode[] => {
     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
 
     const generateEntry = (id: string, parent: string): GridData => {
+        totalItems++;
         return {
             treeId: id,
             parentId: parent,
             isExpanded: true,
             children: [],
-            Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
+            Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)] + Math.random() * 100,
             Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
             Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
             Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
@@ -50,15 +52,17 @@ const generateTreeData = (size: number): TreeNode[] => {
                 let treeEntry2 = generateEntry(treeEntry1.treeId + k + '.', treeEntry1.treeId);
                 for (let l = 0; l < treeSize[3]; l++) {
                     let treeEntry3 = generateEntry(treeEntry2.treeId + l + '.', treeEntry2.treeId);
+                  //  treeEntry3.isExpanded = false;
                     treeEntry2.children.push(treeEntry3);
                 }
+               // treeEntry2.isExpanded = false;
                 treeEntry1.children.push(treeEntry2);
             }
             treeEntry.children.push(treeEntry1);
         }
         result.push(treeEntry);
     }
-
+    alert(totalItems);
     return result;
 };
 
