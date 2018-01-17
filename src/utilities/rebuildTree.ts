@@ -56,6 +56,7 @@ export function expandOrCollapseAsyncTreeItem(getRoots: () => TreeItem[], treeIt
                 currentItem = {
                     ...currentItem,
                     children: items,
+                    expanded: currentItem.expanded && items.length > 0,
                     hasChildren: items.length > 0,
                     asyncChildrenLoadInProgress: false
                 };
