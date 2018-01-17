@@ -37,12 +37,13 @@ export function createRandomizedData(numOfItems, maxDepth) {
             hoverOverBtn: [{
                 iconName: 'icon-edit',
                 // tslint:disable-next-line:no-console
-                callback: (id) => console.log(id)
+                callback: (item) => console.log(item.id),
+                tooltip: {content: 'This is tooltip! This is tooltip! This is tooltip!' }
             },
             {
                 iconName: 'icon-trash',
                 // tslint:disable-next-line:no-console
-                callback: (id) => console.log(id)
+                callback: (item) => console.log(item)
             }]
         };
     };

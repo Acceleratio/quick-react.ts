@@ -2,9 +2,10 @@ import * as React from 'react';
 import { TreeviewItemHoverBtn } from '../Treeview/treeviewItemHoverBtn';
 import { IHoverOverBtn } from '../Treeview';
 import './HoverableButton.scss';
+import { Tooltip } from '../../index';
 
 export interface IHoverableButtonsProps {
-    id: string;
+    item: any;
     hoverOverBtn: Array<IHoverOverBtn>;
 }
 
@@ -35,18 +36,22 @@ const addHoverableButtons = (hoverableProps: IHoverableButtonsProps) => <P exten
                 {hoverableProps.hoverOverBtn && this.state.hover &&
                     <span className="hoverable-items-container__btn">
                         {
-                            hoverableProps.hoverOverBtn.map((btn, key) => (
-                                <TreeviewItemHoverBtn
-                                    key={key}
-                                    id={hoverableProps.id}
-                                    iconName={btn.iconName}
-                                    onClick={btn.callback}
-                                    className="hoverable-items__btn"
-                                />
-                            ))
+                            hoverableProps.hoverOverBtn.map((btn, keyNumber) => this._setButton(btn, keyNumber)
+                            )
                         }
                     </span>}
             </span>; 
+        }
+
+        private _setButton(btn: IHoverOverBtn, keyNumber: number) {
+            const hoverBtn = <TreeviewItemHoverBtn
+                                key={keyNumber}
+                                id={hoverableProps.item}
+                                iconName={btn.iconName}
+                                onClick={btn.callback}
+                                className="hoverable-items__btn"
+                            />;
+            return  btn.tooltip !== undefined ? <Tooltip {...btn.tooltip}> {hoverBtn} </Tooltip> : hoverBtn;
         }
 
         private _onItemHover() {
