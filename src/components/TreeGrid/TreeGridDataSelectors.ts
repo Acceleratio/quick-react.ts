@@ -21,26 +21,34 @@ const sortTree = (tree: Array<TreeNode>, sortColumn: string, sortDirection: Sort
     for (let child of tree) {
         if (child.children && child.children.length > 0) {
             child.children = sortTree(child.children, sortColumn, sortDirection);
-        }
-        newTree = sort([...tree], sortDirection, sortColumn);
+        }       
     }
+    newTree = sort(tree, sortDirection, sortColumn);
+
     return newTree;
 };
 
 const sort = (input, sortDirection, sortColumn) => {
     const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
     const sortFunction = (a, b) => {
-        if (sortColumn === undefined) {
-            sortColumn = 'TreeId';
-        }
-        let valueA = a[sortColumn];
-        let valueB = b[sortColumn];
+        let sortColumnFinal = sortColumn;
+        let valueA = a[sortColumnFinal];
+        let valueB = b[sortColumnFinal];
         if (valueA < valueB) {
             return -1 * sortModifier;
         }
         if (valueA > valueB) {
             return 1 * sortModifier;
+        }
+        sortColumnFinal = 'treeId';
+        valueA = a[sortColumnFinal];
+        valueB = b[sortColumnFinal];
+        if (valueA < valueB) {
+            return -1 * sortModifier;
         }        
+        if (valueA > valueB) {
+            return 1 * sortModifier;
+        }  
         return 0;
     };
     return [...input].sort(sortFunction);
