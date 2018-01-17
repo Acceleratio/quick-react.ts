@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ITooltipProps } from '../../index';
 
 export interface ITreeviewItemProps {
     item?: ITreeviewItem;
@@ -12,7 +13,8 @@ export interface ITreeviewItemProps {
 
 export interface IHoverOverBtn {
     iconName: string;
-    callback: (id: string) => void;
+    callback: (item: any) => void;
+    tooltip?: ITooltipProps;
 }
 
 export interface ITreeviewItem {
