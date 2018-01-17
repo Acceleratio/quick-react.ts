@@ -21,9 +21,9 @@ export interface GridData extends TreeNode {
 const generateTreeData = (size: number): TreeNode[] => {
     let treeSize: Array<number>;
     if (size === 0) {
-        treeSize = [5, 3, 2, 5];
+        treeSize = [50, 1000, 1, 10];
     } else {
-        treeSize = [10, 10, 5, 100];
+        treeSize = [10, 1000, 1, 10];
     }
     let result: Array<TreeNode> = [];
     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();

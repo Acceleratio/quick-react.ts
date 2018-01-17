@@ -3,16 +3,17 @@ import * as ReactDOM from 'react-dom';
 import * as classNames from 'classnames';
 import { ITreeGridProps, ITreeGridState, TreeNode } from './TreeGrid.Props';
 
-import { getTreeRowsSelector, getNodeChildrenRecursively, getNodeLevel, flatten } from './treeGridDataSelectors';
+import { getTreeRowsSelector, getNodeChildrenRecursively, flatten, IFinalTreeNode } from './treeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 import { CellElement } from './CellElement';
 
 
+
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
 
-    private finalGridRows: Array<TreeNode>;
+    private finalGridRows: Array<IFinalTreeNode>;
     constructor(props: ITreeGridProps) {
         super(props);
         this.state = {
@@ -51,7 +52,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const rowID: string = !rowData.treeId ? '' : rowData.treeId;
         const indentSize = 20;
         let indent = 0;
-        let level = getNodeLevel(rowData, this.finalGridRows);
+        let level = rowData.nodeLevel;
         if ((columnIndex === 0 || columnIndex === 2)) {
 
             indent = level * indentSize;     
@@ -184,25 +185,23 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     }
 
     onTreeExpandToggleClick = (rowData: TreeNode) => {
+        if (this.props.onNodeExpand) {
+            this.props.onNodeExpand(rowData);
+        }
         this.setState((oldState) => {
             let index: number;
             let rows: Array<TreeNode>;
             let collapsedNodes = [...oldState.collapsedTreeNodes];
             let oldNodes = rowData.isExpanded ? [...this.finalGridRows] : collapsedNodes;
+                       
+            rowData.isExpanded = !rowData.isExpanded;   
+            index = collapsedNodes.indexOf(rowData);
 
-            rows = getNodeChildrenRecursively(oldNodes, rowData.treeId);
-
-            for (let i = 0; i < rows.length; i++) {
-                index = collapsedNodes.indexOf(rows[i], 0);
-                if (!rowData.isExpanded) {
-                    collapsedNodes.splice(index, 1);
-                } else if (index < 0) {
-                    collapsedNodes.push(rows[i]);
-                }
-                rows[i].isExpanded = !rowData.isExpanded;            
+            if (index > 0 && !rowData.isExpanded) {
+                collapsedNodes.splice(index, 1);
+            } else if (index < 0 && rowData.isExpanded) {
+                collapsedNodes.push(rowData);
             }
-
-            rowData.isExpanded = !rowData.isExpanded;
 
             return { ...oldState, collapsedTreeNodes: collapsedNodes };
         });
