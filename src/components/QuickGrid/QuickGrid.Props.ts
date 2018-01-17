@@ -18,7 +18,7 @@ export interface IQuickGridProps {
     headerClassName?: string;
     rowHeight?: number | ((info: { index: number }) => number); // Number or a function that returns the height of a row given its index
     overscanRowCount?: number;
-    onSelectedRowChanged?: (selectedRowIndex: number) => void;
+    onSelectedRowChanged?: (selectedRowIndex: number, rowData: any) => void;
     onRowDoubleClicked?: (row: any) => void;
     displayGroupContainer?: boolean;
     sortColumn?: string;
@@ -73,7 +73,7 @@ export interface GridColumn {
     minWidth?: number;
     fixedWidth?: boolean;
     dataMember?: string;
-    cellFormatter?: (cellData) => any;
+    cellFormatter?: (cellData, rowData) => any;
     cellClassName?: string;
     headerClassName?: string;
     headerTooltip?: string;

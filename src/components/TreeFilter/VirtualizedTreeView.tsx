@@ -221,11 +221,13 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                     <span
                         className="virtualized-tree-single-select-item"
                         onClick={onSingleSelectItemClick}
-                        title={treeItem.value}>
+                    >
                         {treeItem.iconName &&
-                            <Icon iconName={treeItem.iconName} className={iconClassName} />
+                            <span title={treeItem.iconTooltipContent}>
+                                <Icon iconName={treeItem.iconName} className={iconClassName} />
+                            </span>
                         }
-                        {treeItem.value}
+                        <span title={treeItem.value}>{treeItem.value}</span>
                     </span>;
                 const SingleSelectItemWithButtons = addHoverableButtons({ id, hoverOverBtn })(SingleSelectItem);
 
@@ -245,6 +247,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         onChange={onItemCheckedChange}
                         iconName={treeItem.iconName}
                         iconClassName={iconClassName}
+                        iconTooltipContent={treeItem.iconTooltipContent}
                     />
                 );
             }

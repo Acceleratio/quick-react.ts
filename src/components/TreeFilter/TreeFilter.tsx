@@ -61,7 +61,14 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
             return { selectionText: this.props.emptySelectionText, titleText: this.props.emptySelectionText };
         }
 
-        const checkedItemIds = selection.selectedIDs;
+        const keys = Object.keys(itemLookup);
+        const checkedItemIds = selection.selectedIDs.filter(selectedId => {
+            if (itemLookup.hasOwnProperty(selectedId)) {
+                return selectedId;
+            } else {
+                console.warn(`Warning: Provided selected key: [${selectedId}] doesn't exist.`);
+            }
+        });
 
         if (checkedItemIds === undefined || checkedItemIds.length === 0) {
             selectionText = titleText = this.props.emptySelectionText;

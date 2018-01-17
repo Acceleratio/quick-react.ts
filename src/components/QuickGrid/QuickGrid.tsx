@@ -235,7 +235,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const rowClass = 'grid-row-' + rowIndex;
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
         const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
-        const onClick = () => { this.setSelectedRowIndex(rowIndex); };
+        const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
 
         const onDoubleClick = () => {
             if (this.props.onRowDoubleClicked) {
@@ -377,7 +377,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
         const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
         const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
-        const onClick = () => { this.setSelectedRowIndex(rowIndex); };
+        const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
 
         const onDoubleClick = () => {
             if (this.props.onRowDoubleClicked) {
@@ -387,7 +387,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
         const columnElement = () => {
             if (column.cellFormatter) {
-                return column.cellFormatter(cellData);
+                return column.cellFormatter(cellData, rowData);
             } else {
                 return (
                     <div style={{ padding: '3px 5px 0 5px' }} >
@@ -413,10 +413,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         );
     }
 
-    setSelectedRowIndex = (rowIndex: number) => {
+    setSelectedRowIndex = (rowIndex: number, rowData: any) => {
         this.setState((prevState) => { return { ...prevState, selectedRowIndex: rowIndex }; });
         if (this.props.onSelectedRowChanged) {
-            this.props.onSelectedRowChanged(rowIndex);
+            this.props.onSelectedRowChanged(rowIndex, rowData);
         }
     }
 

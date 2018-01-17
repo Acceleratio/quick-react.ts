@@ -33,7 +33,11 @@ $button-height: 32px;
             font-size: 16px;
             margin-right: 8px;
             position: relative;
-            top: 1px;
+            top: 1px;      
+            
+            &.svg {                
+                fill: $white-color !important;                
+            }
         }
     }
 
@@ -44,6 +48,10 @@ $button-height: 32px;
             margin-right: 0;
             color: $white-color;
             font-size: 16px;
+
+            &.svg {                
+                fill: $white-color !important;
+            }
         }
     }
 
@@ -93,6 +101,10 @@ $button-height: 32px;
         &.button-icon-text {
             .icon {
                 color: $primary-color;
+
+                &.svg {
+                    fill: $primary-color !important;
+                }
             }
         }
 
@@ -101,6 +113,10 @@ $button-height: 32px;
 
             .icon {
                 color: $primary-color;
+
+                &.svg {
+                    fill: $primary-color !important;
+                }
             }
         }
 			
@@ -111,6 +127,10 @@ $button-height: 32px;
 
             .button-label, .icon {
                 color: $primary-hover-color;
+            }
+
+            >.icon.svg {
+                fill: $primary-hover-color !important;
             }
         }
 
@@ -124,6 +144,10 @@ $button-height: 32px;
             .button-label, .icon {
                 color: $primary-disabled-color;
             }
+
+            &.icon.svg {
+                fill: $primary-disabled-color !important;
+            }
         }
     }
 
@@ -135,6 +159,9 @@ $button-height: 32px;
         &.button-icon-text {
             .icon {
                 color: $tertiary-color;
+                &.svg {
+                    fill: $tertiary-color !important;
+                }
             }
         }
 
@@ -143,6 +170,10 @@ $button-height: 32px;
 
             .icon {
                 color: $tertiary-color;
+
+                &.svg {
+                    fill: $tertiary-color !important;
+                }
             }
         }
 
@@ -153,6 +184,10 @@ $button-height: 32px;
 
             .button-label, .icon {
                 color: $tertiary-hover-color;
+            }
+
+            >.icon.svg {
+                fill: $tertiary-hover-color !important;
             }
         }
         
@@ -165,6 +200,10 @@ $button-height: 32px;
 
             .button-label, .icon {
                 color: $tertiary-disabled-color;
+            }
+
+            >.icon.svg {
+                fill: $tertiary-disabled-color !important;
             }
         }
     }
@@ -194,6 +233,10 @@ $button-height: 32px;
         &.button-icon-text {
             .icon {
                 color: $primary-color;
+
+                &.svg {
+                    fill: $primary-color !important;
+                }
             }
         }
 			
@@ -202,6 +245,10 @@ $button-height: 32px;
 		&:active {
             .button-label, .icon {
                 color: $primary-hover-color;
+            }
+
+            >.icon.svg {
+                fill: $primary-hover-color !important;
             }
         }
         
@@ -212,6 +259,10 @@ $button-height: 32px;
         &:disabled {
             .button-label, .icon {
                 color: $secondary-disabled-color;
+            }
+
+            >.icon.svg {
+                fill: $primary-disabled-color !important;
             }
         }
     }
@@ -245,10 +296,18 @@ $button-height: 32px;
     .icon {
         color: $link-color;
 
+        &.svg {
+            fill: $link-color !important;
+        }
+
         &:hover,
         &:focus,
         &:active {
             color: $link-hover-color;
+
+            &.svg {
+                fill: $link-hover-color !important;
+            }
         }
     }
 
@@ -263,6 +322,10 @@ $button-height: 32px;
 
         .icon {
             color: $secondary-disabled-color;
+
+            &.svg {
+                fill: $secondary-disabled-color !important;
+            }
         }
     }
 }

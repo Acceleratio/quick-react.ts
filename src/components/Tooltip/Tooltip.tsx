@@ -46,7 +46,7 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
         );
 
         const tooltipContainerClass = classNames('tooltip-container', [this.props.containerClass]);
-
+        
         return (
             <div
                 ref={this._resolveRef('_tooltipHost')}

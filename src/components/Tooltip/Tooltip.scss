@@ -27,6 +27,7 @@
         .callout-main {
             .tooltip-content span {
                 color: $secondary-color;
+                white-space: pre-line;
             }
         }
     }
@@ -48,6 +49,7 @@
 
             .tooltip-content span {
                 color: $white-color;
+                white-space: pre-line;
             }
         }
     }
@@ -79,6 +81,7 @@
             .tooltip-content span {
                 color: $white-color;
                 font-size: 12px;
+                white-space: pre-line;
             }
         }
     }

@@ -147,7 +147,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
         const columnElement = () => {
             if (column.cellFormatter) {
-                return column.cellFormatter(cellData);
+                return column.cellFormatter(cellData, rowData);
             } else {
                 return (
                     <div style={{ padding: '3px 5px 0 5px' }} >

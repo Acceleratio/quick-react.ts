@@ -9,6 +9,7 @@ import { Button } from './../../src/components/Button/Button';
 import { Dialog } from './../../src/components/Dialog/Dialog';
 import { DialogFooter } from './../../src/components/Dialog/DialogFooter';
 import { TextField } from './../../src/components/TextField/TextField';
+import { DialogFooterSection, DialogFooterSectionPosition } from './../../src/components/Dialog/DialogFooterSection';
 
 export class Index extends React.Component<any, any> {
     constructor() {
@@ -44,8 +45,6 @@ export class Index extends React.Component<any, any> {
                         <TextField label="Multiline TextField:" multiline rows={4} cols={50} />
                     </div>
 
-
-
                     <DialogFooter>
                         <Button className={'button-textual'} onClick={this._toggleDialog.bind(this)}>Cancel</Button>
                         <Button className={'button-primary-gray'} onClick={this._toggleDialog.bind(this)}>Discard</Button>
@@ -58,10 +57,16 @@ export class Index extends React.Component<any, any> {
                     onDismiss={this._toggleDialog2.bind(this)}
                     title={'Warning'}
                     subText={'This is warning message and you have to fix it!'}
-                    headerClassName="header-white">
+                >
                     <DialogFooter>
-                        <Button className={'button-textual'} onClick={this._toggleDialog2.bind(this)}>Cancel</Button>
-                        <Button className={'button-primary'} onClick={this._toggleDialog2.bind(this)}>Save</Button>
+                        <DialogFooterSection position={DialogFooterSectionPosition.Left}>
+                            <a href={''} onClick={() => alert('help me!')}>Help</a> |
+                            <a href={''} onClick={() => alert('legal stuff')}>Privacy Policy Statement</a>
+                        </DialogFooterSection>
+                        <DialogFooterSection position={DialogFooterSectionPosition.Right}>
+                            <Button className={'button-textual'} onClick={this._toggleDialog2.bind(this)}>Cancel</Button>
+                            <Button className={'button-primary'} onClick={this._toggleDialog2.bind(this)}>Save</Button>
+                        </DialogFooterSection>
                     </DialogFooter>
                 </Dialog>
             </div>

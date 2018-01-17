@@ -23,6 +23,12 @@ export class Index extends React.Component<any, any> {
                         <Button>Hover Over Me</Button>
                     </Tooltip>
                 </div>
+
+                <div style={{ marginLeft: '50px' }}>
+                    <Tooltip content={'This tooltip\r\ndisplay new line!'} directionalHint={DirectionalHint.rightCenter}>
+                        <Button>Hover Over Me</Button>
+                    </Tooltip>
+                </div>
             </div>
         );
     }

@@ -6,7 +6,7 @@ import { rebuildTree, updateTree, expandOrCollapseTreeItem, expandOrCollapseAsyn
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { TreeFilter, IFilterSelection, FilterSelectionEnum, VirtualizedTreeView, TreeItem } from '../../src/components/TreeFilter';
-import { createFlatList, createRandomizedData, getSelectedIds, createAsyncLoadRandomizedData } from '../MockData/treeFilterElements';
+import { createFlatList, createRandomizedData, getSelectedIds, createAsyncLoadRandomizedData, createCustomTooltipContentRandomizedData } from '../MockData/treeFilterElements';
 import { Button } from '../../src/components/Button/Button';
 import { ILookupTable } from '../../src/components/TreeFilter/TreeItemOperators';
 import { Spinner } from '../../src/components/Spinner/Spinner';
@@ -22,6 +22,7 @@ const deeperTreeData = createRandomizedData(50, 4);
 const flatList = createFlatList(4000);
 const selected = getSelectedIds(4000);
 const shortFlatList = createFlatList(6);
+const customTooltipContent = createCustomTooltipContentRandomizedData();
 export class Index extends React.Component<any, DemoState> {
     constructor(props) {
         super(props);
@@ -212,6 +213,28 @@ export class Index extends React.Component<any, DemoState> {
                     emptySelectionText="Select role"
                     showStatusBar={false}
                     validated={false}
+                />
+                <br/><br/>
+                <TreeFilter
+                    title="Custom tooltip content Icon"
+                    filterId={'f3'}
+                    items={customTooltipContent}
+                    onValuesSelected={this.onValuesSelected}
+                    isSingleSelect={true}
+                    isGroupSelectableOnSingleSelect={true}
+                    // tslint:disable-next-line:no-string-literal
+                    filterSelection={this.state.filterStates['f3']}
+                    defaultSelection={FilterSelectionEnum.All}
+                    enabledResizeHandles={{
+                        top: false,
+                        right: false,
+                        bottom: true,
+                        left: true,
+                        topRight: false,
+                        bottomRight: false,
+                        bottomLeft: true,
+                        topLeft: false
+                    }}
                 />
             </div>
         );
