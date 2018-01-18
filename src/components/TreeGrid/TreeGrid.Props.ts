@@ -1,11 +1,11 @@
 import { GridColumn, SortDirection } from '../QuickGrid/QuickGrid.Props';
 
 export interface ITreeGridProps {
-    tree: Array<TreeNode>;
+    tree: TreeNode;
     columns: Array<GridColumn>;
     className?: string;
     onRowDoubleClicked?: (row: any) => void;
-    onSelectedRowChanged?: (selectedRowIndex: number) => void;    
+    onSelectedRowChanged?: (selectedRowIndex: number) => void;
     onNodeExpand?: (item?: TreeNode) => void;
     sortColumn?: string;
     sortDirection?: SortDirection;
@@ -13,18 +13,19 @@ export interface ITreeGridProps {
 }
 
 export interface ITreeGridState {
-    collapsedTreeNodes: Array<TreeNode>;
     selectedRowIndex?: number;
-    columnsToDisplay: Array<GridColumn>;
+    columnsToDisplay: Array<GridColumn>;    
     sortColumn?: string;
     sortDirection?: SortDirection;
+    sortRequestId: number;
+    structureRequestChangeId: number;
 }
 
 
 export interface TreeNode { // extend this interface on a data structure to be used for row data
     treeId: string;
     parentId: string; // treeId of the parent node
-    isExpanded: boolean;
+    isExpanded?: boolean;
     children: Array<TreeNode>;
     hasChildren?: boolean;
     asyncChildrenLoadInProgress?: boolean;

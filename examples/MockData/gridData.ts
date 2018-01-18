@@ -19,10 +19,10 @@ export interface GridData extends TreeNode {
 }
 
 let totalItems = 0;
-const generateTreeData = (size: number): TreeNode[] => {
+const generateTreeData = (size: number): TreeNode => {
     let treeSize: Array<number>;
     if (size === 0) {
-        treeSize = [100000, 2, 2, 1];
+        treeSize = [5, 5, 5, 2];
     } else {
         treeSize = [10, 1000, 1, 10];
     }
@@ -44,6 +44,7 @@ const generateTreeData = (size: number): TreeNode[] => {
 
         };
     };
+
     for (let i = 0; i < treeSize[0]; i++) {
         let treeEntry = generateEntry(i + '.', null);
         for (let j = 0; j < treeSize[1]; j++) {
@@ -52,10 +53,10 @@ const generateTreeData = (size: number): TreeNode[] => {
                 let treeEntry2 = generateEntry(treeEntry1.treeId + k + '.', treeEntry1.treeId);
                 for (let l = 0; l < treeSize[3]; l++) {
                     let treeEntry3 = generateEntry(treeEntry2.treeId + l + '.', treeEntry2.treeId);
-                  //  treeEntry3.isExpanded = false;
+                    // treeEntry3.isExpanded = false;
                     treeEntry2.children.push(treeEntry3);
                 }
-               // treeEntry2.isExpanded = false;
+                // treeEntry2.isExpanded = false;
                 treeEntry1.children.push(treeEntry2);
             }
             treeEntry.children.push(treeEntry1);
@@ -63,7 +64,11 @@ const generateTreeData = (size: number): TreeNode[] => {
         result.push(treeEntry);
     }
     alert(totalItems);
-    return result;
+    return {
+        treeId: '',
+        parentId: '',
+        children: result
+    };
 };
 
 export const gridColumns1: Array<GridColumn> = [
