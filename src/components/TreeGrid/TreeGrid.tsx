@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import * as classNames from 'classnames';
 import { ITreeGridProps, ITreeGridState, TreeNode } from './TreeGrid.Props';
 
-import { getTreeRowsSelector, flatten, IFinalTreeNode } from './treeGridDataSelectors';
+import { getTreeRowsSelector, IFinalTreeNode } from './treeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
@@ -188,10 +188,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
-    onTreeExpandToggleClick = (rowData: TreeNode) => {
-        if (this.props.onNodeExpand) {
-            this.props.onNodeExpand(rowData);
-        }
+    onTreeExpandToggleClick = (rowData: TreeNode) => {      
         this.setState((oldState) => {
 
             // we are breaking immutability here and potential redux stores, but we need the performance

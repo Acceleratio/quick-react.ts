@@ -6,7 +6,6 @@ export interface ITreeGridProps {
     className?: string;
     onRowDoubleClicked?: (row: any) => void;
     onSelectedRowChanged?: (selectedRowIndex: number) => void;
-    onNodeExpand?: (item?: TreeNode) => void;
     sortColumn?: string;
     sortDirection?: SortDirection;
     columnSummaries?: any;
@@ -14,7 +13,7 @@ export interface ITreeGridProps {
 
 export interface ITreeGridState {
     selectedRowIndex?: number;
-    columnsToDisplay: Array<GridColumn>;    
+    columnsToDisplay: Array<GridColumn>;
     sortColumn?: string;
     sortDirection?: SortDirection;
     sortRequestId: number;
@@ -26,7 +25,5 @@ export interface TreeNode { // extend this interface on a data structure to be u
     treeId: string;
     parentId: string; // treeId of the parent node
     isExpanded?: boolean;
-    children: Array<TreeNode>;
-    hasChildren?: boolean;
-    asyncChildrenLoadInProgress?: boolean;
+    children: Array<TreeNode>;    
 }

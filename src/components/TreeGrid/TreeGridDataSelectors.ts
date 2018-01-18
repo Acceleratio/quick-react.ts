@@ -41,6 +41,7 @@ const sortData = (treeNode: TreeNode, sortColumn: string, sortDirection: SortDir
     }
 
     // if the last sort configuration differs from the current, we need to resort the children    
+    // otherwise, performance gains    
     if ((<IFinalTreeNode>treeNode).sortRequestId !== rootSortRequestId) {        
         sort(treeNode.children, sortDirection, sortColumn);
         (<IFinalTreeNode>treeNode).sortRequestId = rootSortRequestId;
