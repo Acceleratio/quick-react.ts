@@ -24,7 +24,7 @@ const generateTreeData = (size: number): TreeNode => {
     if (size === 0) {
         treeSize = [5, 5, 5, 2];
     } else {
-        treeSize = [10, 1000, 1, 10];
+        treeSize = [10, 1000, 5, 10];
     }
     let result: Array<TreeNode> = [];
     let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
