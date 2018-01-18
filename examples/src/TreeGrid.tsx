@@ -11,6 +11,8 @@ import { gridColumns1, getTreeGridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 
+import './../../src/components/Icon/symbol-defs.svg';
+
 
 const columnSummaries = {
     Color: 'Best: Orange',

@@ -34,8 +34,10 @@ const generateTreeData = (size: number): TreeNode => {
         return {
             treeId: id,
             parentId: parent,
-            isExpanded: true,
+            isExpanded: false,
             children: [],
+            iconName: 'svg-icon-add',
+            hasChildren: true,
             Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)] + Math.random() * 100,
             Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
             Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],

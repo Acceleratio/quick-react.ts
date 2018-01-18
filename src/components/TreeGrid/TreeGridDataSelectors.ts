@@ -5,6 +5,7 @@ const createSelector = require('reselect').createSelector;
 export interface IFinalTreeNode extends TreeNode {
     nodeLevel: number;
     sortRequestId: number;
+    isAsyncLoadingNode?: boolean;
 }
 
 const getChangeRequestIds = (state: ITreeGridState, props: ITreeGridProps) => ({ sortRequestId: state.sortRequestId, structureRequestChangeId: state.structureRequestChangeId });
@@ -78,13 +79,21 @@ const sort = (input, sortDirection, sortColumn) => {
     input.sort(sortFunction);
 };
 
-export function flatten(tree, resultArray: Array<TreeNode>, level: number = 0) {
+export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0) {
     level++;
     for (let child of tree) {
         resultArray.push(child);
         child.nodeLevel = level;
         if (child.children && child.children.length > 0 && child.isExpanded) {
             flatten(child.children, resultArray, level);
+        } else if (child.children && child.children.length === 0 && child.isExpanded) {
+            resultArray.push(<IFinalTreeNode>{
+                nodeLevel: child.nodeLevel + 1,
+                treeId: child.treeId + '_ASYNC',
+                parentId: child.id,
+                children: [],
+                isAsyncLoadingNode: true
+            });
         }
     }
 }

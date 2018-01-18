@@ -8,6 +8,8 @@ import { Icon } from '../Icon/Icon';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 import { CellElement } from './CellElement';
+import { Spinner } from '../Spinner/Spinner';
+import { SpinnerType } from '../Spinner/Spinner.Props';
 
 
 
@@ -15,7 +17,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     private finalGridRows: Array<IFinalTreeNode>;
     constructor(props: ITreeGridProps) {
-        super(props);        
+        super(props);
         this.state = {
             columnsToDisplay: this.getTreeColumnsToDisplay(props.columns),
             sortColumn: props.sortColumn,
@@ -46,7 +48,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     componentWillUpdate(nextProps, nextState) {
         if (this.props.tree !== nextProps.tree) {
-            this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1 , structureRequestChangeId: oldState.structureRequestChangeId + 1 }));
+            this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1, structureRequestChangeId: oldState.structureRequestChangeId + 1 }));
         }
         this.finalGridRows = getTreeRowsSelector(nextState, nextProps);
     }
@@ -105,7 +107,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         let iconName = rowData.isExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
         let icon = null;
 
-        if (rowData.children.length <= 0) {
+        if (rowData.children.length <= 0 && !rowData.hasChildren) {
             icon = null;
             actionsTooltip = null;
         } else {
@@ -150,17 +152,27 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             { 'border-column-cell': notLastIndex },
             { 'is-selected': rowIndex === this.state.selectedRowIndex });
 
-        const columnElement = () => {
-            if (column.cellFormatter) {
-                return column.cellFormatter(cellData, rowData);
-            } else {
-                return (
-                    <div style={{ padding: '3px 5px 0 5px' }} >
-                        {cellData}
-                    </div>
-                );
-            }
-        };
+        let columnElement: JSX.Element;
+        if (rowData.isAsyncLoadingNode && columnIndex === 2) {
+            columnElement = <div className="loading-container">
+                <Spinner className="async-loading-spinner"
+                    type={SpinnerType.small}
+                />
+                <span className="async-loading-label">
+                    Loading...
+                    </span>
+            </div>;
+        } else if (column.cellFormatter) {
+            columnElement = column.cellFormatter(cellData, rowData);
+        } else {
+            columnElement = (
+                <div style={{ padding: '3px 5px 0 5px' }} >
+                    {columnIndex === 2 && rowData.iconName ? <Icon iconName={rowData.iconName} /> : null}
+                    {cellData}
+                </div>
+            );
+        }
+
         const title = cellData;
         return (
             <CellElement
@@ -176,7 +188,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 onRowDoubleClicked={this.props.onRowDoubleClicked}
                 rowClass={rowClass}
                 rowData={rowData}
-                element={columnElement()}
+                element={columnElement}
             />
         );
     }
@@ -188,14 +200,16 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
-    onTreeExpandToggleClick = (rowData: TreeNode) => {      
+    onTreeExpandToggleClick = (rowData: TreeNode) => {
+        // we are breaking immutability here and potential redux stores, but we need the performance
+        rowData.isExpanded = !rowData.isExpanded;
+        if (rowData.children.length === 0 && rowData.hasChildren && this.props.onLoadChildNodes) {
+            this.props.onLoadChildNodes(rowData);
+        }
         this.setState((oldState) => {
-
-            // we are breaking immutability here and potential redux stores, but we need the performance
-            rowData.isExpanded = !rowData.isExpanded;
-
             return { structureRequestChangeId: oldState.structureRequestChangeId + 1 };
         });
+
     }
 
     onMouseEnterCell = (rowClass) => {
