@@ -1,15 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as classNames from 'classnames';
-import { ITreeGridProps, ITreeGridState, TreeNode } from './TreeGrid.Props';
+import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 
-import { getTreeRowsSelector, IFinalTreeNode } from './treeGridDataSelectors';
+import { getTreeRowsSelector } from './treeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
 import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 import { CellElement } from './CellElement';
 import { Spinner } from '../Spinner/Spinner';
 import { SpinnerType } from '../Spinner/Spinner.Props';
+import { IFinalTreeNode } from './TreeGridDataSource';
 
 
 
@@ -45,17 +46,20 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         columns = emptyArray.concat(columns);
         return columns;
     }
+   
+    componentWillReceiveProps(nextProps) {
+        if (this.props.treeDataSource !== nextProps.treeDataSource) {
+            this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1, structureRequestChangeId: oldState.structureRequestChangeId + 1 }));           
+        }
+    }
 
     componentWillUpdate(nextProps, nextState) {
-        if (this.props.tree !== nextProps.tree) {
-            this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1, structureRequestChangeId: oldState.structureRequestChangeId + 1 }));
-        }
         this.finalGridRows = getTreeRowsSelector(nextState, nextProps);
     }
 
     treeCellRenderer = ({ columnIndex, key, rowIndex, style }) => {
         const rowData = this.finalGridRows[rowIndex];
-        const rowID: string = !rowData.treeId ? '' : rowData.treeId;
+        const rowID: number = rowData.nodeId;
         const indentSize = 20;
         let indent = 0;
         let level = rowData.nodeLevel;
@@ -102,7 +106,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             </div>);
     }
 
-    renderActionTreeCell(key, rowIndex: number, rowData: TreeNode, style) {
+    renderActionTreeCell(key, rowIndex: number, rowData: IFinalTreeNode, style) {
         let actionsTooltip = rowData.isExpanded ? 'Collapse' : 'Expand';
         let iconName = rowData.isExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
         let icon = null;
@@ -200,10 +204,10 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
-    onTreeExpandToggleClick = (rowData: TreeNode) => {
+    onTreeExpandToggleClick = (rowData: IFinalTreeNode) => {
         // we are breaking immutability here and potential redux stores, but we need the performance
         rowData.isExpanded = !rowData.isExpanded;
-        if (rowData.children.length === 0 && rowData.hasChildren && this.props.onLoadChildNodes) {
+        if (rowData.isExpanded && rowData.children.length === 0 && rowData.hasChildren && this.props.onLoadChildNodes) {          
             this.props.onLoadChildNodes(rowData);
         }
         this.setState((oldState) => {

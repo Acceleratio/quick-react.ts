@@ -1,5 +1,6 @@
 import { GridColumn, DataTypeEnum, SortDirection } from '../../src/components/QuickGrid/QuickGrid.Props';
-import { TreeNode } from '../../src/components/TreeGrid/TreeGrid.Props';
+import { TreeNode, TreeDataSource } from '../../src/components/TreeGrid/TreeGridDataSource';
+
 
 
 const RANDOM_WORDS = ['abstrusity', 'advertisable', 'bellwood', 'benzole', 'disputative', 'djilas', 'ebracteate', 'zonary'];
@@ -19,42 +20,42 @@ export interface GridData extends TreeNode {
 }
 
 let totalItems = 0;
+
+const randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
+export const generateTreeNode = () => {
+    totalItems++;  
+    return {                        
+        isExpanded: false,            
+        children: [],
+        iconName: 'svg-icon-add',
+        hasChildren: true,
+        Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)] + Math.random() * 100,
+        Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
+        Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
+        Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
+        Numbers: Math.floor(Math.random() * 30)
+
+    };
+};
 const generateTreeData = (size: number): TreeNode => {
     let treeSize: Array<number>;
     if (size === 0) {
-        treeSize = [5, 5, 5, 2];
+        treeSize = [20, 20, 100, 0];
     } else {
         treeSize = [10, 1000, 5, 10];
     }
-    let result: Array<TreeNode> = [];
-    let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
+    let result: Array<TreeNode> = [];   
 
-    const generateEntry = (id: string, parent: string): GridData => {
-        totalItems++;
-        return {
-            treeId: id,
-            parentId: parent,
-            isExpanded: false,
-            children: [],
-            iconName: 'svg-icon-add',
-            hasChildren: true,
-            Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)] + Math.random() * 100,
-            Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
-            Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
-            Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
-            Numbers: Math.floor(Math.random() * 30)
 
-        };
-    };
 
     for (let i = 0; i < treeSize[0]; i++) {
-        let treeEntry = generateEntry(i + '.', null);
+        let treeEntry = generateTreeNode();
         for (let j = 0; j < treeSize[1]; j++) {
-            let treeEntry1 = generateEntry(treeEntry.treeId + j + '.', treeEntry.treeId);
+            let treeEntry1 = generateTreeNode();
             for (let k = 0; k < treeSize[2]; k++) {
-                let treeEntry2 = generateEntry(treeEntry1.treeId + k + '.', treeEntry1.treeId);
+                let treeEntry2 = generateTreeNode();
                 for (let l = 0; l < treeSize[3]; l++) {
-                    let treeEntry3 = generateEntry(treeEntry2.treeId + l + '.', treeEntry2.treeId);
+                    let treeEntry3 = generateTreeNode();
                     // treeEntry3.isExpanded = false;
                     treeEntry2.children.push(treeEntry3);
                 }
@@ -65,10 +66,8 @@ const generateTreeData = (size: number): TreeNode => {
         }
         result.push(treeEntry);
     }
-    // alert(totalItems);
+     alert(totalItems);
     return {
-        treeId: '',
-        parentId: '',
         children: result
     };
 };
@@ -106,8 +105,8 @@ export const gridColumns1: Array<GridColumn> = [
 
 
 
-export function getTreeGridData(size: number) {
-    const treeData = generateTreeData(size);
+export function getTreeGridData(size: number): TreeDataSource {
+    const treeData = new TreeDataSource(generateTreeData(size));
     return treeData;
 }
 
