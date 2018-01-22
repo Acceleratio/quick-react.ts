@@ -78,4 +78,3 @@ export function expandOrCollapseAsyncTreeItem(getRoots: () => TreeItem[], treeIt
 
     onTreeUpdated(updateTree(getRoots(), flippedTreeItem, lookupTableGetter));
 }
-
