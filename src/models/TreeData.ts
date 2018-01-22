@@ -7,7 +7,7 @@ export interface TreeNode { // extend this interface on a data structure to be u
 
 export interface IFinalTreeNode extends TreeNode {
     nodeId?: number;
-    parentId?: number; // treeId of the parent node
+    parentId?: number; // nodeId of the parent node
     nodeLevel: number;
     sortRequestId: number;
     isAsyncLoadingNode?: boolean;
@@ -41,7 +41,6 @@ export class TreeDataSource {
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
     private treeStructure: IFinalTreeNode;
-
   
     /**
      * 
@@ -79,8 +78,7 @@ export class TreeDataSource {
 
     private isDataSource(input: TreeNode | TreeDataSource): input is TreeDataSource {
         return (<TreeDataSource>input).updateNode !== undefined;
-    }
-   
+    }   
     
     public updateNode(nodeId: number, props: IPartialFinalTreeNode): TreeDataSource {        
         let existingNode = this.nodesById[nodeId];
