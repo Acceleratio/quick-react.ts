@@ -43,3 +43,5 @@ lib/
 quick-react-ts*
 
 src/mockData/largeFarms.ts
+/node_modules/quick-react-ts
+/.vs/slnx.sqlite
