@@ -83,8 +83,15 @@ export const lowercasedColumnPrefix = 'lowercase_';
 
 export interface QuickGridActions {
     actionItems: Array<ActionItem>;
-    actionIconName: string;
+    actionsBehaviour?: QuickGridActionsBehaviourEnum;
+    actionIconName: string;    
+
     onActionSelected: (commandName: string, parameters, rowData) => void;
+}
+
+export enum QuickGridActionsBehaviourEnum {
+     ShowAsFirstColumn,
+     ShowOnRowHover
 }
 
 export interface ActionItem {

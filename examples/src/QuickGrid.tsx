@@ -9,6 +9,8 @@ import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, QuickGridActions
 import { gridColumns1, getTreeGridData, gridColumns2, getGridData, gridColumns3, getSmallGridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
+import './../../src/components/Icon/symbol-defs.svg';
+import { QuickGridActionsBehaviourEnum } from '../../src/index';
 
 const numOfRows = 100000;
 
@@ -20,6 +22,7 @@ const gridActions: QuickGridActions = {
         { name: 'Action 3', commandName: 'command3' },
         { name: 'Action 4', commandName: 'command4', parameters: { key: 'someParam' } }
     ],
+    actionsBehaviour: QuickGridActionsBehaviourEnum.ShowOnRowHover,
     actionIconName: 'icon-ghost',
     onActionSelected: function (commandName: string, parameters, rowData) {
         // tslint:disable-next-line:no-console
