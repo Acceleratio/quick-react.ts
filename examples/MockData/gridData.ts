@@ -1,5 +1,5 @@
 import { GridColumn, DataTypeEnum, SortDirection } from '../../src/components/QuickGrid/QuickGrid.Props';
-import { TreeNode, TreeDataSource } from '../../src/components/TreeGrid/TreeGridDataSource';
+import { TreeNode, TreeDataSource } from '../../src/models/TreeData';
 
 
 
@@ -25,11 +25,11 @@ const randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCas
 export const generateTreeNode = () => {
     totalItems++;  
     return {                        
-        isExpanded: false,            
+        isExpanded: true,            
         children: [],
         iconName: 'svg-icon-add',
         hasChildren: true,
-        Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)] + Math.random() * 100,
+        Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
         Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
         Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
         Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
@@ -40,7 +40,7 @@ export const generateTreeNode = () => {
 const generateTreeData = (size: number): TreeNode => {
     let treeSize: Array<number>;
     if (size === 0) {
-        treeSize = [20, 20, 100, 0];
+        treeSize = [5, 5, 5, 2];
     } else {
         treeSize = [10, 1000, 5, 10];
     }
@@ -56,17 +56,17 @@ const generateTreeData = (size: number): TreeNode => {
                 let treeEntry2 = generateTreeNode();
                 for (let l = 0; l < treeSize[3]; l++) {
                     let treeEntry3 = generateTreeNode();
-                    // treeEntry3.isExpanded = false;
+                     treeEntry3.isExpanded = false;
                     treeEntry2.children.push(treeEntry3);
                 }
-                // treeEntry2.isExpanded = false;
+                 treeEntry2.isExpanded = false;
                 treeEntry1.children.push(treeEntry2);
             }
             treeEntry.children.push(treeEntry1);
         }
         result.push(treeEntry);
     }
-     alert(totalItems);
+     // alert(totalItems);
     return {
         children: result
     };

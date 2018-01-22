@@ -1,5 +1,5 @@
 import { GridColumn, SortDirection } from '../QuickGrid/QuickGrid.Props';
-import { TreeNode, TreeDataSource, IFinalTreeNode } from './TreeGridDataSource';
+import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
 
 export interface ITreeGridProps {
     treeDataSource: TreeDataSource;

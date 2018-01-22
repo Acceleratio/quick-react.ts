@@ -13,7 +13,7 @@ import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
 import './../../src/components/Icon/symbol-defs.svg';
 import { autobind } from '../../src/index';
-import { IFinalTreeNode, TreeNode } from '../../src/components/TreeGrid/TreeGridDataSource';
+import { IFinalTreeNode, TreeNode } from '../../src/models/TreeData';
 
 
 const columnSummaries = {
@@ -68,7 +68,9 @@ export class Index extends React.Component<any, any> {
         setTimeout(() => {
             let children = [];
             for (let i = 0; i < 6; i++) {
-                children.push(generateTreeNode());
+                let newChildNode = generateTreeNode();
+                newChildNode.isExpanded = false;
+                children.push(newChildNode);
             }
             let newData = this.state.data.updateNode(node.nodeId, { children });
             this.setState(prev => ({ data: newData }));

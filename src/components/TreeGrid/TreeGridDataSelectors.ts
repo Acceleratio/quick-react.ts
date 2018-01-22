@@ -1,6 +1,6 @@
 import { ITreeGridState, ITreeGridProps } from './TreeGrid.Props';
 import { SortDirection } from '../QuickGrid/QuickGrid.Props';
-import { TreeNode, TreeDataSource, IFinalTreeNode } from './TreeGridDataSource';
+import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
 const createSelector = require('reselect').createSelector;
 
 

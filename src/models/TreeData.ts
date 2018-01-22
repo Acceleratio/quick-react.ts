@@ -1,11 +1,9 @@
-
 export interface TreeNode { // extend this interface on a data structure to be used for row data    
     isExpanded?: boolean;
     children: Array<TreeNode>;
     hasChildren?: boolean;
     iconName?: string;
 }
-
 
 export interface IFinalTreeNode extends TreeNode {
     nodeId?: number;
@@ -17,11 +15,11 @@ export interface IFinalTreeNode extends TreeNode {
     parent: IFinalTreeNode;
 }
 
-export interface ILookupTable {
+export type IPartialFinalTreeNode = { [P in keyof IFinalTreeNode]?: IFinalTreeNode[P] };
+
+interface ILookupTable {
     [id: number]: IFinalTreeNode;
 }
-
-
 
 /**
  * This class is meant to work with th TreeGrid component.
@@ -83,16 +81,15 @@ export class TreeDataSource {
         return (<TreeDataSource>input).updateNode !== undefined;
     }
    
-
-    public updateNode(nodeId: number, props: any): TreeDataSource {        
+    
+    public updateNode(nodeId: number, props: IPartialFinalTreeNode): TreeDataSource {        
         let existingNode = this.nodesById[nodeId];
-        if (existingNode) {
-            let index = -1;
-            let parent = existingNode.parent;
-            if (parent) {
-                index = parent.children.indexOf(existingNode);
-            }
-            existingNode = { ...existingNode, ...props };
+        if (existingNode) {            
+
+            // we do not want to use the spread operator, we want to reause the existing treenode            
+            // existingNode = { ...existingNode, ...props };
+            Object.assign(existingNode, props);
+            
             if (props.children) {
                 existingNode.isAsyncLoadingNode = false;
                 existingNode.hasChildren = props.children && props.children.length > 0;
@@ -100,14 +97,11 @@ export class TreeDataSource {
                 this.extendNodes(existingNode, existingNode.children, existingNode.nodeLevel + 1);
             }
             
-            if (parent) {                
-                parent.children.splice(index, 1, existingNode);
-            }
-            this.nodesById[existingNode.nodeId] = existingNode;
+            
             return new TreeDataSource(this);
         }
         return this;
-    }
+    }  
 
     private getNextId(): number {
         return ++this.idCounter;

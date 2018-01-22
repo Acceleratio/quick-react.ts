@@ -10,7 +10,7 @@ import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 import { CellElement } from './CellElement';
 import { Spinner } from '../Spinner/Spinner';
 import { SpinnerType } from '../Spinner/Spinner.Props';
-import { IFinalTreeNode } from './TreeGridDataSource';
+import { IFinalTreeNode } from '../../models/TreeData';
 
 
 
