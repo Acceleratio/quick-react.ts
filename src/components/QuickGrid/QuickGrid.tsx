@@ -390,7 +390,12 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             { 'is-selected': rowIndex === this.state.selectedRowIndex });
 
         const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
-        const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
+        const onClick = (e) => { 
+            console.log(e);
+           // if (!isLastColumn) {
+                this.setSelectedRowIndex(rowIndex, rowData); 
+            //}
+        };
 
         const onDoubleClick = () => {
             if (this.props.onRowDoubleClicked) {
@@ -436,14 +441,15 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         if (!actions) {
             return;
         }
-
-        // || rowIndex !== this.state.selectedRowIndex
-        //    
+           
         if (rowIndex === this.state.selectedRowIndex) {
             return <span key="nonHover" className="hoverable-items-container__btn is-selected">
-                {rowIndex === this.state.selectedRowIndex && <Icon iconName="svg-icon-checkmark" className="hoverable-items__btn" />}
+                   {
+                       this._rowHoverActionsHandler.getRenderedActions(rowIndex)
+                   }
             </span>;
-        } else {
+        } else
+         {
             return <span key="hover" className="hoverable-items-container__btn hover-allowed">
             </span>;
         }
