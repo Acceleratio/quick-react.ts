@@ -38,12 +38,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     };
     private finalGridRows: Array<any>;
     private cellElementsToUnmout: Array<any>;
-    private _grid: any;
-    private hoveredRowIndex: number;
+    private _grid: any;    
     private _headerGrid: any;
     private parentElement: HTMLElement;
     private columnsMinTotalWidth = 0;
-    private rowHoverActionsHandler: QuickGridRowActionsHandler;
+    private _rowHoverActionsHandler: QuickGridRowActionsHandler;
     constructor(props: IQuickGridProps) {
         super(props);
         const groupByState = this.getGroupByFromProps(props.groupBy);
@@ -161,19 +160,22 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         } else if (this.state.sortDirection !== prevState.sortDirection || this.state.sortColumn !== prevState.sortColumn) {
             this._grid.forceUpdate();
         }
-        this.clearAllManuallyRenderedRowComponents();
+        this._rowHoverActionsHandler.clearHoveredElement();
     }
 
     componentDidMount() {
         // we need to hook up to the actual mouse leave event
         // the react event does not function correctly with our custom rendered hover actions
-        ReactDOM.findDOMNode(this).addEventListener('mouseleave', () => {
-            this.markRowAsHovered(-1);            
+        let domElement = ReactDOM.findDOMNode(this);
+        domElement.addEventListener('mouseleave', () => {
+            this._rowHoverActionsHandler.clearHoveredElement();
         });
+        this._rowHoverActionsHandler.setGridRootElement(domElement);
     }
 
     componentWillUnmount() {
         this.clearAllManuallyRenderedRowComponents();
+        ReactDOM.findDOMNode(this).removeEventListener('mouseleave');
     }
 
     private clearAllManuallyRenderedRowComponents() {
@@ -369,49 +371,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     onMouseEnterCell = (rowIndex: number) => {
-         this.markRowAsHovered(rowIndex);
-    }
-
-    private markRowAsHovered(rowIndex: number) {
-        if (rowIndex === this.hoveredRowIndex) {
-            return;
-        }
-
-        if (this.hoveredRowIndex && this.hoveredRowIndex !== -1) {
-            let prevHoveredRowClass = 'grid-row-' + this.hoveredRowIndex;
-            let prevHoveredRowElements = document.getElementsByClassName(prevHoveredRowClass);
-            for (let i = 0; i < prevHoveredRowElements.length; i++) {
-                const classList = prevHoveredRowElements[i].classList;
-                if (classList.contains('is-hover')) {
-                    classList.remove('is-hover');
-                }
-            }
-            this.clearAllManuallyRenderedRowComponents();
-        }
-
-        if (rowIndex && rowIndex !== -1) {
-
-            let rowClass = 'grid-row-' + rowIndex;
-            let rowElements = document.getElementsByClassName(rowClass);
-            for (let i = 0; i < rowElements.length; i++) {
-                const classList = rowElements[i].classList;
-                if (!classList.contains('is-hover')) {
-                    classList.add('is-hover');
-                }
-            }
-            let hoverContainer = rowElements[rowElements.length - 1].getElementsByClassName('hover-allowed');
-
-            if (hoverContainer.length > 0 && hoverContainer[0].children.length === 0) {                            
-                 this.cellElementsToUnmout.push(hoverContainer[0]);            
-                 ReactDOM.render(<Icon iconName="svg-icon-add" className="hoverable-items__btn" onClick={this.onActionItemClicked}/>, hoverContainer[0]);                
-            }
-        }
-
-        this.hoveredRowIndex = rowIndex;
-    }
-
-    onActionItemClicked= () => {
-        console.log(this.state);
+        this._rowHoverActionsHandler.markRowAsHovered(rowIndex);
     }
 
     renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style) {
@@ -554,6 +514,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
     setHeaderGridReference = (ref) => { this._headerGrid = ref; };
     setGridReference = (ref) => { this._grid = ref; };
+    setRowHoverActionsHandler = (ref) => { this._rowHoverActionsHandler = ref; };
 
     render() {
         let mainClass = classNames('grid-component-container', this.props.gridClassName);
@@ -561,7 +522,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return (
             <div className={mainClass}>
                 <div className="hoverActions">
-                    <QuickGridRowActionsHandler ref={(c) => this.rowHoverActionsHandler = c} />
+                    <QuickGridRowActionsHandler ref={this.setRowHoverActionsHandler} />
                 </div>
                 <AutoSizer onResize={this.onGridResize}>
                     {({ height, width }) => (
