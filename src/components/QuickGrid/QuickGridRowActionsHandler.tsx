@@ -7,7 +7,7 @@ import { DropdownType } from '../Dropdown/Dropdown.Props';
 
 
 export interface IQuickGridRowActionsHandler {
-    onGetActionsElement?: (rowIndex: number) => JSX.Element;
+    onGetRowActions?: (rowIndex: number) => Array<ActionItem>;
     onActionClicked?: (rowIndex: number, action: ActionItem) => void;
 }
 
@@ -17,22 +17,21 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
     private _gridElement: Element;
     private _hoveredRowIndex: number;
     private _hoveredHTMLRowElement: Element;
-    private _hoveredReactComponent: any ;
     private _dropdownOpened: boolean;
     setGridRootElement(gridElement: Element) {
         this._gridElement = gridElement;
     }
 
     clearHoveredElement(force: boolean = true) {       
-        // if (this._dropdownOpened) {
-        //     return;
-        // }
-        // // if (this._hoveredHTMLRowElement) {
-        // //     ReactDOM.unmountComponentAtNode(this._hoveredHTMLRowElement);
-        // //     this._hoveredHTMLRowElement = null;
-        // // }
-        // this.removeHoveredStyle(this._hoveredRowIndex);
-        // this._hoveredRowIndex = -1;
+        if (this._dropdownOpened) {
+            return;
+        }
+        if (this._hoveredHTMLRowElement) {
+            ReactDOM.unmountComponentAtNode(this._hoveredHTMLRowElement);
+            this._hoveredHTMLRowElement = null;
+        }
+        this.removeHoveredStyle(this._hoveredRowIndex);
+        this._hoveredRowIndex = -1;
     }
 
     markRowAsHovered(rowIndex: number) {
@@ -69,7 +68,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         this.forceUpdate();
     }
 
-    private removeHoveredStyle(rowIndex: number) {
+    private removeHoveredStyle(rowIndex: number) {        
         if (this._dropdownOpened) {
             return;
         }
@@ -95,60 +94,19 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         if (this._hoveredHTMLRowElement) {
             let renderedActions = this.getRenderedActions(this._hoveredRowIndex);
             if (renderedActions) {
-                ReactDOM.render(renderedActions, this._hoveredHTMLRowElement, (component) => {
-                    console.log("test")
-                    console.log(component)
-                    this._hoveredReactComponent = component
-                 } );
+                ReactDOM.render(renderedActions, this._hoveredHTMLRowElement);
             }
         }
     }
 
-    getRenderedActions(rowIndex: number) {
-        console.log(this._hoveredRowIndex);
-        console.log(this._hoveredReactComponent);
-        if (rowIndex === this._hoveredRowIndex && this._hoveredReactComponent) {
-            console.log("returning cached");
-            return this._hoveredReactComponent;
-        }
+    getRenderedActions(rowIndex: number) {        
+        let actions = this.props.onGetRowActions(rowIndex);
         let renderedActions = renderActions(rowIndex,
-            [
-                {
-                    iconName: 'icon-add',
-                    commandName: 'Test action',
-                    name: 'TestAction',
-                    parameters: null
-                },
-                {
-                    iconName: 'svg-icon-checkmark',
-                    commandName: 'Test action2',
-                    name: 'TestAction2',
-                    parameters: null
-                },
-                {
-                    iconName: 'svg-icon-checkmark',
-                    commandName: 'Test action3',
-                    name: 'TestAction3',
-                    parameters: null
-                },
-                {
-                    iconName: 'svg-icon-checkmark',
-                    commandName: 'Test action4',
-                    name: 'TestAction4',
-                    parameters: null
-                },
-                {
-                    iconName: 'svg-icon-checkmark',
-                    commandName: 'Test action5',
-                    name: 'TestAction5',
-                    parameters: null
-                }
-            ],
-            () => alert('hi'), (opened) => {
-                this._dropdownOpened = opened;
-                console.log(opened);
-            } 
-            
+            actions,
+            this.props.onActionClicked,
+            (opened) => {
+                this._dropdownOpened = opened;                
+            }            
         );
 
         return renderedActions;
@@ -165,28 +123,12 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
     }
 }
 
-export function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
+export function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
     if (!actions || actions.length === 0) { 
         return null;
     }
 
-//     <div
-//     key={key}
-//     style={style}
-//     className={className}
-//     onMouseEnter={onMouseEnter}
-//     title={title}
-// >
-//     <Dropdown
-//         dropdownKey={rowIndex}
-//         icon={actionIconName}
-//         dropdownType={DropdownType.actionDropdown}
-//         displaySelection={false}
-//         onClick={this.onActionItemClick}
-//         options={actionOptions}
-//     />
-// </div>
-    const mapAction = (x: ActionItem) => <Icon key={x.commandName} iconName={x.iconName} className="hoverable-items__btn" onClick={(e) => {e.nativeEvent.preventDefault(); e.nativeEvent.stopPropagation(); }}/>;
+    const mapAction = (x: ActionItem) => <Icon key={x.commandName} iconName={x.iconName} title={x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
     let renderDropDown = actions.length >= 4;
     let elements = [];
     if (renderDropDown) {
@@ -202,7 +144,7 @@ export function renderActions(rowIndex: number, actions: Array<ActionItem>, onAc
                 icon="svg-icon-in_progress"
                 dropdownType={DropdownType.actionDropdown}
                 displaySelection={false}
-                onClick={() => onActionClicked}
+                onClick={(item) => onActionClicked(rowIndex, actions.find(x => x.commandName === item.key ))}
                 options={actionOptions}
                 onMenuToggle={onMenuToggle}
                 onClosed = {() => onMenuToggle(false)}
@@ -211,7 +153,7 @@ export function renderActions(rowIndex: number, actions: Array<ActionItem>, onAc
         elements = actions.map(mapAction);
     }
 
-    return <span style={{display: 'flex'}} onClick={e => e.stopPropagation()}>
+    return <span style={{display: 'flex'}} >
         {
            elements
         }

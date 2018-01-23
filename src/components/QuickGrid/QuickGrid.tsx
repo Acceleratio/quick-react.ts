@@ -46,7 +46,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     constructor(props: IQuickGridProps) {
         super(props);
         const groupByState = this.getGroupByFromProps(props.groupBy);
-        const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupByState, this.shouldRenderActionsColumn());
+        const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupByState, this.shouldRenderActionsColumn(props));
         this.state = {
             columnWidths: this.getColumnWidths(columnsToDisplay),
             columnsToDisplay: columnsToDisplay,
@@ -140,9 +140,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentWillReceiveProps(nextProps: IQuickGridProps) {
-        if (nextProps.columns !== this.props.columns || nextProps.groupBy !== this.props.groupBy) {
+        if (nextProps.columns !== this.props.columns || nextProps.groupBy !== this.props.groupBy
+        || nextProps.gridActions !== this.props.gridActions) {
             const newGroupBy = this.getGroupByFromProps(nextProps.groupBy);
-            const hasActionColumn = nextProps.gridActions != null;
+            const hasActionColumn = this.shouldRenderActionsColumn(nextProps);
             const columnsToDisplay = nextProps.hasStaticColumns ? nextProps.columns : this.getColumnsToDisplay(nextProps.columns, newGroupBy, hasActionColumn);
             const columnWidths = this.getColumnWidths(columnsToDisplay);
             this.setState((prevState) => { return { ...prevState, columnsToDisplay: columnsToDisplay, columnWidths: columnWidths, groupBy: newGroupBy }; });
@@ -165,7 +166,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
     componentDidMount() {
         // we need to hook up to the actual mouse leave event
-        // the react event does not function correctly with our custom rendered hover actions
+        // the react event does not function correctly with our custom rendered hover actions, probably because of the ReactDom.render usage
         let domElement = ReactDOM.findDOMNode(this);
         domElement.addEventListener('mouseleave', () => {
             this._rowHoverActionsHandler.clearHoveredElement();
@@ -205,8 +206,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             - this.gridFooterContainerHeight();
     }
 
-    private shouldRenderActionsColumn(): boolean {
-        return this.props.gridActions != null && (this.props.gridActions.actionsBehaviour === undefined || this.props.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowAsFirstColumn);
+    private shouldRenderActionsColumn(props: IQuickGridProps): boolean {
+        return props.gridActions != null && (props.gridActions.actionsBehaviour === undefined || props.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowAsFirstColumn);
     }
 
     onRowExpandToggle(name, shouldExpand) {
@@ -249,7 +250,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         if (rowData.type === 'GroupRow') { // todo Different member - > true
             return this.renderGroupCell(columnIndex, key, rowIndex, rowData, style);
         } else {
-            if (columnIndex === 0 && this.shouldRenderActionsColumn()) {
+            if (columnIndex === 0 && this.shouldRenderActionsColumn(this.props)) {
                 return this.renderActionCell(key, rowIndex, rowData, style);
             }
             if (columnIndex < this.props.groupBy.length) {
@@ -391,10 +392,14 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
         const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
         const onClick = (e) => { 
-            console.log(e);
-           // if (!isLastColumn) {
-                this.setSelectedRowIndex(rowIndex, rowData); 
-            //}
+
+            // https://github.com/facebook/react/issues/1691 funky bussinese because of multiple mount points in the hover actions            
+            // so stopPropagation and preventDefault do not work there, manually checking if row actions were clicked
+            if (e.currentTarget !== e.target && !e.currentTarget.children[0].contains(e.target)) {
+                return;
+            }                                  
+             
+            this.setSelectedRowIndex(rowIndex, rowData);           
         };
 
         const onDoubleClick = () => {
@@ -426,18 +431,18 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 title={title}
             >
                 {columnElement()}
-                {isLastColumn && this.renderRowActions(rowIndex, rowData)}
+                {isLastColumn && this.renderRowHoverActions(rowIndex, rowData)}
             </div>
         );
     }
 
 
-    renderRowActions(rowIndex, rowData) {
-        if (!this.props.gridActions || this.shouldRenderActionsColumn()) {
+    renderRowHoverActions(rowIndex, rowData) {
+        if (!this.props.gridActions || this.shouldRenderActionsColumn(this.props)) {
             return;
         }
 
-        let actions: Array<ActionItem> = rowData.actions || this.props.gridActions;
+        let actions: Array<ActionItem> = rowData.rowActions || this.props.gridActions;
         if (!actions) {
             return;
         }
@@ -448,13 +453,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                        this._rowHoverActionsHandler.getRenderedActions(rowIndex)
                    }
             </span>;
-        } else
-         {
+        } else {
             return <span key="hover" className="hoverable-items-container__btn hover-allowed">
             </span>;
         }
-
-
     }
 
     setSelectedRowIndex = (rowIndex: number, rowData: any) => {
@@ -518,6 +520,18 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return totalColumnsWidth > viewportWidth;
     }
 
+    getHoverRowActions = (rowIndex: number) => {
+        if (!this.props.gridActions || this.props.gridActions.actionsBehaviour !== QuickGridActionsBehaviourEnum.ShowOnRowHover) {
+            return;
+        }
+        const actions = this.finalGridRows[rowIndex].rowActions || this.props.gridActions.actionItems;
+        return actions;
+    }
+
+    onHoverRowActionClicked = (rowIndex: number, action: ActionItem) => {
+        this.props.gridActions.onActionSelected(action.commandName, action.parameters, this.finalGridRows[rowIndex]);
+    }
+
     setHeaderGridReference = (ref) => { this._headerGrid = ref; };
     setGridReference = (ref) => { this._grid = ref; };
     setRowHoverActionsHandler = (ref) => { this._rowHoverActionsHandler = ref; };
@@ -528,7 +542,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return (
             <div className={mainClass}>
                 <div className="hoverActions">
-                    <QuickGridRowActionsHandler ref={this.setRowHoverActionsHandler} />
+                    <QuickGridRowActionsHandler ref={this.setRowHoverActionsHandler} onGetRowActions={this.getHoverRowActions} onActionClicked={this.onHoverRowActionClicked} />
                 </div>
                 <AutoSizer onResize={this.onGridResize}>
                     {({ height, width }) => (
@@ -551,7 +565,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         onGroupByChanged={this.props.onGroupByChanged}
                                         displayGroupContainer={this.props.displayGroupContainer}
                                         onGroupBySort={this.onGroupBySort}
-                                        hasActionColumn={this.shouldRenderActionsColumn()}
+                                        hasActionColumn={this.shouldRenderActionsColumn(this.props)}
                                         onCollapseAll={this.collapseAll}
                                         onExpandAll={this.expandAll}
                                         tooltipsEnabled={this.props.tooltipsEnabled}

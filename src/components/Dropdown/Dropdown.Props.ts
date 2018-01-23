@@ -27,6 +27,7 @@ export interface IDropdownProps {
     displaySelection?: boolean; // default true
     showArrowIcon?: boolean; // default true
     title?: string;
+    initialOpenState?: boolean;
 }
 
 export interface IDropdownOption {

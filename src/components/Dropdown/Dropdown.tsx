@@ -40,7 +40,7 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
         this.state = {
             id: getId('Dropdown'),
             isDisabled: props.disabled,
-            isOpen: false,
+            isOpen: props.initialOpenState === undefined ? false :  props.initialOpenState,
             selectedIndex: this._getSelectedIndex(props.options, props.selectedKey)
         };
     }
