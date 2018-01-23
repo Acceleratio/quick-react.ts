@@ -19,6 +19,7 @@ import { groupBy as arrayGroupBy } from '../../utilities/array';
 const createSelector = require('reselect').createSelector;
 import { GridFooter } from './QuickGridFooter';
 import './QuickGrid.scss';
+import { QuickGridRowActionsHandler } from './QuickGridRowActionsHandler';
 
 const getActionItems = (props: IQuickGridProps) => props.gridActions.actionItems;
 const getActionItemOptions = createSelector([getActionItems], (actionItems) => {
@@ -38,9 +39,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     private finalGridRows: Array<any>;
     private cellElementsToUnmout: Array<any>;
     private _grid: any;
+    private hoveredRowIndex: number;
     private _headerGrid: any;
     private parentElement: HTMLElement;
     private columnsMinTotalWidth = 0;
+    private rowHoverActionsHandler: QuickGridRowActionsHandler;
     constructor(props: IQuickGridProps) {
         super(props);
         const groupByState = this.getGroupByFromProps(props.groupBy);
@@ -158,14 +161,22 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         } else if (this.state.sortDirection !== prevState.sortDirection || this.state.sortColumn !== prevState.sortColumn) {
             this._grid.forceUpdate();
         }
-       this.clearAllManuallyMounterComponents();
+        this.clearAllManuallyRenderedRowComponents();
+    }
+
+    componentDidMount() {
+        // we need to hook up to the actual mouse leave event
+        // the react event does not function correctly with our custom rendered hover actions
+        ReactDOM.findDOMNode(this).addEventListener('mouseleave', () => {
+            this.markRowAsHovered(-1);            
+        });
     }
 
     componentWillUnmount() {
-        this.clearAllManuallyMounterComponents();
+        this.clearAllManuallyRenderedRowComponents();
     }
 
-    private clearAllManuallyMounterComponents() {
+    private clearAllManuallyRenderedRowComponents() {
         this.cellElementsToUnmout.forEach(element => {
             ReactDOM.unmountComponentAtNode(element);
         });
@@ -250,8 +261,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
     renderEmptyCell(key, rowIndex, rowData, style) {
         const rowClass = 'grid-row-' + rowIndex;
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
         const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
 
         const onDoubleClick = () => {
@@ -272,7 +282,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 key={key}
                 className={className}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
             />
@@ -292,8 +301,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         let actionsTooltip = this.props.actionsTooltip;
 
         const rowClass = 'grid-row-' + rowIndex;
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
         const actionOptions = getActionItemOptions(this.props);
         const { actionIconName } = this.props.gridActions;
         const title = this.props.tooltipsEnabled ? actionsTooltip : null;
@@ -308,7 +316,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 style={style}
                 className={className}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 title={title}
             >
                 <Dropdown
@@ -361,33 +368,50 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    onMouseEnterCell = (rowClass) => {
-        const rowElements = document.getElementsByClassName(rowClass);
-        for (let i = 0; i < rowElements.length; i++) {
-            rowElements[i].classList.add('is-hover');
-        }
-        let hoverContainer = rowElements[rowElements.length - 1].getElementsByClassName('hover-allowed');
-
-        if (hoverContainer.length > 0 && hoverContainer[0].children.length === 0) {
-            this.cellElementsToUnmout.push(hoverContainer[0]);
-            ReactDOM.render(<Icon iconName="svg-icon-add"/>, hoverContainer[0]);
-        }
+    onMouseEnterCell = (rowIndex: number) => {
+         this.markRowAsHovered(rowIndex);
     }
 
-    onMouseLeaveCell = (rowClass) => {
-        console.log(rowClass);
-        const rowElements = document.getElementsByClassName(rowClass);
-        for (let i = 0; i < rowElements.length; i++) {
-            const classList = rowElements[i].classList;
-            if (classList.contains('is-hover')) {
-                classList.remove('is-hover');
-            }
-        }
-        let hoverContainer = rowElements[rowElements.length - 1].getElementsByClassName('hover-allowed');
-        if (hoverContainer.length > 0) {           
-            //this.clearAllManuallyMounterComponents();
+    private markRowAsHovered(rowIndex: number) {
+        if (rowIndex === this.hoveredRowIndex) {
+            return;
         }
 
+        if (this.hoveredRowIndex && this.hoveredRowIndex !== -1) {
+            let prevHoveredRowClass = 'grid-row-' + this.hoveredRowIndex;
+            let prevHoveredRowElements = document.getElementsByClassName(prevHoveredRowClass);
+            for (let i = 0; i < prevHoveredRowElements.length; i++) {
+                const classList = prevHoveredRowElements[i].classList;
+                if (classList.contains('is-hover')) {
+                    classList.remove('is-hover');
+                }
+            }
+            this.clearAllManuallyRenderedRowComponents();
+        }
+
+        if (rowIndex && rowIndex !== -1) {
+
+            let rowClass = 'grid-row-' + rowIndex;
+            let rowElements = document.getElementsByClassName(rowClass);
+            for (let i = 0; i < rowElements.length; i++) {
+                const classList = rowElements[i].classList;
+                if (!classList.contains('is-hover')) {
+                    classList.add('is-hover');
+                }
+            }
+            let hoverContainer = rowElements[rowElements.length - 1].getElementsByClassName('hover-allowed');
+
+            if (hoverContainer.length > 0 && hoverContainer[0].children.length === 0) {                            
+                 this.cellElementsToUnmout.push(hoverContainer[0]);            
+                 ReactDOM.render(<Icon iconName="svg-icon-add" className="hoverable-items__btn" onClick={this.onActionItemClicked}/>, hoverContainer[0]);                
+            }
+        }
+
+        this.hoveredRowIndex = rowIndex;
+    }
+
+    onActionItemClicked= () => {
+        console.log(this.state);
     }
 
     renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style) {
@@ -405,8 +429,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             { 'border-column-cell': notLastIndex },
             { 'is-selected': rowIndex === this.state.selectedRowIndex });
 
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
         const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
 
         const onDoubleClick = () => {
@@ -433,7 +456,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 style={style}
                 className={className}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 title={title}
@@ -538,6 +560,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         let headerClass = classNames('grid-component-header', this.props.headerClassName);
         return (
             <div className={mainClass}>
+                <div className="hoverActions">
+                    <QuickGridRowActionsHandler ref={(c) => this.rowHoverActionsHandler = c} />
+                </div>
                 <AutoSizer onResize={this.onGridResize}>
                     {({ height, width }) => (
                         <ScrollSync>
