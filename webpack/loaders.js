@@ -39,7 +39,18 @@ exports.json = {
 
 exports.svgIcon = {
     test: /.*symbol-defs\.svg$/,
-    loader: 'svg-sprite-loader'
+    loaders: [
+        'svg-sprite-loader',
+        {
+            loader: 'svgo-loader',
+            options: {
+                enforce: 'pre',
+                plugins: [
+                    { removeTitle: true },
+                ]
+            }
+        }
+    ]
 };
 
 exports.svg = makeUrlLoader(/\.svg$/);
