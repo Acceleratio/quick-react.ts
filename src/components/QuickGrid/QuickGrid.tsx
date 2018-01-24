@@ -167,15 +167,17 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         // we need to hook up to the actual mouse leave event
         // the react event does not function correctly with our custom rendered hover actions, probably because of the ReactDom.render usage
         let domElement = ReactDOM.findDOMNode(this);
-        domElement.addEventListener('mouseleave', () => {
-            this._rowHoverActionsHandler.clearHoveredElement();
-        });
+        domElement.addEventListener('mouseleave', this.nativeMouseLeaveListener);
         this._rowHoverActionsHandler.setGridRootElement(domElement);
     }
 
     componentWillUnmount() {
         this._rowHoverActionsHandler.clearHoveredElement();
-        ReactDOM.findDOMNode(this).removeEventListener('mouseleave');
+        ReactDOM.findDOMNode(this).removeEventListener('mouseleave', this.nativeMouseLeaveListener);
+    }
+
+    private nativeMouseLeaveListener= () => {
+        this._rowHoverActionsHandler.clearHoveredElement();
     }
 
 

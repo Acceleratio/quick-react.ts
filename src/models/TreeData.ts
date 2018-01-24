@@ -124,4 +124,19 @@ export class TreeDataSource {
     public getTreeStructure(): IFinalTreeNode {
         return this.treeStructure;
     }
+
+    public getNodeById(nodeId: number): IFinalTreeNode {
+        return this.nodesById[nodeId];
+    }
+
+    public findNode(nodePredicate: (node) => boolean): IFinalTreeNode {
+        // tslint:disable-next-line:forin
+        for (let key in this.nodesById) {
+            let candidate = this.nodesById[key];
+            if (nodePredicate(candidate)) {
+                return candidate;
+            }           
+        }
+        return undefined;
+    }
 }
