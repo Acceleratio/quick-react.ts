@@ -37,19 +37,20 @@ exports.json = {
     loader: 'json',
 };
 
+var svgoConfig = JSON.stringify({
+    options: {
+        enforce: 'pre',
+        plugins: [
+            { removeTitle: true },
+        ]
+    }
+});
+
 exports.svgIcon = {
     test: /.*symbol-defs\.svg$/,
     loaders: [
         'svg-sprite-loader',
-        {
-            loader: 'svgo-loader',
-            options: {
-                enforce: 'pre',
-                plugins: [
-                    { removeTitle: true },
-                ]
-            }
-        }
+        'svgo-loader?' + svgoConfig
     ]
 };
 
