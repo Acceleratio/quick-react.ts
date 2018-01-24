@@ -22,7 +22,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         this._gridElement = gridElement;
     }
 
-    clearHoveredElement(force: boolean = true) {       
+    clearHoveredElement(force: boolean = true) {
         if (this._dropdownOpened) {
             return;
         }
@@ -68,7 +68,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         this.forceUpdate();
     }
 
-    private removeHoveredStyle(rowIndex: number) {        
+    private removeHoveredStyle(rowIndex: number) {
         if (this._dropdownOpened) {
             return;
         }
@@ -99,14 +99,14 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         }
     }
 
-    getRenderedActions(rowIndex: number) {        
+    getRenderedActions(rowIndex: number) {
         let actions = this.props.onGetRowActions(rowIndex);
         let renderedActions = renderActions(rowIndex,
             actions,
             this.props.onActionClicked,
             (opened) => {
-                this._dropdownOpened = opened;                
-            }            
+                this._dropdownOpened = opened;
+            }
         );
 
         return renderedActions;
@@ -124,7 +124,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
 }
 
 export function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
-    if (!actions || actions.length === 0) { 
+    if (!actions || actions.length === 0) {
         return null;
     }
 
@@ -133,29 +133,31 @@ export function renderActions(rowIndex: number, actions: Array<ActionItem>, onAc
     let elements = [];
     if (renderDropDown) {
         elements.push(mapAction(actions[0]));
-        elements.push(mapAction(actions[1])); 
+        elements.push(mapAction(actions[1]));
         let actionOptions = [];
         for (let i = 2; i < actions.length; i++) {
             actionOptions.push({ key: actions[i].commandName, icon: actions[i].iconName, text: actions[i].name });
         }
         elements.push(
             <Dropdown
+                className="hoverable_items__btn-dropdown"
                 dropdownKey={rowIndex}
                 icon="svg-icon-in_progress"
+                
                 dropdownType={DropdownType.actionDropdown}
                 displaySelection={false}
-                onClick={(item) => onActionClicked(rowIndex, actions.find(x => x.commandName === item.key ))}
+                onClick={(item) => onActionClicked(rowIndex, actions.find(x => x.commandName === item.key))}
                 options={actionOptions}
                 onMenuToggle={onMenuToggle}
-                onClosed = {() => onMenuToggle(false)}
+                onClosed={() => onMenuToggle(false)}
             />);
     } else {
         elements = actions.map(mapAction);
     }
 
-    return <span style={{display: 'flex'}} >
+    return <span className="hoverable-items-inner-container">
         {
-           elements
+            elements
         }
     </span>;
 }

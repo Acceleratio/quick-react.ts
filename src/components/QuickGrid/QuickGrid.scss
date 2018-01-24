@@ -201,20 +201,34 @@
 
                 
               >.hoverable-items-container__btn {               
-                display: flex;
-                align-items: center;                                
+                    display: flex;
+                    align-items: center;                                
 
-                .hoverable-items__btn {
-                    display: inline-block;
-                    margin-right: 8px;
-                    z-index: 1;
-                    &:hover {
-                        color: $primary-color;
-                        cursor: pointer;
-                        fill: $primary-color !important;
+                    .hoverable-items__btn {
+                        display: inline-block;
+                        margin-right: 8px;
+                        z-index: 1;
+                        &:hover {
+                            color: $primary-color;
+                            cursor: pointer;
+                            fill: $primary-color !important;
+                        }
+                    }
+
+                    >.hoverable-items-inner-container {
+                        display: flex;
+                        align-items: center;
+                        padding-right: 10px;
+
+                        >.dropdown-root {
+                            height: 16px;
+
+                            >.dropdown {
+                                padding-left: 0;
+                            }
+                        }
                     }
                 }
-            }
         }
 
         &.no-scrollbar {

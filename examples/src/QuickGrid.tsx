@@ -65,7 +65,7 @@ export class Index extends React.Component<any, any> {
                             ]}
                     />
                 </div>
-                <Checkbox label="Show as hover actions" 
+                <Checkbox label="Show actions as row context actions" 
                 checked={this.state.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowOnRowHover} 
                 onChange={this.onRowHoverActionsChecked } /> <br />
                 <Button onClick={this.refreshData}>Refresh data</Button>
