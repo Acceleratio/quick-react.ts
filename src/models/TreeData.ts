@@ -15,7 +15,8 @@ export interface IFinalTreeNode extends TreeNode {
     parentId?: number; // nodeId of the parent node
     nodeLevel: number;
     sortRequestId: number;
-    isAsyncLoadingNode?: boolean;
+    isLazyChildrenLoadInProgress?: boolean;
+    isAsyncLoadingDummyNode?: boolean;
     children: Array<IFinalTreeNode>;
     parent: IFinalTreeNode;
 }
@@ -46,23 +47,29 @@ export class TreeDataSource {
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
     private treeStructure: IFinalTreeNode;
-  
+    public isEmpty: boolean;
     /**
      * 
      * @param root warning: will be mutated and returned as ITreeDataSource
      */
-    constructor(input: TreeNode | TreeDataSource) {
+    constructor(input: TreeNode | TreeDataSource | Array<TreeNode>) {
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
             this.treeStructure = input.treeStructure;
             this.changeIteration = input.changeIteration + 1;
         } else {
+            let rootNode: TreeNode;
+            if (this.isRootNodesArray(input)) {
+                rootNode = { children: input };
+            } else {
+                rootNode = input;
+            }
             this.nodesById = {};            
-            this.extendNodes(input, input.children, 0);
-
-            this.treeStructure = <IFinalTreeNode>input;
-        }
+            this.extendNodes(input, rootNode.children, 0);
+            this.treeStructure = <IFinalTreeNode>rootNode;
+            this.isEmpty = this.treeStructure.children.length === 0;
+        }        
     }
 
     private extendNodes(parent, children: Array<TreeNode>, level: number) {
@@ -81,9 +88,13 @@ export class TreeDataSource {
         }
     }
 
-    private isDataSource(input: TreeNode | TreeDataSource): input is TreeDataSource {
+    private isDataSource(input: TreeNode | TreeDataSource  | Array<TreeNode>): input is TreeDataSource {
         return (<TreeDataSource>input).updateNode !== undefined;
     }   
+
+    private isRootNodesArray(input: TreeNode | TreeDataSource | Array<TreeNode> ): input is Array<TreeNode>  {
+        return (<Array<TreeNode>>input).slice !== undefined;
+    }
     
     public updateNode(nodeId: number, props: IPartialFinalTreeNode): TreeDataSource {        
         let existingNode = this.nodesById[nodeId];
@@ -94,13 +105,13 @@ export class TreeDataSource {
             Object.assign(existingNode, props);
             
             if (props.children) {
-                existingNode.isAsyncLoadingNode = false;
+                existingNode.isLazyChildrenLoadInProgress = false;
                 existingNode.hasChildren = props.children && props.children.length > 0;
                 existingNode.isExpanded = existingNode.isExpanded && existingNode.hasChildren;
                 this.extendNodes(existingNode, existingNode.children, existingNode.nodeLevel + 1);
             }
             
-            
+            this.isEmpty = this.treeStructure.children.length === 0;
             return new TreeDataSource(this);
         }
         return this;
@@ -113,4 +124,6 @@ export class TreeDataSource {
     public getTreeStructure(): IFinalTreeNode {
         return this.treeStructure;
     }
+
+    
 }

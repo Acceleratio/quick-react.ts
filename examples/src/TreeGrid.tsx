@@ -67,7 +67,7 @@ export class Index extends React.Component<any, any> {
                             treeDataSource={this.state.data}
                             columns={this.state.columns}
                             gridActions={this.gridActions}
-                            onLoadChildNodes={this.onLoadChildNodes}
+                            onLazyLoadChildNodes={this.onLoadChildNodes}
                             columnSummaries={columnSummaries}
                         />
                     </div>

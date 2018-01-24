@@ -159,7 +159,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             { 'is-selected': isSelectedRow });
 
         let columnElement: any;
-        if (rowData.isAsyncLoadingNode && columnIndex === 2) {
+        if (rowData.isAsyncLoadingDummyNode && columnIndex === 2) {
             columnElement = <div className="loading-container">
                 <Spinner className="async-loading-spinner"
                     type={SpinnerType.small}
@@ -205,9 +205,14 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     onTreeExpandToggleClick = (ev, rowData: IFinalTreeNode) => {
         // we are breaking immutability here and potential redux stores, but we need the performance
-        rowData.isExpanded = !rowData.isExpanded;
-        if (rowData.isExpanded && rowData.children.length === 0 && rowData.hasChildren && this.props.onLoadChildNodes) {
-            this.props.onLoadChildNodes(rowData);
+        rowData.isExpanded = !rowData.isExpanded;        
+        if (rowData.isExpanded 
+            && rowData.children.length === 0 
+            && rowData.hasChildren 
+            && this.props.onLazyLoadChildNodes 
+            && !rowData.isLazyChildrenLoadInProgress) {
+            rowData.isLazyChildrenLoadInProgress = true;
+            this.props.onLazyLoadChildNodes(rowData);
         }
         this.setState((oldState) => {
             return { structureRequestChangeId: oldState.structureRequestChangeId + 1 };

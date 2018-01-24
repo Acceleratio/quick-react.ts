@@ -89,7 +89,7 @@ export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number 
                 parentId: child.id,
                 parent: child,
                 children: [],
-                isAsyncLoadingNode: true,
+                isAsyncLoadingDummyNode: true,
                 sortRequestId: child.sortRequestId
             });
         }
