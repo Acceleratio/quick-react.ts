@@ -5,7 +5,7 @@ import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 
 import { getTreeRowsSelector } from './treeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
-import { QuickGrid, IQuickGridProps, SortDirection, GridColumn } from '../QuickGrid';
+import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, ICustomCellRendererArgs } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 import { CellElement } from './CellElement';
 import { Spinner } from '../Spinner/Spinner';
@@ -46,10 +46,10 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         columns = emptyArray.concat(columns);
         return columns;
     }
-   
+
     componentWillReceiveProps(nextProps) {
         if (this.props.treeDataSource !== nextProps.treeDataSource) {
-            this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1, structureRequestChangeId: oldState.structureRequestChangeId + 1 }));           
+            this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1, structureRequestChangeId: oldState.structureRequestChangeId + 1 }));
         }
     }
 
@@ -57,7 +57,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this.finalGridRows = getTreeRowsSelector(nextState, nextProps);
     }
 
-    treeCellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+    treeCellRenderer = (args: ICustomCellRendererArgs) => {
+        let { columnIndex, key, rowIndex, style, onMouseEnter, rowActionsRender, onMouseClick } = args;
         const rowData = this.finalGridRows[rowIndex];
         const rowID: number = rowData.nodeId;
         const indentSize = 20;
@@ -91,9 +92,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             style = { ...style, left: style.left + indent };
         }
         if (columnIndex === 0) {
-            return this.renderActionTreeCell(key, rowIndex, rowData, style);
+            return this.renderExpandCollapseButton(key, rowIndex, rowData, style, onMouseEnter, args.isSelectedRow);
         }
-        return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);
+
+        // return defaultRender(style);
+        return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style, onMouseEnter, onMouseClick, rowActionsRender, args.isSelectedRow);
     }
 
     renderHiddenTreeCell(key, columnIndex, rowData) {
@@ -106,7 +109,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             </div>);
     }
 
-    renderActionTreeCell(key, rowIndex: number, rowData: IFinalTreeNode, style) {
+    renderExpandCollapseButton(key, rowIndex: number, rowData: IFinalTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
         let actionsTooltip = rowData.isExpanded ? 'Collapse' : 'Expand';
         let iconName = rowData.isExpanded ? 'icon-arrow_down' : 'icon-arrow_right';
         let icon = null;
@@ -122,7 +125,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const className = classNames(
             'grid-component-cell',
             rowClass,
-            { 'is-selected': rowIndex === this.state.selectedRowIndex }
+            { 'is-selected': isSelectedRow }
         );
         return (
             <CellElement
@@ -131,8 +134,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 style={style}
                 className={className}
                 title={title}
-                onMouseEnter={this.onMouseEnterCell}
-                onMouseLeave={this.onMouseLeaveCell}
+                onMouseEnter={onMouseEnter}
                 onClick={icon ? this.onTreeExpandToggleClick : null}
                 onClickParameter={rowData}
                 rowClass={rowClass}
@@ -142,7 +144,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         );
     }
 
-    renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style) {
+    renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style, onMouseEnter, onCellClick, rowActionsRender, isSelectedRow: boolean) {
         const columns = this.state.columnsToDisplay;
         const notLastIndex = columnIndex < (columns.length - 1);
         const column = columns[columnIndex];
@@ -154,9 +156,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             rowClass,
             column.cellClassName,
             { 'border-column-cell': notLastIndex },
-            { 'is-selected': rowIndex === this.state.selectedRowIndex });
+            { 'is-selected': isSelectedRow });
 
-        let columnElement: JSX.Element;
+        let columnElement: any;
         if (rowData.isAsyncLoadingNode && columnIndex === 2) {
             columnElement = <div className="loading-container">
                 <Spinner className="async-loading-spinner"
@@ -169,12 +171,15 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         } else if (column.cellFormatter) {
             columnElement = column.cellFormatter(cellData, rowData);
         } else {
-            columnElement = (
-                <div style={{ padding: '3px 5px 0 5px' }} >
+            columnElement = [
+                <div key="cellData" style={{ padding: '3px 5px 0 5px', width: '100%' }} >
                     {columnIndex === 2 && rowData.iconName ? <Icon iconName={rowData.iconName} /> : null}
                     {cellData}
                 </div>
-            );
+            ];
+            if (!notLastIndex) {
+                columnElement.push(rowActionsRender(rowIndex, rowData));
+            }
         }
 
         const title = cellData;
@@ -185,10 +190,10 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 style={style}
                 className={className}
                 title={title}
-                onMouseEnter={this.onMouseEnterCell}
-                onMouseLeave={this.onMouseLeaveCell}
-                onClick={this.setSelectedRowIndex}
+                onMouseEnter={onMouseEnter}
+                onClick={onCellClick}
                 onClickParameter={rowIndex}
+                rowIndex={rowIndex}
                 onRowDoubleClicked={this.props.onRowDoubleClicked}
                 rowClass={rowClass}
                 rowData={rowData}
@@ -197,40 +202,17 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         );
     }
 
-    setSelectedRowIndex = (rowIndex: number) => {
-        this.setState((prevState) => { return { ...prevState, selectedRowIndex: rowIndex }; });
-        if (this.props.onSelectedRowChanged) {
-            this.props.onSelectedRowChanged(rowIndex);
-        }
-    }
 
-    onTreeExpandToggleClick = (rowData: IFinalTreeNode) => {
+    onTreeExpandToggleClick = (ev, rowData: IFinalTreeNode) => {
         // we are breaking immutability here and potential redux stores, but we need the performance
         rowData.isExpanded = !rowData.isExpanded;
-        if (rowData.isExpanded && rowData.children.length === 0 && rowData.hasChildren && this.props.onLoadChildNodes) {          
+        if (rowData.isExpanded && rowData.children.length === 0 && rowData.hasChildren && this.props.onLoadChildNodes) {
             this.props.onLoadChildNodes(rowData);
         }
         this.setState((oldState) => {
             return { structureRequestChangeId: oldState.structureRequestChangeId + 1 };
         });
 
-    }
-
-    onMouseEnterCell = (rowClass) => {
-        const rowElements = document.getElementsByClassName(rowClass);
-        for (let i = 0; i < rowElements.length; i++) {
-            rowElements[i].classList.add('is-hover');
-        }
-    }
-
-    onMouseLeaveCell = (rowClass) => {
-        const rowElements = document.getElementsByClassName(rowClass);
-        for (let i = 0; i < rowElements.length; i++) {
-            const classList = rowElements[i].classList;
-            if (classList.contains('is-hover')) {
-                classList.remove('is-hover');
-            }
-        }
     }
 
     getSortInfo = (newSortColumn, newSortDirection) => {
@@ -242,6 +224,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             <QuickGrid
                 rows={this.finalGridRows}
                 columns={this.state.columnsToDisplay}
+                gridActions={this.props.gridActions}
                 sortDirection={this.state.sortDirection}
                 sortColumn={this.state.sortColumn}
                 tooltipsEnabled={false}

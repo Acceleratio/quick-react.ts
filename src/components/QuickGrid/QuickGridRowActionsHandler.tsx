@@ -57,10 +57,12 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
                     classList.add('is-hover');
                 }
             }
-            let hoverContainer = rowElements[rowElements.length - 1].getElementsByClassName('hover-allowed');
+            if (rowElements.length > 0) {
+                let hoverContainer = rowElements[rowElements.length - 1].getElementsByClassName('hover-allowed');
 
-            if (hoverContainer.length > 0 && hoverContainer[0].children.length === 0) {
-                this._hoveredHTMLRowElement = hoverContainer[0];
+                if (hoverContainer.length > 0 && hoverContainer[0].children.length === 0) {
+                    this._hoveredHTMLRowElement = hoverContainer[0];
+                }
             }
         }
 
@@ -143,7 +145,7 @@ export function renderActions(rowIndex: number, actions: Array<ActionItem>, onAc
                 className="hoverable_items__btn-dropdown"
                 dropdownKey={rowIndex}
                 icon="svg-icon-in_progress"
-                
+
                 dropdownType={DropdownType.actionDropdown}
                 displaySelection={false}
                 onClick={(item) => onActionClicked(rowIndex, actions.find(x => x.commandName === item.key))}

@@ -10,6 +10,7 @@ const RANDOM_Animal = ['Dog', 'Cat', 'Mouse'];
 const RANDOM_City = ['Zagreb', 'Vienna', 'London', 'Amsterdam', 'Barcelona'];
 const RANDOM_CarBrand = ['Audi', 'BMW', 'Mercedes', 'Opel', 'VW', 'Lada', 'Ford', 'Mazda'];
 const RANDOM_Mix = ['1', 2, '3', 4, 'A', 'B', 'C', '10'];
+const RANDOM_ActionIcons = ['svg-icon-add', 'svg-icon-camera', 'svg-icon-edit', 'svg-icon-open', 'svg-icon-settings', 'svg-icon-user', 'svg-icon-reset'];
 
 export interface GridData extends TreeNode {
     Name: string;
@@ -29,6 +30,28 @@ export const generateTreeNode = () => {
         children: [],
         iconName: 'svg-icon-add',
         hasChildren: true,
+        rowActions: [
+            {
+                name: 'Test Action 1',
+                commandName: 'TestAction1',
+                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+            },
+            {
+                name: 'Test Action 2',
+                commandName: 'TestAction2',
+                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+            },
+            {
+                name: 'Random Action ' + Math.floor(Math.random()),
+                commandName: 'Random Action 1',
+                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+            },
+            {
+                name: 'Random Action ' + Math.floor(Math.random()),
+                commandName: 'Random Action 2',
+                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+            }
+        ],
         Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
         Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
         Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],

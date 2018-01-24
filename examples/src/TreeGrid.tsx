@@ -12,7 +12,7 @@ import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resi
 import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
 import './../../src/components/Icon/symbol-defs.svg';
-import { autobind } from '../../src/index';
+import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum } from '../../src/index';
 import { IFinalTreeNode, TreeNode } from '../../src/models/TreeData';
 
 
@@ -28,6 +28,17 @@ export class Index extends React.Component<any, any> {
         columns: gridColumns1,
         selectedData: 1
     };
+
+    gridActions: QuickGridActions = {
+        actionItems: [],
+        actionIconName: '',
+        actionsBehaviour: QuickGridActionsBehaviourEnum.ShowOnRowHover,
+        onActionSelected: this.rowActionClicked
+    };
+
+    rowActionClicked(commandName: string, parameters, rowData) {
+        alert(commandName + ' clicked.');
+    }
     
     prev: any;
     public render() {        
@@ -55,6 +66,7 @@ export class Index extends React.Component<any, any> {
                         <TreeGrid
                             treeDataSource={this.state.data}
                             columns={this.state.columns}
+                            gridActions={this.gridActions}
                             onLoadChildNodes={this.onLoadChildNodes}
                             columnSummaries={columnSummaries}
                         />

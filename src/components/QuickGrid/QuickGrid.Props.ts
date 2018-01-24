@@ -32,8 +32,19 @@ export interface IQuickGridProps {
     tooltipsEnabled?: boolean;
     hasCustomRowSelector?: boolean;
     customRowSorter?: (sortBy, sortDirection) => void;
-    customCellRenderer?: ({}) => React.ReactNode;
+    customCellRenderer?: (args: ICustomCellRendererArgs) => React.ReactNode;
     hasStaticColumns?: boolean;
+}
+
+export interface ICustomCellRendererArgs {
+    columnIndex: number;
+    key: any;
+    rowIndex: number; 
+    style: any;    
+    onMouseEnter: any;
+    onMouseClick: any;
+    isSelectedRow: boolean;
+    rowActionsRender: (rowIndex: number, rowData: any) => React.ReactNode;
 }
 
 export interface IQuickGridState {
