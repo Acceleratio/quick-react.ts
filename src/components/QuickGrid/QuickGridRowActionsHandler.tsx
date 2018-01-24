@@ -142,6 +142,7 @@ export function renderActions(rowIndex: number, actions: Array<ActionItem>, onAc
         }
         elements.push(
             <Dropdown
+                key="hoverDropDown"
                 className="hoverable_items__btn-dropdown"
                 dropdownKey={rowIndex}
                 icon="svg-icon-in_progress"
@@ -157,7 +158,7 @@ export function renderActions(rowIndex: number, actions: Array<ActionItem>, onAc
         elements = actions.map(mapAction);
     }
 
-    return <span className="hoverable-items-inner-container">
+    return <span key="hoverActionsSpan" className="hoverable-items-inner-container">
         {
             elements
         }
