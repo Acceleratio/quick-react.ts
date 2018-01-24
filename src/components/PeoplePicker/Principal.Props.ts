@@ -9,15 +9,15 @@ export interface IPrincipalProps extends React.Props<Principal> {
 }
 
 export interface IPrincipal {
-    id: number;
+    id: string;
     displayName: string;
     email: string;
     type: PrincipalType;
 }
 
 export enum PrincipalType {
-    user = 0,
-    securityGroup = 1,
-    sharePointGroup = 2, 
-    activeDirectoryGroup = 3
+    sharePointGroup = 1,
+    user = 2,
+    activeDirectoryGroup = 3,
+    securityGroup = 4,
 }

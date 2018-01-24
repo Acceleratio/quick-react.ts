@@ -12,5 +12,6 @@ export interface IPeoplePickerProps extends React.Props<PeoplePicker> {
     onSelect: (selectedPersonList: IPrincipal[]) => void;
     placeholder?: string;
     singleSelect?: boolean;
+    selectedPrincipalList?: IPrincipal[];
     suggestionList: IPrincipal[]; 
 }

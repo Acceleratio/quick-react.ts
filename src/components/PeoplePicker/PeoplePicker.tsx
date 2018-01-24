@@ -27,7 +27,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
         this.state = {
             isFocused: false,
-            selectedPrincipalList: null,
+            selectedPrincipalList: this.props.selectedPrincipalList ? this.props.selectedPrincipalList : null,
             suggestionsVisible: false,
             value: props.value || props.defaultValue || ''
         };
@@ -70,7 +70,9 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
         this.setState({ suggestionsVisible: false, value: '' });
 
         if (this.state.selectedPrincipalList !== null) {
-            this.setState({ selectedPrincipalList: [...this.state.selectedPrincipalList, principal] });
+            if (!this.state.selectedPrincipalList.find(x => x.id === principal.id)) {
+                this.setState({ selectedPrincipalList: [...this.state.selectedPrincipalList, principal] });
+            }
         } else {
             this.setState({ selectedPrincipalList: [principal] });
         }
