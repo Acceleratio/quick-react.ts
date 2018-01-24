@@ -205,11 +205,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     onTreeExpandToggleClick = (ev, rowData: IFinalTreeNode) => {
         // we are breaking immutability here and potential redux stores, but we need the performance
-        rowData.isExpanded = !rowData.isExpanded;        
-        if (rowData.isExpanded 
-            && rowData.children.length === 0 
-            && rowData.hasChildren 
-            && this.props.onLazyLoadChildNodes 
+        rowData.isExpanded = !rowData.isExpanded;
+        if (rowData.isExpanded
+            && rowData.children.length === 0
+            && rowData.hasChildren
+            && this.props.onLazyLoadChildNodes
             && !rowData.isLazyChildrenLoadInProgress) {
             rowData.isLazyChildrenLoadInProgress = true;
             this.props.onLazyLoadChildNodes(rowData);
@@ -217,7 +217,12 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this.setState((oldState) => {
             return { structureRequestChangeId: oldState.structureRequestChangeId + 1 };
         });
+    }
 
+    onInnerGridSelectedRowChanged = (rowIndex: number) => {
+        if (this.props.onSelectedNodeChanged) {
+            this.props.onSelectedNodeChanged(this.finalGridRows[rowIndex]);
+        }
     }
 
     getSortInfo = (newSortColumn, newSortDirection) => {
@@ -232,6 +237,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 gridActions={this.props.gridActions}
                 sortDirection={this.state.sortDirection}
                 sortColumn={this.state.sortColumn}
+                onSelectedRowChanged={this.onInnerGridSelectedRowChanged}
                 tooltipsEnabled={false}
                 customCellRenderer={this.treeCellRenderer}
                 hasCustomRowSelector={true}

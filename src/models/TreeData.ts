@@ -124,6 +124,4 @@ export class TreeDataSource {
     public getTreeStructure(): IFinalTreeNode {
         return this.treeStructure;
     }
-
-    
 }

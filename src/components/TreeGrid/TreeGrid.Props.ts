@@ -5,8 +5,8 @@ export interface ITreeGridProps {
     treeDataSource: TreeDataSource;
     columns: Array<GridColumn>;
     className?: string;
-    onRowDoubleClicked?: (row: any) => void;
-    onSelectedRowChanged?: (selectedRowIndex: number) => void;
+    onRowDoubleClicked?: (row: any) => void;    
+    onSelectedNodeChanged?: (selectedNode: IFinalTreeNode) => void;
     onLazyLoadChildNodes?: (node: IFinalTreeNode) => void;
     gridActions?: QuickGridActions;
     sortColumn?: string;
