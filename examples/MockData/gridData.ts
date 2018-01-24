@@ -89,7 +89,7 @@ const generateTreeData = (size: number): TreeNode => {
         }
         result.push(treeEntry);
     }
-     // alert(totalItems);
+    //  alert(totalItems);
     return {
         children: result
     };

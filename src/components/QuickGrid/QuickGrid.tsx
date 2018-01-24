@@ -39,7 +39,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     private finalGridRows: Array<any>;
     private _grid: any;
     private _headerGrid: any;
-    private parentElement: HTMLElement;
+    private _parentElement: Element;
     private columnsMinTotalWidth = 0;
     private _rowHoverActionsHandler: QuickGridRowActionsHandler;
     constructor(props: IQuickGridProps) {
@@ -163,15 +163,21 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         this._rowHoverActionsHandler.clearHoveredElement();
     }
 
+    private _mounted: boolean;
     componentDidMount() {
         // we need to hook up to the actual mouse leave event
         // the react event does not function correctly with our custom rendered hover actions, probably because of the ReactDom.render usage
         let domElement = ReactDOM.findDOMNode(this);
+        this._parentElement = domElement;
         domElement.addEventListener('mouseleave', this.nativeMouseLeaveListener);
         this._rowHoverActionsHandler.setGridRootElement(domElement);
+        this._mounted = true;
+        // this will have a consequence of a double render, but we need it here to handle the column sizing correctly
+        this.onGridResizeCore();
     }
 
     componentWillUnmount() {
+        this._mounted = false;
         this._rowHoverActionsHandler.clearHoveredElement();
         ReactDOM.findDOMNode(this).removeEventListener('mouseleave', this.nativeMouseLeaveListener);
     }
@@ -182,14 +188,12 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
 
 
     getViewportWidth() {
-        let width = 0;
-        if (document.getElementsByClassName('viewport-height')[0] !== undefined) {
-            width = document.getElementsByClassName('viewport-height')[0].clientWidth;
-        } else {
-            width = document.getElementById('root').clientWidth;
+        let width = 800;
+        if (this._parentElement) {
+            width = this._parentElement.clientWidth;
         }
-        // 35px margins
-        return width - 35;
+                
+        return width;
     }
 
     getGridWidth() {
@@ -480,6 +484,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     onGridResize = () => {
+       this.onGridResizeCore();
+    }
+
+    onGridResizeCore = () => {
         let columnWidths = this.getColumnWidths(this.state.columnsToDisplay);
         this.setState((prevState) => ({ ...prevState, columnWidths }));
     }

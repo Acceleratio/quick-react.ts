@@ -3,7 +3,7 @@ export interface TreeNode { // extend this interface on a data structure to be u
     children: Array<TreeNode>;
     hasChildren?: boolean;
     iconName?: string;
-    nodeActions?: Array<{
+    rowActions?: Array<{
         name: string;
         commandName: string;
         iconName?: string;
