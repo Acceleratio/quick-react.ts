@@ -229,7 +229,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         }
                         <span title={treeItem.value}>{treeItem.value}</span>
                     </span>;
-                const SingleSelectItemWithButtons = addHoverableButtons({ id, hoverOverBtn })(SingleSelectItem);
+                const SingleSelectItemWithButtons = addHoverableButtons({ item: treeItem, hoverOverBtn })(SingleSelectItem);
 
                 return <SingleSelectItemWithButtons />;
             } else {
@@ -238,7 +238,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                     checked = CheckStatus.ChildChecked;
                 }
 
-                const ItemWithButtons = addHoverableButtons({ id, hoverOverBtn })(VirtualizedTreeViewCheckBox);
+                const ItemWithButtons = addHoverableButtons({ item: treeItem, hoverOverBtn })(VirtualizedTreeViewCheckBox);
                 return (
                     <ItemWithButtons
                         itemId={treeItem.id}

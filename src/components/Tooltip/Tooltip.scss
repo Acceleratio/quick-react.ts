@@ -29,6 +29,10 @@
                 color: $secondary-color;
                 white-space: pre-line;
             }
+            .tooltip-content .tooltip-title{
+                font-weight: bold;
+                font-size: 14px;
+            }
         }
     }
 
@@ -50,6 +54,11 @@
             .tooltip-content span {
                 color: $white-color;
                 white-space: pre-line;
+                font-size: 12px;
+            }
+            .tooltip-content .tooltip-title{
+                font-weight: bold;
+                font-size: 14px;               
             }
         }
     }
@@ -59,7 +68,7 @@
     }
 
     .callout-main {
-        padding: 12px 20px;
+        padding: 12px 15px;
     }
 
     &.tooltip-error {
@@ -82,6 +91,11 @@
                 color: $white-color;
                 font-size: 12px;
                 white-space: pre-line;
+            }
+
+            .tooltip-content .tooltip-title{
+                font-weight: bold;
+                font-size: 14px;
             }
         }
     }

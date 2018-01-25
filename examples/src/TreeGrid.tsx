@@ -7,9 +7,13 @@ import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { TreeGrid, ITreeGridProps } from '../../src/components/TreeGrid';
 import { SortDirection, GridColumn } from '../../src/components/QuickGrid';
-import { gridColumns1, getTreeGridData } from '../MockData/gridData';
+import { gridColumns1, getTreeGridData, generateTreeNode } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
+import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
+import './../../src/components/Icon/symbol-defs.svg';
+import { autobind } from '../../src/index';
+import { IFinalTreeNode, TreeNode } from '../../src/models/TreeData';
 
 
 const columnSummaries = {
@@ -25,7 +29,9 @@ export class Index extends React.Component<any, any> {
         selectedData: 1
     };
     
-    public render() {
+    prev: any;
+    public render() {        
+        this.prev = this.state.data;
         return (
             <div>
                 <div style={{ 'width': '150px' }}>
@@ -47,14 +53,28 @@ export class Index extends React.Component<any, any> {
                 <Resizable width={1000} height={700} >
                     <div className="viewport-height" style={{ height: '100%' }} >
                         <TreeGrid
-                            tree={this.state.data}
+                            treeDataSource={this.state.data}
                             columns={this.state.columns}
+                            onLoadChildNodes={this.onLoadChildNodes}
                             columnSummaries={columnSummaries}
                         />
                     </div>
                 </Resizable>
             </div >
         );
+    }
+
+    onLoadChildNodes = (node: IFinalTreeNode) => {
+        setTimeout(() => {
+            let children = [];
+            for (let i = 0; i < 6; i++) {
+                let newChildNode = generateTreeNode();
+                newChildNode.isExpanded = false;
+                children.push(newChildNode);
+            }
+            let newData = this.state.data.updateNode(node.nodeId, { children });
+            this.setState(prev => ({ data: newData }));
+        }, 2000);
     }
 
     onDropdownDataChange = (option, index) => {

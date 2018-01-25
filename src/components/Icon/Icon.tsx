@@ -40,7 +40,7 @@ export const Icon: (props: IIconProps) => JSX.Element = (props: IIconProps) => {
     }
 
     if (svgIcon) {
-        return <svg className={iconClassName} width={iconWidth} height={iconHeight}>
+        return <svg { ...getNativeAttributes(props, htmlElementAttributes) } className={iconClassName} width={iconWidth} height={iconHeight}>
             <use xlinkHref={'#symbol-defs_' + props.iconName} />
         </svg>;
     } else {

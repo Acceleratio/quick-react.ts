@@ -185,6 +185,18 @@
                 border-right: 1px solid $secondary-color-20;
                 box-sizing: border-box;
             }
+
+            >.loading-container {
+                display: flex;                
+    
+                .spinner.async-loading-spinner>.spinner-circle {
+                    margin: 0;
+                  }
+                
+                .async-loading-label {
+                    margin-left: 6px;
+                  }
+              }
         }
 
         &.no-scrollbar {
