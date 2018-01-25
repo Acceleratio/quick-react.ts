@@ -4,9 +4,7 @@ import { Button } from '../Button/Button';
 
 
 export interface IButtonLoaderProps extends React.Props<ButtonLoader> {
-    isVisible?: boolean;
     icon?: string;
-    disabled?: boolean;
     className?: string;
     onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement | Button>;
     isLoading?: boolean;
