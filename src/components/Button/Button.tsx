@@ -5,6 +5,8 @@ import { getNativeAttributes, buttonAttributes, anchorAttributes } from '../../u
 import { assign } from '../../utilities/object';
 import { Icon } from '../Icon/Icon';
 import './Button.scss';
+import { SpinnerType } from '../Spinner/Spinner.Props';
+import { Spinner } from '../Spinner/Spinner';
 
 export class Button extends React.Component<IButtonProps, any> implements IButton {
 
@@ -23,7 +25,8 @@ export class Button extends React.Component<IButtonProps, any> implements IButto
             href,
             disabled,
             onClick,
-            isVisible
+            isVisible,
+            isLoading
         } = this.props;
 
         const renderAsAnchor: boolean = !!href;
@@ -49,6 +52,10 @@ export class Button extends React.Component<IButtonProps, any> implements IButto
             ? <Icon iconName={icon}></Icon>
             : null;
 
+        const spinner = isLoading
+            ? <Spinner type={SpinnerType.small} />
+            : null;
+
         return React.createElement(
             tag,
             assign(
@@ -58,9 +65,11 @@ export class Button extends React.Component<IButtonProps, any> implements IButto
                 { 'ref': (c: HTMLButtonElement): HTMLButtonElement => this._buttonElement = c },
                 onClick && { 'onClick': onClick },
                 disabled && { 'disabled': disabled },
-                { className }
+                { className },
+                this.props.width !== undefined && { style: { width: this.props.width } }
             ),
             iconElement,
+            spinner,
             children && <span className="button-label">{children}</span>
         );
     }

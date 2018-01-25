@@ -9,6 +9,7 @@ module.exports = {
     entry: {
         Dropdown: "./examples/src/Dropdown.tsx",
         Button: "./examples/src/Button.tsx",
+        ButtonLoader: "./examples/src/ButtonLoader.tsx",
         CompactServer: "./examples/src/CompactServer.tsx",
         TagContainer: "./examples/src/TagContainer.tsx",
         BarChart: "./examples/src/BarChart.tsx",

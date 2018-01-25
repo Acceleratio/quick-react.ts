@@ -13,6 +13,8 @@ export interface IButtonProps extends React.HTMLProps<HTMLButtonElement | HTMLAn
     onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement | Button>;
     ariaLabel?: string;
     ariaDescription?: string;
+    isLoading?: boolean;
+    width?: number;
 }
 
 export enum ElementType { button, anchor }
