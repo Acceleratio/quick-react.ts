@@ -4,6 +4,7 @@ import { Icon } from '../Icon/Icon';
 import { ActionItem } from './QuickGrid.Props';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { DropdownType } from '../Dropdown/Dropdown.Props';
+import { Tooltip } from '../Tooltip/Tooltip';
 
 
 export interface IQuickGridRowAContextActionsHandlerProps {
@@ -42,12 +43,12 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
             return;
         }
 
-        if (this._hoveredRowIndex && this._hoveredRowIndex !== -1) {
+        if (this._hoveredRowIndex !== undefined && this._hoveredRowIndex !== -1) {
             this._removeHoveredStyle(this._hoveredRowIndex);
             this.clearHoveredElement(false);
         }
 
-        if (rowIndex && rowIndex !== -1) {
+        if (rowIndex !== undefined && rowIndex !== -1) {
 
             let rowClass = 'grid-row-' + rowIndex;
             let rowElements = this._gridElement.getElementsByClassName(rowClass);
@@ -124,7 +125,11 @@ function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionCli
         return null;
     }
 
-    const mapAction = (x: ActionItem) => <Icon key={x.commandName} iconName={x.iconName} title={x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
+    const mapAction = (x: ActionItem) => {
+        const mappedAction = <Icon key={x.commandName} iconName={x.iconName} title={x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
+        return  x.tooltip !== undefined ? <Tooltip {...x.tooltip}> {mappedAction} </Tooltip> : mappedAction;
+    };
+
     let renderDropDown = actions.length >= 4;
     let elements = [];
     if (renderDropDown) {
@@ -152,7 +157,7 @@ function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionCli
         elements = actions.map(mapAction);
     }
 
-    return <span key="hoverActionsSpan" className="hoverable-items-inner-container">
+    return <span key="hoverActionsSpan" className="hoverable-items-inner-container" title="">
         {
             elements
         }

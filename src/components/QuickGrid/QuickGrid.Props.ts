@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ITooltipProps } from '../Tooltip/Tooltip.props';
 
 export enum SortDirection {
     Ascending,
@@ -124,5 +125,6 @@ export interface ActionItem {
     commandName: string;
     iconName?: string;
     parameters?: any;
+    tooltip?: ITooltipProps;
 }
 

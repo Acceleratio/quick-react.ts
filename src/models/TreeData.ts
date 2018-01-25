@@ -3,6 +3,7 @@ export interface TreeNode { // extend this interface on a data structure to be u
     children: Array<TreeNode>;
     hasChildren?: boolean;
     iconName?: string;
+    iconTooltipContent?: string;
 }
 
 export interface IFinalTreeNode extends TreeNode {

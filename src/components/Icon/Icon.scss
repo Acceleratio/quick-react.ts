@@ -19,8 +19,9 @@
     }
 
     &.svg {  
-        position:relative;              
-        top: 1px;
+        //position:relative;              
+        vertical-align: middle;
+        //top: 1px;
         fill: $secondary-color;
     }
 }

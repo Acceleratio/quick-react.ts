@@ -255,8 +255,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const onClick = (e) => {
             // https://github.com/facebook/react/issues/1691 funky bussinese because of multiple mount points in the hover actions            
             // so stopPropagation and preventDefault do not work there, manually checking if row actions were clicked
-            if (e.currentTarget !== e.target && !e.currentTarget.children[0].contains(e.target)) {
-                return;
+            if (e.currentTarget !== e.target) {
+                const rowActionsContainer = e.currentTarget.getElementsByClassName('hoverable-items-container__btn')[0];
+                if (rowActionsContainer && rowActionsContainer.contains(e.target)) {
+                    return;
+                }                
             }
 
             this.setSelectedRowIndex(rowIndex, rowData);
@@ -436,7 +439,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 return column.cellFormatter(cellData, rowData);
             } else {
                 return (
-                    <div style={{ padding: '3px 5px 0 5px', width: '100%' }} >
+                    <div className="grid-component-cell-inner" >
                         {cellData}
                     </div>
                 );

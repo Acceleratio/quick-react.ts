@@ -145,7 +145,18 @@
         .grid-component-cell {
             user-select: none;            
             display: flex;
-
+            align-items: center;
+            
+            >span {
+                .icon {
+                    margin-right: 0;
+                }
+            }
+            >.grid-component-cell-inner {
+                padding: 0 5px 0 5px;
+                width: 100%;                
+            }
+            
             > div {
                 white-space: nowrap;
                 overflow: hidden;
@@ -171,7 +182,7 @@
             .status-ok {
                 color: $ok-status-server;
             }
-
+        
             .dropdown {
                 padding-left: 5px;
                 
@@ -222,9 +233,11 @@
 
                         >.dropdown-root {
                             height: 16px;
-
+                            position: relative;
+                            top: -4px;
                             >.dropdown {
                                 padding-left: 0;
+                                margin: 0;
                             }
                         }
                     }
