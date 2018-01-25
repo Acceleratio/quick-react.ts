@@ -16,8 +16,6 @@ export interface IFinalTreeNode extends TreeNode {
     parent: IFinalTreeNode;
 }
 
-export type IPartialFinalTreeNode = { [P in keyof IFinalTreeNode]?: IFinalTreeNode[P] };
-
 interface ILookupTable {
     [id: number]: IFinalTreeNode;
 }
@@ -91,7 +89,7 @@ export class TreeDataSource {
         return (<Array<TreeNode>>input).slice !== undefined;
     }
     
-    public updateNode(nodeId: number, props: IPartialFinalTreeNode): TreeDataSource {        
+    public updateNode(nodeId: number, props: Partial<IFinalTreeNode>): TreeDataSource {        
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {            
 
