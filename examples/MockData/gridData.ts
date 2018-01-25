@@ -23,35 +23,37 @@ export interface GridData extends TreeNode {
 let totalItems = 0;
 
 const randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
+
+export const nodeActions = [
+    {
+        name: 'Test Action 1',
+        commandName: 'TestAction1',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    },
+    {
+        name: 'Test Action 2',
+        commandName: 'TestAction2',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    },
+    {
+        name: 'Random Action ' + Math.floor(Math.random() * 10),
+        commandName: 'Random Action 1',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    },
+    {
+        name: 'Random Action ' + Math.floor(Math.random() * 10),
+        commandName: 'Random Action 2',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    }
+];
+
 export const generateTreeNode = () => {
     totalItems++;  
     return {                        
         isExpanded: true,            
         children: [],
         iconName: 'svg-icon-add',
-        hasChildren: true,
-        rowActions: [
-            {
-                name: 'Test Action 1',
-                commandName: 'TestAction1',
-                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
-            },
-            {
-                name: 'Test Action 2',
-                commandName: 'TestAction2',
-                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
-            },
-            {
-                name: 'Random Action ' + Math.floor(Math.random()),
-                commandName: 'Random Action 1',
-                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
-            },
-            {
-                name: 'Random Action ' + Math.floor(Math.random()),
-                commandName: 'Random Action 2',
-                iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
-            }
-        ],
+        hasChildren: true,       
         Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
         Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
         Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],

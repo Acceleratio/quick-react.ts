@@ -454,12 +454,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
 
-    renderRowHoverActions = (rowIndex, rowData) => {
-        if (!this.props.gridActions || this.shouldRenderActionsColumn(this.props)) {
-            return;
-        }
-
-        let actions: Array<ActionItem> = rowData.rowActions || this.props.gridActions;
+    renderRowHoverActions = (rowIndex, rowData) => {        
+        let actions: Array<ActionItem> = this.getHoverRowActions(rowIndex);
         if (!actions) {
             return;
         }
@@ -545,7 +541,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         if (!this.props.gridActions || this.props.gridActions.actionsBehaviour !== QuickGridActionsBehaviourEnum.ShowOnRowHover) {
             return;
         }
-        const actions = this.finalGridRows[rowIndex].rowActions || this.props.gridActions.actionItems;
+        const actions = this.props.gridActions.onGetSingleRowActions && this.props.gridActions.onGetSingleRowActions(this.finalGridRows[rowIndex]) || this.props.gridActions.actionItems;
         return actions;
     }
 

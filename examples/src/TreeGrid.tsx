@@ -7,7 +7,7 @@ import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { TreeGrid, ITreeGridProps } from '../../src/components/TreeGrid';
 import { SortDirection, GridColumn } from '../../src/components/QuickGrid';
-import { gridColumns1, getTreeGridData, generateTreeNode } from '../MockData/gridData';
+import { gridColumns1, getTreeGridData, generateTreeNode, nodeActions } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
@@ -33,7 +33,12 @@ export class Index extends React.Component<any, any> {
         actionItems: [],
         actionIconName: '',
         actionsBehaviour: QuickGridActionsBehaviourEnum.ShowOnRowHover,
-        onActionSelected: this.rowActionClicked
+        onActionSelected: this.rowActionClicked,
+        onGetSingleRowActions: (node) => {
+
+            // here we use the same node actions each time for demo purposes, but the actions can be per node
+            return nodeActions;
+        }
     };
 
     rowActionClicked(commandName: string, parameters, rowData) {

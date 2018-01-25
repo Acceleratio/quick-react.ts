@@ -93,10 +93,23 @@ export interface GridColumn {
 export const lowercasedColumnPrefix = 'lowercase_';
 
 export interface QuickGridActions {
+    /**
+     * the global action items, these will be shown when actionsBehavior equals to ShowAsFirstColumn.
+     * If ShowOnRowHover behaviour is used, then they will be shown only if OnGetSingleRowActions does not return a value
+     */
     actionItems: Array<ActionItem>;
+    /**
+     * Determined where the actions will be shown
+     */
     actionsBehaviour?: QuickGridActionsBehaviourEnum;
+    /**
+     * This icon will be used for the dropdown when actionsBehavior equals to ShowAsFirstColumn
+     */
     actionIconName: string;    
-
+    /**
+     * used in ShowOnRowHover behaviur to specify actions per row
+     */
+    onGetSingleRowActions?: (rowData) => Array<ActionItem>;
     onActionSelected: (commandName: string, parameters, rowData) => void;
 }
 
