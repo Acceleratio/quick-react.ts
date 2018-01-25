@@ -521,6 +521,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     groupByToolboxHeight = () => {
+        if (!this.props.columnHeadersVisible) {
+            return 2;
+        }
         return 30 + (this.props.displayGroupContainer ? 62 : 0); // header height + Drag&Drop height+padding
     }
 
