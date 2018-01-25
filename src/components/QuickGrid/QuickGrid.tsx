@@ -34,7 +34,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         groupBy: [],
         rowHeight: 28,
         tooltipsEnabled: true,
-        actionsTooltip: 'Actions'
+        actionsTooltip: 'Actions',
+        columnHeadersVisible: true
     };
 
     private _finalGridRows: Array<any>;
@@ -571,7 +572,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                         <ScrollSync>
                             {({ onScroll, scrollLeft }) => (
                                 <div style={{ width, height }} >
-                                    <GridHeader
+                                    {
+                                     this.props.columnHeadersVisible && <GridHeader
                                         ref={this._setHeaderGridReference}
                                         allColumns={this.props.columns}
                                         headerColumns={this.state.columnsToDisplay}
@@ -592,6 +594,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         onExpandAll={this.expandAll}
                                         tooltipsEnabled={this.props.tooltipsEnabled}
                                     />
+                                    }
 
                                     <Grid
                                         ref={this._setGridReference}

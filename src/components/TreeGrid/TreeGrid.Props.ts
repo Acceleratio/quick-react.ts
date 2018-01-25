@@ -12,6 +12,7 @@ export interface ITreeGridProps {
     sortColumn?: string;
     sortDirection?: SortDirection;
     columnSummaries?: any;
+    columnHeadersVisible?: boolean;
 }
 
 export interface ITreeGridState {    

@@ -242,6 +242,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 hasStaticColumns={true}
                 customRowSorter={this._getSortInfo}
                 columnSummaries={this.props.columnSummaries}
+                columnHeadersVisible={this.props.columnHeadersVisible}
             />
         );
     }

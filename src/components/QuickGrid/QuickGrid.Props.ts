@@ -34,6 +34,7 @@ export interface IQuickGridProps {
     customRowSorter?: (sortBy, sortDirection) => void;
     customCellRenderer?: (args: ICustomCellRendererArgs) => React.ReactNode;
     hasStaticColumns?: boolean;
+    columnHeadersVisible?: boolean;
 }
 
 export interface ICustomCellRendererArgs {
