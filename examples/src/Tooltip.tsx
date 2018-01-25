@@ -14,21 +14,31 @@ export class Index extends React.Component<any, any> {
     public render() {
         return (
             <div style={{ display: 'inline-flex' }}>
-                <Tooltip content={'This is tooltip! This is tooltip! This is tooltip!'} >
+                <Tooltip content={'This is tooltip! This is tooltip! This is tooltip!\r\nOne more tooltip row! Something to explain'} title={'Tooltip title'} >
                     <Button>Hover Over Me</Button>
                 </Tooltip>
-
                 <div style={{ marginLeft: '50px' }}>
                     <Tooltip content={'This is tooltip'} className={'tooltip-white'} directionalHint={DirectionalHint.rightCenter}>
                         <Button>Hover Over Me</Button>
                     </Tooltip>
                 </div>
-
                 <div style={{ marginLeft: '50px' }}>
-                    <Tooltip content={'This tooltip\r\ndisplay new line!'} directionalHint={DirectionalHint.rightCenter}>
+                    <Tooltip content={'This tooltip\r\ndisplay new line!'} directionalHint={DirectionalHint.rightCenter} >
                         <Button>Hover Over Me</Button>
                     </Tooltip>
                 </div>
+
+                <div style={{ marginLeft: '50px' }}>
+                    <Tooltip content={'This is error tooltip'} className={'tooltip-error'} directionalHint={DirectionalHint.rightCenter} >
+                        <Button>Hover Over Me</Button>
+                    </Tooltip>
+                </div>
+                <div style={{ marginLeft: '50px' }}>
+                    <Tooltip content={'This is error tooltip, because an error occured'} title={'Error tooltip title'}className={'tooltip-error'} directionalHint={DirectionalHint.rightCenter} >
+                        <Button>Hover Over Me</Button>
+                    </Tooltip>
+                </div>
+
             </div>
         );
     }

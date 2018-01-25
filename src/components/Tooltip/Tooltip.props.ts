@@ -1,6 +1,7 @@
 import { DirectionalHint } from '../../utilities/DirectionalHint';
 
 export interface ITooltipProps {
+    title?: string;
     content: string;
     className?: string;
     targetElement?: HTMLElement;

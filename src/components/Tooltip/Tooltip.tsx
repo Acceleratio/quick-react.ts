@@ -35,7 +35,7 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
     }
 
     public render() {
-        let { className, targetElement, directionalHint, content, children } = this.props;
+        let { className, targetElement, directionalHint, content, children, title } = this.props;
 
         const tooltipClassName = classNames(
             'tooltip-callout',
@@ -46,7 +46,7 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
         );
 
         const tooltipContainerClass = classNames('tooltip-container', [this.props.containerClass]);
-        
+
         return (
             <div
                 ref={this._resolveRef('_tooltipHost')}
@@ -66,6 +66,11 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
                         isBeakVisible={true}
                         gapSpace={0}>
                         <div className="tooltip-content" role="tooltip">
+                            {title &&
+                                <div>
+                                    <span className="tooltip-title">{title}</span>
+                                </div>
+                            }
                             <span>{content}</span>
                         </div>
                     </Callout>
@@ -111,7 +116,7 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
         this.setState({
             isTooltipVisible: showTooltipProp && isTooltipVisible
         }, () => this.props.onTooltipToggle(this.state.isTooltipVisible));
-        
+
         this.timer = null;
     }
 }

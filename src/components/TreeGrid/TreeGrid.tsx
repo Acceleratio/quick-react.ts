@@ -44,7 +44,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         columns = emptyArray.concat(columns);
         return columns;
     }
-
+   
     componentWillReceiveProps(nextProps) {
         if (this.props.treeDataSource !== nextProps.treeDataSource) {
             this.setState(oldState => ({ sortRequestId: oldState.sortRequestId + 1, structureRequestChangeId: oldState.structureRequestChangeId + 1 }));
