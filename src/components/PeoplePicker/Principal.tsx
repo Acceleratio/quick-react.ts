@@ -92,12 +92,12 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
                         onClick={this._onClickDelete}
                     />
                 }
-                <Tooltip
+                {this.props.principal.email && <Tooltip
                     className="tooltip-white"
                     content={this.props.principal.email}
                     directionalHint={DirectionalHint.rightCenter}
                     showTooltip={this.state.showTooltip}
-                />
+                />}
             </span>
         );
     }

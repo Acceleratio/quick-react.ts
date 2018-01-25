@@ -19,5 +19,5 @@ export enum PrincipalType {
     sharePointGroup = 1,
     user = 2,
     activeDirectoryGroup = 3,
-    securityGroup = 4,
+    securityGroup = 4
 }
