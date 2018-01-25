@@ -176,6 +176,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         this._mounted = true;
 
         // this will have a consequence of a double render, but we need it here to handle the column sizing correctly
+        // the previous implementation relied on a global div with a specific class. This was troublesome for multiple reasons
+        // one of them being that you could not have two quickgrid in the same document (different widths)
         this.onGridResizeCore();
     }
 
@@ -456,10 +458,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         );
     }
 
-
     renderRowContextActions = (rowIndex, rowData) => {        
         let actions: Array<ActionItem> = this.getRowContextActions(rowIndex);
-        if (!actions) {
+        if (!actions || actions.length === 0) {
             return;
         }
 
@@ -470,6 +471,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 }
             </span>;
         } else {
+            // this is a hook element where the hovered contex row actions will be rendered                        
             return <span key="hover" className="hoverable-items-container__btn hover-allowed">
             </span>;
         }
