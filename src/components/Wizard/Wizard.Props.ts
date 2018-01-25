@@ -21,6 +21,7 @@ export interface IWizardProps {
     steps: Array<IWizardStep>;
     onPageRender?: (index: number) => JSX.Element;
     onPageEnter?: (currentStepIndex: number, nextStepIndex: number) => void;
+    onPageLeaving?: (currentStepIndex: number, nextStepIndex: number, direction: WizardStepDirection) => boolean;
     onPageLeave?: (currentStepIndex: number, nextStepIndex: number, direction: WizardStepDirection) => void;
     onFinish: () => void;
     onCancel: () => void;

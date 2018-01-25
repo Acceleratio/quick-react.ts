@@ -32,6 +32,9 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
     private _nextStep(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         if ((this.state.currentStep + 1) !== this.props.steps.length) {
+            if (this.props.onPageLeaving && !this.props.onPageLeaving(this.state.currentStep, this.state.currentStep + 1, WizardStepDirection.Next)) {
+                return;
+            }
             this.props.onPageLeave(this.state.currentStep, this.state.currentStep + 1, WizardStepDirection.Next);
             this.setState({ currentStep: this.state.currentStep + 1 });
             this.props.onPageEnter(this.state.currentStep + 1, this.state.currentStep + 2);
@@ -42,6 +45,9 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
     private _backStep(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         if (this.state.currentStep > 0) {
+            if (this.props.onPageLeaving && !this.props.onPageLeaving(this.state.currentStep, this.state.currentStep - 1, WizardStepDirection.Previous)) {
+                return;
+            }
             this.props.onPageLeave(this.state.currentStep, this.state.currentStep - 1, WizardStepDirection.Previous);
             this.setState({ currentStep: this.state.currentStep - 1 });
             this.props.onPageEnter(this.state.currentStep - 1, this.state.currentStep);
