@@ -34,7 +34,7 @@ export class Index extends React.Component<any, any> {
         actionIconName: '',
         actionsBehaviour: QuickGridActionsBehaviourEnum.ShowOnRowHover,
         onActionSelected: this.rowActionClicked,
-        onGetSingleRowActions: (node) => {
+        onGetSingleRowContextActions: (node) => {
 
             // here we use the same node actions each time for demo purposes, but the actions can be per node
             return nodeActions;

@@ -6,18 +6,18 @@ import { Dropdown } from '../Dropdown/Dropdown';
 import { DropdownType } from '../Dropdown/Dropdown.Props';
 
 
-export interface IQuickGridRowActionsHandler {
+export interface IQuickGridRowAContextActionsHandlerProps {
     onGetRowActions?: (rowIndex: number) => Array<ActionItem>;
     onActionClicked?: (rowIndex: number, action: ActionItem) => void;
 }
 
-
-export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRowActionsHandler, {}> {
+export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuickGridRowAContextActionsHandlerProps, {}> {
 
     private _gridElement: Element;
     private _hoveredRowIndex: number;
     private _hoveredHTMLRowElement: Element;
     private _dropdownOpened: boolean;
+
     setGridRootElement(gridElement: Element) {
         this._gridElement = gridElement;
     }
@@ -30,7 +30,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
             ReactDOM.unmountComponentAtNode(this._hoveredHTMLRowElement);
             this._hoveredHTMLRowElement = null;
         }
-        this.removeHoveredStyle(this._hoveredRowIndex);
+        this._removeHoveredStyle(this._hoveredRowIndex);
         this._hoveredRowIndex = -1;
     }
 
@@ -43,7 +43,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         }
 
         if (this._hoveredRowIndex && this._hoveredRowIndex !== -1) {
-            this.removeHoveredStyle(this._hoveredRowIndex);
+            this._removeHoveredStyle(this._hoveredRowIndex);
             this.clearHoveredElement(false);
         }
 
@@ -70,7 +70,7 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
         this.forceUpdate();
     }
 
-    private removeHoveredStyle(rowIndex: number) {
+    private _removeHoveredStyle(rowIndex: number) {
         if (this._dropdownOpened) {
             return;
         }
@@ -116,16 +116,10 @@ export class QuickGridRowActionsHandler extends React.PureComponent<IQuickGridRo
 
     componentWillUnmount() {
         this.clearHoveredElement();
-    }
-
-    onActionItemClicked = () => {
-        if (this.props.onActionClicked) {
-
-        }
-    }
+    }    
 }
 
-export function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
+function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
     if (!actions || actions.length === 0) {
         return null;
     }
