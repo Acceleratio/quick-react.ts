@@ -14,7 +14,7 @@ export interface IButtonProps extends React.HTMLProps<HTMLButtonElement | HTMLAn
     ariaLabel?: string;
     ariaDescription?: string;
     /**
-     * uset to indicate a async operation in progress
+     * used to indicate an async operation in progress
      */
     isLoading?: boolean;
     /**
