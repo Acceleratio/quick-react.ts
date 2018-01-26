@@ -12,7 +12,7 @@ import * as ReactDOM from 'react-dom';
 export class Button extends React.Component<IButtonProps, any> implements IButton {
 
     private _buttonElement: HTMLButtonElement;
-    constructor(props: IButtonProps) {        
+    constructor(props: IButtonProps) {
         super(props);
         this.state = {};
     }
