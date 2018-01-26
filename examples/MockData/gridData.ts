@@ -52,7 +52,7 @@ export const generateTreeNode = () => {
     return {                        
         isExpanded: true,            
         children: [],
-        iconName: 'svg-icon-add',
+        iconName: 'svg-icon-world',
         hasChildren: true,       
         Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
         Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),

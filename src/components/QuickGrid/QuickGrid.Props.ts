@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ITooltipProps } from '../Tooltip/Tooltip.props';
 
 export enum SortDirection {
     Ascending,
@@ -34,6 +35,7 @@ export interface IQuickGridProps {
     customRowSorter?: (sortBy, sortDirection) => void;
     customCellRenderer?: (args: ICustomCellRendererArgs) => React.ReactNode;
     hasStaticColumns?: boolean;
+    columnHeadersVisible?: boolean;
 }
 
 export interface ICustomCellRendererArgs {
@@ -123,5 +125,6 @@ export interface ActionItem {
     commandName: string;
     iconName?: string;
     parameters?: any;
+    tooltip?: ITooltipProps;
 }
 
