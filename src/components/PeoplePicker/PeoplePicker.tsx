@@ -59,13 +59,17 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
         return (
             <div className="people-picker-suggestions">
                 {this.props.loadingSuggestionList && <Spinner type={SpinnerType.small} />}
-                {!this.props.loadingSuggestionList && this.props.suggestionList.map((principal, index) => (
-                    <Principal
+                {!this.props.loadingSuggestionList && this.props.suggestionList.map((principal, index) => {
+                    const alreadySelected = this.state.selectedPrincipalList 
+                        && this.state.selectedPrincipalList.find(selected => selected.id === principal.id) !== undefined;
+
+                    return !alreadySelected && <Principal
+                        key={principal.id}
                         principal={principal}
                         isSelected={false}
                         onSelect={this._onSuggestionClick}
-                    />
-                ))}
+                    />;
+                })}
             </div>
         );
     }

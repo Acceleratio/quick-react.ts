@@ -95,7 +95,7 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
                 {this.props.principal.email && <Tooltip
                     className="tooltip-white"
                     content={this.props.principal.email}
-                    directionalHint={DirectionalHint.rightCenter}
+                    directionalHint={DirectionalHint.topCenter}
                     showTooltip={this.state.showTooltip}
                 />}
             </span>
