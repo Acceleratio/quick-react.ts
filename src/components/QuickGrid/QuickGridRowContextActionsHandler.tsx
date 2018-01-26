@@ -127,7 +127,7 @@ function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionCli
 
     const mapAction = (x: ActionItem) => {
         const mappedAction = <Icon key={x.commandName} iconName={x.iconName} title={x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
-        return  x.tooltip !== undefined ? <Tooltip {...x.tooltip}> {mappedAction} </Tooltip> : mappedAction;
+        return  x.tooltip !== undefined ? <Tooltip key={x.commandName} {...x.tooltip}> {mappedAction} </Tooltip> : mappedAction;
     };
 
     let renderDropDown = actions.length >= 4;
