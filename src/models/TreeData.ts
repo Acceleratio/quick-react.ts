@@ -15,6 +15,7 @@ export interface IFinalTreeNode extends TreeNode {
     isAsyncLoadingDummyNode?: boolean;
     children: Array<IFinalTreeNode>;
     parent: IFinalTreeNode;
+    isVisible?: boolean;
 }
 
 interface ILookupTable {
@@ -59,11 +60,11 @@ export class TreeDataSource {
             } else {
                 rootNode = input;
             }
-            this.nodesById = {};            
+            this.nodesById = {};
             this.extendNodes(input, rootNode.children, 0);
             this.treeStructure = <IFinalTreeNode>rootNode;
             this.isEmpty = this.treeStructure.children.length === 0;
-        }        
+        }
     }
 
     private extendNodes(parent, children: Array<TreeNode>, level: number) {
@@ -82,34 +83,34 @@ export class TreeDataSource {
         }
     }
 
-    private isDataSource(input: TreeNode | TreeDataSource  | Array<TreeNode>): input is TreeDataSource {
+    private isDataSource(input: TreeNode | TreeDataSource | Array<TreeNode>): input is TreeDataSource {
         return (<TreeDataSource>input).updateNode !== undefined;
-    }   
+    }
 
-    private isRootNodesArray(input: TreeNode | TreeDataSource | Array<TreeNode> ): input is Array<TreeNode>  {
+    private isRootNodesArray(input: TreeNode | TreeDataSource | Array<TreeNode>): input is Array<TreeNode> {
         return (<Array<TreeNode>>input).slice !== undefined;
     }
-    
-    public updateNode(nodeId: number, props: Partial<IFinalTreeNode>): TreeDataSource {        
+
+    public updateNode(nodeId: number, props: Partial<IFinalTreeNode>): TreeDataSource {
         let existingNode = this.nodesById[nodeId];
-        if (existingNode) {            
+        if (existingNode) {
 
             // we do not want to use the spread operator, we want to reause the existing treenode            
             // existingNode = { ...existingNode, ...props };
             Object.assign(existingNode, props);
-            
+
             if (props.children) {
                 existingNode.isLazyChildrenLoadInProgress = false;
                 existingNode.hasChildren = props.children && props.children.length > 0;
                 existingNode.isExpanded = existingNode.isExpanded && existingNode.hasChildren;
                 this.extendNodes(existingNode, existingNode.children, existingNode.nodeLevel + 1);
             }
-            
+
             this.isEmpty = this.treeStructure.children.length === 0;
             return new TreeDataSource(this);
         }
         return this;
-    }  
+    }
 
     private getNextId(): number {
         return ++this.idCounter;
@@ -129,7 +130,7 @@ export class TreeDataSource {
             let candidate = this.nodesById[key];
             if (nodePredicate(candidate)) {
                 return candidate;
-            }           
+            }
         }
         return undefined;
     }
