@@ -32,6 +32,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         emptyArray.push({
             isSortable: false,
             width: 16,
+            minWidth: 30,
             fixedWidth: true
         });
         emptyArray.push({
@@ -171,7 +172,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         } else {
             columnElement = [
                 columnIndex === 2 && rowData.iconName ? <span style={{display: 'flex'}} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} /></span> : null,
-                <div key="cellData" className="grid-component-cell-inner" >                    
+                <div key="cellData" className="grid-component-cell-inner" >
                     {cellData}
                 </div>
             ];
@@ -240,7 +241,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 customCellRenderer={this.treeCellRenderer}
                 hasCustomRowSelector={true}
                 hasStaticColumns={true}
-                customRowSorter={this._getSortInfo}                
+                customRowSorter={this._getSortInfo}
                 columnSummaries={this.props.columnSummaries}
                 columnHeadersVisible={this.props.columnHeadersVisible}
             />

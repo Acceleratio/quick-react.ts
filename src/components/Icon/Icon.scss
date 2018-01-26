@@ -18,10 +18,8 @@
         font-style: normal;
     }
 
-    &.svg {  
-        //position:relative;              
-        vertical-align: middle;
-        //top: 1px;
+    &.svg {                     
+        vertical-align: middle;        
         fill: $secondary-color;
     }
 }

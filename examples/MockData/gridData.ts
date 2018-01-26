@@ -6,7 +6,7 @@ import { TreeNode, TreeDataSource } from '../../src/models/TreeData';
 const RANDOM_WORDS = ['abstrusity', 'advertisable', 'bellwood', 'benzole', 'disputative', 'djilas', 'ebracteate', 'zonary'];
 const RANDOM_Names = ['Ivan', 'Mario', 'Silvio', 'Hrvoje', 'Vinko', 'Marijana', 'Andrea'];
 const RANDOM_Color = ['Black', 'Green', 'White', 'Blue', 'Orange', 'Red', 'Yellow', 'Gray'];
-const RANDOM_Animal = ['Dog adfasdfa', 'Cat afdsfdas fds fdas ffdfa', 'Mouse af dasf  dasfdsfds fds fds  f'];
+const RANDOM_Animal = ['Dog', 'Cat', 'Mouse'];
 const RANDOM_City = ['Zagreb', 'Vienna', 'London', 'Amsterdam', 'Barcelona'];
 const RANDOM_CarBrand = ['Audi', 'BMW', 'Mercedes', 'Opel', 'VW', 'Lada', 'Ford', 'Mazda'];
 const RANDOM_Mix = ['1', 2, '3', 4, 'A', 'B', 'C', '10'];
@@ -91,7 +91,7 @@ const generateTreeData = (size: number): TreeNode => {
         }
         result.push(treeEntry);
     }
-      alert(totalItems);
+    //  alert(totalItems);
     return {
         children: result
     };
