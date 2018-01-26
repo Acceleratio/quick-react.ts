@@ -4,8 +4,7 @@ import 'ts-helpers';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
-import { ButtonLoader } from './../../src/components/ButtonLoader/ButtonLoader';
+import { Button } from '../../src/components/Button/Button';
 
 
 export class Index extends React.Component<any, any> {
@@ -13,82 +12,65 @@ export class Index extends React.Component<any, any> {
         super(props);
 
         this.state = {
-            isLoading: false,
-            isSucces: false,
-            isError: false
+            isLoading: false
         };
     }
 
     public componentDidMount() {
-        setInterval(this._changeLoading.bind(this), 3000);
-        setInterval(this._changeSucces.bind(this), 5000);
-        setInterval(this._changeError.bind(this), 8000);
+        setInterval(this._changeLoading.bind(this), 5000);        
+        
     }
 
+
+    private _actionCounter = 0;
     private _changeLoading() {
-        this.setState({ isLoading: !this.state.isLoading, isSucces: false, isError: false });
+        this.setState({ isLoading: !this.state.isLoading, isSuccess: Math.random() < 0.5 });
+        setTimeout(() => {
+            this.setState({ isSuccess: undefined });       
+        }, 2000);
     }
 
     private _changeSucces() {
-        this.setState({ isSucces: !this.state.isSucces, isLoading: false, isError: false });
-    }
-
-    private _changeError() {
-        this.setState({ isError: !this.state.isError, isSucces: false, isLoading: false });
+        this.setState({ isSuccess: !this.state.isSucces, isLoading: false });
     }
 
     public render() {
         return (
             <div>
                 <div style={{ display: 'flex', marginBottom: '20px' }}>
-                    <ButtonLoader
+                    <Button
                         className="button-primary"
-                        buttonText="Button Loader Primary"
                         onClick={() => this._onClick()}
                         isLoading={this.state.isLoading}
-                        isSucces={this.state.isSucces}
-                        isError={this.state.isError}
-                    />
+                        isSuccess={this.state.isSuccess}>Button Loader Primary</Button>
                 </div>
                 <div style={{ display: 'flex', marginBottom: '20px' }}>
-                    <ButtonLoader
+                    <Button
                         className="button-primary-gray"
-                        buttonText="Button Loader Primary Grey"
                         onClick={() => this._onClick()}
                         isLoading={this.state.isLoading}
-                        isSucces={this.state.isSucces}
-                        isError={this.state.isError}
-                    />
+                        isSuccess={this.state.isSuccess}>Button Loader Primary Grey</Button>
                 </div>
                 <div style={{ display: 'flex', marginBottom: '20px' }}>
-                    <ButtonLoader
+                    <Button
                         className="button-secondary"
-                        buttonText="Button Loader Secondary"
                         onClick={() => this._onClick()}
                         isLoading={this.state.isLoading}
-                        isSucces={this.state.isSucces}
-                        isError={this.state.isError}
-                    />
+                        isSuccess={this.state.isSuccess}>Button Loader Secondary</Button>
                 </div>
                 <div style={{ display: 'flex', marginBottom: '20px' }}>
-                    <ButtonLoader
+                    <Button
                         className="button-secondary-blue"
-                        buttonText="Button Loader Secondary Blue"
                         onClick={() => this._onClick()}
-                        isLoading={this.state.isLoading}
-                        isSucces={this.state.isSucces}
-                        isError={this.state.isError}
-                    />
+                        isLoading={false}
+                        isSuccess={true}>Button Loader Secondary Blue</Button>
                 </div>
                 <div style={{ display: 'flex', marginBottom: '20px' }}>
-                    <ButtonLoader
+                    <Button
                         className="button-tertiary"
-                        buttonText="Button Tertiary"
                         onClick={() => this._onClick()}
                         isLoading={this.state.isLoading}
-                        isSucces={this.state.isSucces}
-                        isError={this.state.isError}
-                    />
+                        isSuccess={this.state.isSuccess}>Button Loader Secondary Blue</Button>
                 </div>
             </div>
         );

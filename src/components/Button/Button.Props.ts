@@ -13,7 +13,15 @@ export interface IButtonProps extends React.HTMLProps<HTMLButtonElement | HTMLAn
     onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement | Button>;
     ariaLabel?: string;
     ariaDescription?: string;
+    /**
+     * uset to indicate a async operation in progress
+     */
     isLoading?: boolean;
+    /**
+     * used to show a checkmark or a error icon after an async action
+     * to hide the status, set to undefined
+     */
+    isSuccess?: boolean;
     width?: number;
 }
 

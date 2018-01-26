@@ -4,7 +4,6 @@
  */
 export * from './components/Breadcrumbs';
 export * from './components/Button';
-export * from './components/ButtonLoader';
 export * from './components/Callout';
 export * from './components/Checkbox';
 export * from './components/CheckboxList';

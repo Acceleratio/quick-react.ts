@@ -318,6 +318,21 @@ $button-height: 32px;
             background-color: $error-disabled-color;
             border-color: $error-disabled-color;
         }
+
+        .icon {
+            margin-right: 0;
+            fill: $white-color;
+            color: $white-color;
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            .icon {
+                fill: $white-color;
+                color: $white-color;
+            }
+        }
     }
 
     &.button-succes {
@@ -335,6 +350,25 @@ $button-height: 32px;
             background-color: $success-disabled-color;
             border-color: $success-disabled-color;
         }
+
+        .icon {
+            margin-right: 0;
+            fill: $white-color;
+            color: $white-color;
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            .icon {
+                fill: $white-color;
+                color: $white-color;
+            }
+        }
+    }
+
+    &.button-loading {
+        pointer-events: none;
     }
 }
 
