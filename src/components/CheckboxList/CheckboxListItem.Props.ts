@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ITooltipProps } from '../Tooltip';
 
 export interface ICheckboxListItemProps {
     item?: ICheckboxListItem;
@@ -11,4 +12,5 @@ export interface ICheckboxListItem {
     children?: ICheckboxListItem[];
     isOpen?: boolean;
     checked?: boolean;
+    tooltip?: ITooltipProps;
 }

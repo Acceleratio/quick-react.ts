@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ITooltipProps } from '../Tooltip';
 
 export interface ICheckboxProps extends React.HTMLProps<HTMLElement> {
     className?: string;
@@ -10,6 +11,7 @@ export interface ICheckboxProps extends React.HTMLProps<HTMLElement> {
     inputProps?: React.HTMLProps<HTMLInputElement>;
     itemId?: string;
     iconClassName?: string;
+    tooltip?: ITooltipProps;
 }
 
 export interface ICheckbox {

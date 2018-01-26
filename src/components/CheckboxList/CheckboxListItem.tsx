@@ -47,13 +47,13 @@ export class CheckboxListItem extends CommonComponent<ICheckboxListItemProps, an
                     </div>
                 }
                 {
-                    !isParent && <Checkbox checked={item.checked !== undefined ? item.checked : false} label={item.text} onChange={onChange} itemId={item.id}></Checkbox>
+                    !isParent && <Checkbox tooltip={item.tooltip} checked={item.checked !== undefined ? item.checked : false} label={item.text} onChange={onChange} itemId={item.id}></Checkbox>
                 }
 
                 <div className={itemClassName}>
                     {item.children && item.children.map((child, index) => (
                         <div key={index}>
-                            <Checkbox checked={child.checked !== undefined ? child.checked : false} label={child.text} onChange={onChange} itemId={child.id}></Checkbox>
+                            <Checkbox tooltip={child.tooltip} checked={child.checked !== undefined ? child.checked : false} label={child.text} onChange={onChange} itemId={child.id}></Checkbox>
                         </div>
                     ))}
                 </div>

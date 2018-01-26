@@ -7,6 +7,7 @@ import { getId } from '../../utilities/getId';
 import { CommonComponent } from '../Common/Common';
 import { Icon } from '../Icon/Icon';
 import './Checkbox.scss';
+import { Tooltip } from '../../index';
 
 export interface ICheckboxState {
     isFocused?: boolean;
@@ -40,7 +41,8 @@ export class Checkbox extends CommonComponent<ICheckboxProps, ICheckboxState> {
         );
     }
 
-    render() {
+    @autobind
+    private _renderCheckBox() {
         const { checked, defaultChecked, disabled, inputProps, label, id, iconClassName } = this.props;
         const { isFocused } = this.state;
         const isChecked = checked === undefined ? this.state.isChecked : checked;
@@ -85,6 +87,16 @@ export class Checkbox extends CommonComponent<ICheckboxProps, ICheckboxState> {
                 </label>
             </div>
         );
+    }
+
+    render() {
+        if (this.props.tooltip) {
+            return <Tooltip {...this.props.tooltip}>
+                {this._renderCheckBox()}
+            </Tooltip>;
+        }
+
+        return this._renderCheckBox();
     }
 
     public get checked(): boolean {

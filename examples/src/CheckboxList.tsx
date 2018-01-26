@@ -12,7 +12,7 @@ export class Index extends React.Component<any, any> {
         super();
         this.state = {
             checkboxElements: [
-                { id: 'A', text: 'Option A', checked: true},
+                { id: 'A', text: 'Option A', checked: true, tooltip: {content: 'Option A tooltip'}},
                 { id: 'B', text: 'Option B' },
                 { id: 'C', text: 'Option C' },
                 { id: 'E', text: 'Option E' },
@@ -44,7 +44,7 @@ export class Index extends React.Component<any, any> {
         this.setState({
             checkboxElements: this.state.checkboxElements.map((item) => {
                 if (itemId.indexOf(item.id) > -1) {
-                    return { id: item.id, text: item.text, checked: checked };
+                    return { id: item.id, text: item.text, checked: checked, tooltip: item.tooltip };
                 } else {
                     return item;
                 }
