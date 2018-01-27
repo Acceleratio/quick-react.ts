@@ -419,12 +419,13 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const dataKey = column.dataMember || column.valueMember;
         const cellData = rowData[dataKey];
         const rowClass = 'grid-row-' + rowIndex;
+        const isSelectedRow = rowIndex === this.state.selectedRowIndex;
         const className = classNames(
             'grid-component-cell',
             rowClass,
             column.cellClassName,
             { 'border-column-cell': notLastIndex },
-            { 'is-selected': rowIndex === this.state.selectedRowIndex });
+            { 'is-selected': isSelectedRow });
 
         const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
       
@@ -457,18 +458,18 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 title={title}
             >
                 {columnElement()}
-                {isLastColumn && this.renderRowContextActions(rowIndex, rowData)}
+                {isLastColumn && this.renderRowContextActions(rowIndex, rowData, isSelectedRow)}
             </div>
         );
     }
 
-    renderRowContextActions = (rowIndex, rowData) => {        
+    renderRowContextActions = (rowIndex, rowData, isSelectedRow) => {        
         let actions: Array<ActionItem> = this.getRowContextActions(rowIndex);
         if (!actions || actions.length === 0) {
             return;
         }
 
-        if (rowIndex === this.state.selectedRowIndex) {
+        if (isSelectedRow) {
             return <span key="nonHover" className="hoverable-items-container__btn is-selected">
                 {
                     this._rowContextActionsHandler.getRenderedActions(rowIndex)

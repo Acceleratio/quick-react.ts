@@ -46,7 +46,7 @@ export interface ICustomCellRendererArgs {
     onMouseEnter: any;
     onMouseClick: any;
     isSelectedRow: boolean;
-    rowActionsRender: (rowIndex: number, rowData: any) => React.ReactNode;
+    rowActionsRender: (rowIndex: number, rowData: any, isSelectedRow: boolean) => React.ReactNode;
 }
 
 export interface IQuickGridState {
