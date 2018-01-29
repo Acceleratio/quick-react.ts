@@ -105,7 +105,6 @@ export class TreeDataSource {
                 existingNode.isExpanded = existingNode.isExpanded && existingNode.hasChildren;
                 this.extendNodes(existingNode, existingNode.children, existingNode.nodeLevel + 1);
             }
-
             this.isEmpty = this.treeStructure.children.length === 0;
             return new TreeDataSource(this);
         }
