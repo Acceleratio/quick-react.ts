@@ -5,7 +5,7 @@ import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 
 import { getTreeRowsSelector } from './treeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
-import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, ICustomCellRendererArgs } from '../QuickGrid';
+import { QuickGrid, IQuickGridProps, SortDirection, GridColumn, ICustomCellRendererArgs, getColumnMinWidth } from '../QuickGrid';
 import { DataTypeEnum } from '../QuickGrid/QuickGrid.Props';
 import { CellElement } from './CellElement';
 import { Spinner } from '../Spinner/Spinner';
@@ -16,6 +16,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     private _quickGrid: any;
     private _finalGridRows: Array<IFinalTreeNode>;
+    private _maxExpandedLevel: number;
     constructor(props: ITreeGridProps) {
         super(props);
         this.state = {
@@ -26,25 +27,38 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             structureRequestChangeId: 0,
             selectedNodeId: -1
         };
-        this._finalGridRows = getTreeRowsSelector(this.state, props).data;
+        const result =  getTreeRowsSelector(this.state, props);
+        this._finalGridRows = result.data;
+        this._maxExpandedLevel = result.maxExpandedLevel;
     }
 
     private _getTreeColumnsToDisplay(columns: Array<GridColumn>) {
-        let emptyArray = new Array();
-        emptyArray.push({
+        let expandedColumns = new Array();
+        expandedColumns.push({
             isSortable: false,
             width: 16,
             minWidth: 30,
             fixedWidth: true
         });
-        emptyArray.push({
+        expandedColumns.push({
             dataType: DataTypeEnum.String,
             valueMember: 'TreeId',
             headerText: 'TreeId',
             width: 0
         });
-        columns = emptyArray.concat(columns);
-        return columns;
+        const replacementFirstColumn: GridColumn = {
+            ...columns[0],
+            minWidth: () => {
+                const calculated = getColumnMinWidth(columns[0]);
+                let minWidth = 20 + this._maxExpandedLevel * 20 + 40;
+                return Math.max(minWidth, calculated);
+            }
+        };
+        expandedColumns.push(replacementFirstColumn);
+        for (let i = 1; i < columns.length; i++) {
+            expandedColumns.push(columns[i]);
+        }        
+        return expandedColumns;
     }
    
     componentWillReceiveProps(nextProps) {
@@ -56,9 +70,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     componentWillUpdate(nextProps, nextState) {
         const result = getTreeRowsSelector(nextState, nextProps);
         this._finalGridRows = result.data;
+        this._maxExpandedLevel = result.maxExpandedLevel;
         this._quickGrid.updateColumnWidth(2, (old) => {
-            let minWidth = 20 + result.maxExpandedLevel * 20 + 40;
-            return Math.max(minWidth, old);
+            return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[2]));
         });
     }
 

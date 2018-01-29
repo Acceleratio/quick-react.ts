@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { IGridHeaderState, IGridHeaderProps } from './QuickGridHeader.Props';
-import { GridColumn, SortDirection } from './QuickGrid.Props';
+import { GridColumn, SortDirection, getColumnMinWidth } from './QuickGrid.Props';
 import { GroupByToolbar } from './GroupByToolbar';
 import { HeaderColumn } from './HeaderColumn';
 import { Grid, SortIndicator } from 'react-virtualized';
@@ -28,8 +28,8 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
         this.columnMinWidths = this.getColumnMinWidths(props.headerColumns);
     }
 
-    getColumnMinWidths(columns) {
-        return columns.map((col) => { return col.minWidth || 20; });
+    getColumnMinWidths(columns: Array<GridColumn>) {
+        return columns.map((col) => { return getColumnMinWidth(col) || 20; });
     }
 
     componentWillReceiveProps(nextProps) {

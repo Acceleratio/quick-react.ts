@@ -84,13 +84,20 @@ export interface GridColumn {
     isGroupable?: boolean; // default true
     sortByValueGetter?: (cellData, sortDirection: SortDirection) => any;
     width: number;
-    minWidth?: number;
+    minWidth?: number | (() => number);
     fixedWidth?: boolean;
     dataMember?: string;
     cellFormatter?: (cellData, rowData) => any;
     cellClassName?: string;
     headerClassName?: string;
     headerTooltip?: string;
+}
+
+export function getColumnMinWidth(col: GridColumn): number {
+    if (col.minWidth instanceof Function) {
+        return col.minWidth();
+    }
+    return col.minWidth;
 }
 
 export const lowercasedColumnPrefix = 'lowercase_';

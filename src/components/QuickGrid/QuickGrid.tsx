@@ -4,7 +4,7 @@ import * as classNames from 'classnames';
 import { AutoSizer, Table, Column, ColumnProps, ScrollSync, Grid } from 'react-virtualized';
 import {
     IQuickGridProps, IQuickGridState, GridColumn, GroupRow,
-    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix, QuickGridActionsBehaviourEnum, ActionItem
+    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix, QuickGridActionsBehaviourEnum, ActionItem, getColumnMinWidth
 } from './QuickGrid.Props';
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 import { getRowsSelector } from './DataSelectors';
@@ -60,7 +60,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             hasVerticalScroll: false
         };
 
-        this._columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
+        this._columnsMinTotalWidth = columnsToDisplay.map(x => getColumnMinWidth(x) || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         this.onGridResize = _.debounce(this.onGridResize, 100);
         this._finalGridRows = props.hasCustomRowSelector ? props.rows : getRowsSelector(this.state, props);
     }
@@ -161,7 +161,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             const columnsToDisplay = nextProps.hasStaticColumns ? nextProps.columns : this.getColumnsToDisplay(nextProps.columns, newGroupBy, hasActionColumn);
             const columnWidths = this.getColumnWidths(columnsToDisplay);
             this.setState((prevState) => { return { ...prevState, columnsToDisplay: columnsToDisplay, columnWidths: columnWidths, groupBy: newGroupBy }; });
-            this._columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
+            this._columnsMinTotalWidth = columnsToDisplay.map(x => getColumnMinWidth(x) || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         }
     }
 
