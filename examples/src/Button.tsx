@@ -50,6 +50,19 @@ export class Index extends React.Component<any, any> {
                 </div>
 
                 <Button href={'javascript:void(0)'} target="_blank">Link</Button>
+                <br /><br />
+                <div style={{ display: 'flex', marginBottom: '20px' }}>
+                    <Button className={'button-primary'} isLoading={true}></Button>
+                    <Button className={'button-primary-gray'} isLoading={true}></Button>
+                    <Button className={'button-secondary'} isLoading={true}></Button>
+                    <Button className={'button-secondary-blue'} isLoading={true}></Button>
+                    <Button className={'button-tertiary'} isLoading={true}></Button>
+                </div>
+                <br /><br />
+                <div style={{ display: 'flex', marginBottom: '20px' }}>
+                    <Button className={'button-succes'} icon="icon-checkmark">Succes</Button>
+                    <Button className={'button-error'} icon="icon-error">Error</Button>
+                </div>
             </div>
         );
     }
