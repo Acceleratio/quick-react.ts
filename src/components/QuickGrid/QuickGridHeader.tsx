@@ -86,6 +86,9 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
     }
 
     getHeaderColumnWidth = ({ index }) => {
+        if (index === this.state.columnWidths.length - 1 && this._headerGrid._scrollingContainer.scrollLeft > 2) {
+            return this.state.columnWidths[index] - 2;
+        }
         return this.state.columnWidths[index];
     }
 
