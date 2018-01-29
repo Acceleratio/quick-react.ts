@@ -7,12 +7,12 @@ import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { TreeGrid, ITreeGridProps } from '../../src/components/TreeGrid';
 import { SortDirection, GridColumn } from '../../src/components/QuickGrid';
-import { gridColumns1, getTreeGridData, generateTreeNode } from '../MockData/gridData';
+import { gridColumns1, getTreeGridData, generateTreeNode, nodeActions } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
 import './../../src/components/Icon/symbol-defs.svg';
-import { autobind } from '../../src/index';
+import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum } from '../../src/index';
 import { IFinalTreeNode, TreeNode } from '../../src/models/TreeData';
 
 
@@ -28,6 +28,22 @@ export class Index extends React.Component<any, any> {
         columns: gridColumns1,
         selectedData: 1
     };
+
+    gridActions: QuickGridActions = {
+        actionItems: [],
+        actionIconName: '',
+        actionsBehaviour: QuickGridActionsBehaviourEnum.ShowOnRowHover,
+        onActionSelected: this.rowActionClicked,
+        onGetSingleRowContextActions: (node) => {
+
+            // here we use the same node actions each time for demo purposes, but the actions can be per node
+            return nodeActions;
+        }
+    };
+
+    rowActionClicked(commandName: string, parameters, rowData) {
+        alert(commandName + ' clicked.');
+    }
     
     prev: any;
     public render() {        
@@ -55,7 +71,8 @@ export class Index extends React.Component<any, any> {
                         <TreeGrid
                             treeDataSource={this.state.data}
                             columns={this.state.columns}
-                            onLoadChildNodes={this.onLoadChildNodes}
+                            gridActions={this.gridActions}
+                            onLazyLoadChildNodes={this.onLoadChildNodes}
                             columnSummaries={columnSummaries}
                         />
                     </div>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ITooltipProps } from '../Tooltip/Tooltip.props';
 
 export enum SortDirection {
     Ascending,
@@ -32,8 +33,20 @@ export interface IQuickGridProps {
     tooltipsEnabled?: boolean;
     hasCustomRowSelector?: boolean;
     customRowSorter?: (sortBy, sortDirection) => void;
-    customCellRenderer?: ({}) => React.ReactNode;
+    customCellRenderer?: (args: ICustomCellRendererArgs) => React.ReactNode;
     hasStaticColumns?: boolean;
+    columnHeadersVisible?: boolean;
+}
+
+export interface ICustomCellRendererArgs {
+    columnIndex: number;
+    key: any;
+    rowIndex: number; 
+    style: any;    
+    onMouseEnter: any;
+    onMouseClick: any;
+    isSelectedRow: boolean;
+    rowActionsRender: (rowIndex: number, rowData: any) => React.ReactNode;
 }
 
 export interface IQuickGridState {
@@ -82,9 +95,29 @@ export interface GridColumn {
 export const lowercasedColumnPrefix = 'lowercase_';
 
 export interface QuickGridActions {
+    /**
+     * the global action items, these will be shown when actionsBehavior equals to ShowAsFirstColumn.
+     * If ShowOnRowHover behaviour is used, then they will be shown only if OnGetSingleRowActions does not return a value
+     */
     actionItems: Array<ActionItem>;
-    actionIconName: string;
+    /**
+     * Determined where the actions will be shown
+     */
+    actionsBehaviour?: QuickGridActionsBehaviourEnum;
+    /**
+     * This icon will be used for the dropdown when actionsBehavior equals to ShowAsFirstColumn
+     */
+    actionIconName: string;    
+    /**
+     * used in ShowOnRowHover behaviur to specify actions per row
+     */
+    onGetSingleRowContextActions?: (rowData) => Array<ActionItem>;
     onActionSelected: (commandName: string, parameters, rowData) => void;
+}
+
+export enum QuickGridActionsBehaviourEnum {
+     ShowAsFirstColumn,
+     ShowOnRowHover
 }
 
 export interface ActionItem {
@@ -92,5 +125,6 @@ export interface ActionItem {
     commandName: string;
     iconName?: string;
     parameters?: any;
+    tooltip?: ITooltipProps;
 }
 

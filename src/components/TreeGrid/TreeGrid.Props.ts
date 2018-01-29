@@ -1,20 +1,21 @@
-import { GridColumn, SortDirection } from '../QuickGrid/QuickGrid.Props';
+import { GridColumn, SortDirection, QuickGridActions } from '../QuickGrid/QuickGrid.Props';
 import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
 
 export interface ITreeGridProps {
     treeDataSource: TreeDataSource;
     columns: Array<GridColumn>;
     className?: string;
-    onRowDoubleClicked?: (row: any) => void;
-    onSelectedRowChanged?: (selectedRowIndex: number) => void;
-    onLoadChildNodes?: (node: IFinalTreeNode) => void;
+    onRowDoubleClicked?: (row: any) => void;    
+    onSelectedNodeChanged?: (selectedNode: IFinalTreeNode) => void;
+    onLazyLoadChildNodes?: (node: IFinalTreeNode) => void;
+    gridActions?: QuickGridActions;
     sortColumn?: string;
     sortDirection?: SortDirection;
     columnSummaries?: any;
+    columnHeadersVisible?: boolean;
 }
 
-export interface ITreeGridState {
-    selectedRowIndex?: number;
+export interface ITreeGridState {    
     columnsToDisplay: Array<GridColumn>;
     sortColumn?: string;
     sortDirection?: SortDirection;

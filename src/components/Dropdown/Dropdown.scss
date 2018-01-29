@@ -32,6 +32,7 @@
         cursor: pointer;
         .icon {
             color: $primary-hover-color;
+            fill: $primary-hover-color !important;
         }
     }
 
@@ -152,7 +153,8 @@
             }
 
             .icon {
-                color: $primary-color;
+                color: $primary-color;      
+                fill: $primary-color !important;         
             }
 
             &:hover {

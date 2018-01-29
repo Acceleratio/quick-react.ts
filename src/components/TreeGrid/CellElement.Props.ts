@@ -5,6 +5,7 @@ export interface ICellElementProps {
     title?: string;
     rowClass?: string;
     rowData?: any;
+    rowIndex?: any;
     onMouseEnter?: any;
     onMouseLeave?: any;
     onClick?: any;

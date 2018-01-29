@@ -143,8 +143,20 @@
 
     .grid-component {
         .grid-component-cell {
-            user-select: none;
-
+            user-select: none;            
+            display: flex;
+            align-items: center;
+            
+            >span {
+                .icon {
+                    margin-right: 0;
+                }
+            }
+            >.grid-component-cell-inner {
+                padding: 0 5px 0 5px;
+                width: 100%;                
+            }
+            
             > div {
                 white-space: nowrap;
                 overflow: hidden;
@@ -197,6 +209,39 @@
                     margin-left: 6px;
                   }
               }
+
+                
+              >.hoverable-items-container__btn {               
+                    display: flex;
+                    align-items: center;                                
+
+                    .hoverable-items__btn {
+                        display: inline-block;
+                        margin-right: 8px;
+                        z-index: 1;
+                        &:hover {
+                            color: $primary-color;
+                            cursor: pointer;
+                            fill: $primary-color !important;
+                        }
+                    }
+
+                    >.hoverable-items-inner-container {
+                        display: flex;
+                        align-items: center;
+                        padding-right: 10px;
+
+                        >.dropdown-root {
+                            height: 16px;
+                            position: relative;
+                            top: -4px;
+                            >.dropdown {
+                                padding-left: 0;
+                                margin: 0;
+                            }
+                        }
+                    }
+                }
         }
 
         &.no-scrollbar {
