@@ -86,6 +86,9 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
     }
 
     getHeaderColumnWidth = ({ index }) => {
+        if (index === this.state.columnWidths.length - 1 && this._headerGrid._scrollingContainer.scrollLeft > 2) {
+            return this.state.columnWidths[index] - 2;
+        }
         return this.state.columnWidths[index];
     }
 
@@ -154,9 +157,9 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                     let extraWidth = 0;
                     let availableWidth = 0;
                     for (let index = columnIndex + 1; index < oldState.columnWidths.length; index++) {
-                        let newWidth = parseFloat((oldState.columnWidths[index] * reductionMultiplier).toFixed(2));
+                        let newWidth = Math.floor(oldState.columnWidths[index] * reductionMultiplier);
                         if (newWidth <= this.columnMinWidths[index]) {
-                            extraWidth += parseFloat((this.columnMinWidths[index] - newWidth).toFixed(2));
+                            extraWidth +=  this.columnMinWidths[index] - newWidth;
                             newColumnWidths[index] = this.columnMinWidths[index];
                         } else {
                             resizeableColumns.push({id : index, width: newWidth, min: this.columnMinWidths[index]});
@@ -177,15 +180,15 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
 
                             // Resize columns proportionately.
                             let newWidth = element.id !== resizeableColumns[resizeableColumns.length - 1].id ?
-                                parseFloat((newColumnWidths[element.id] * reductionMultiplier).toFixed(2)) :
-                                parseFloat((newColumnWidths[element.id] - extraWidth).toFixed(2));
+                                Math.floor(newColumnWidths[element.id] * reductionMultiplier) :
+                                (newColumnWidths[element.id] - extraWidth);
 
                             if (newWidth < element.min) {
                                 newWidth = element.min;
                             }
 
                             // Recalculate width and multiplier.
-                            extraWidth -= parseFloat((newColumnWidths[element.id] - newWidth).toFixed(2));
+                            extraWidth -= newColumnWidths[element.id] - newWidth;
                             remainingColumnWidth -= element.width;
                             reductionMultiplier = (remainingColumnWidth - extraWidth) / remainingColumnWidth;
                             newColumnWidths[element.id] = newWidth;
@@ -247,7 +250,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                 let percentage = remainingWidth / totalWidth;
                 
                 for (let index = columnIndex + 1; index < snapColumnWidth.length; index++) {
-                    let newWidth = snapColumnWidth[index] + parseFloat((snapColumnWidth[index] * percentage).toFixed(2));
+                    let newWidth = snapColumnWidth[index] + Math.floor(snapColumnWidth[index] * percentage);
                     snapColumnWidth[index] = newWidth;            
                 }
             }

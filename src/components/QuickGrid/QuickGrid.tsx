@@ -516,13 +516,24 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         if (fixedColumns.length > 0) {
             fixedColumnsTotalWidth = fixedColumns.map(col => col.width).reduce((a, b) => a + b);
         }
-        const available = this.getGridWidth() - fixedColumnsTotalWidth;
+
+        const gridWidth = this.getGridWidth();
+        const available = gridWidth - fixedColumnsTotalWidth;
+        let newColumnWidths = [];
         if (available > this._columnsMinTotalWidth) {
             const totalWidth = columnsToDisplay.map(x => x.width).reduce((a, b) => a + b, 0) - fixedColumnsTotalWidth;
-            return columnsToDisplay.map((col) => this.getColumnWidthInPx(available, totalWidth, col.width, col.fixedWidth));
+            newColumnWidths = columnsToDisplay.map((col) => this.getColumnWidthInPx(available, totalWidth, col.width, col.fixedWidth));
         } else {
-            return columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth);
+            newColumnWidths = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth);
         }
+        
+        const totalNewWidth = newColumnWidths.reduce((a, b) => a + b, 0);
+        const empty = gridWidth - totalNewWidth;
+        if (empty > 0) {
+            newColumnWidths[newColumnWidths.length - 1] = newColumnWidths[newColumnWidths.length - 1] + empty;
+        }
+        
+        return newColumnWidths;
     }
 
     getColumnWidthInPx(available: number, totalWidth: number, currentWidth: number, fixedWidth: boolean) {
@@ -533,7 +544,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     getColumnWidth = ({ index }) => {        
-        return this.state.columnWidths[index] -  (this.state.hasVerticalScroll && (index === this.state.columnWidths.length - 1) ? 10 : 0);
+        return this.state.columnWidths[index] -  (this.state.hasVerticalScroll && (index === this.state.columnWidths.length - 1) ? scrollbarSize() : 0);
     }
 
     groupByToolboxHeight = () => {
