@@ -86,6 +86,10 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
     }
 
     getHeaderColumnWidth = ({ index }) => {
+
+        // this hachish code is beceause of some strange behavior when the horizontal scrollbar actually belongs to the inner grid(that can potentially have a vertical scrollbar)
+        // the sizes of the header grid and the inner grid do not align properly and when scrolled to to far right 2 pixels are missing
+        // it could be that the actual solution is somewhere in the code below that does the column size recalculation
         if (index === this.state.columnWidths.length - 1 && this._headerGrid._scrollingContainer.scrollLeft > 2) {
             return this.state.columnWidths[index] - 2;
         }
