@@ -14,6 +14,7 @@ import { IFinalTreeNode } from '../../models/TreeData';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
 
+    private _quickGrid: any;
     private _finalGridRows: Array<IFinalTreeNode>;
     constructor(props: ITreeGridProps) {
         super(props);
@@ -25,7 +26,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             structureRequestChangeId: 0,
             selectedNodeId: -1
         };
-        this._finalGridRows = getTreeRowsSelector(this.state, props);
+        this._finalGridRows = getTreeRowsSelector(this.state, props).data;
     }
 
     private _getTreeColumnsToDisplay(columns: Array<GridColumn>) {
@@ -53,7 +54,12 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     }
 
     componentWillUpdate(nextProps, nextState) {
-        this._finalGridRows = getTreeRowsSelector(nextState, nextProps);
+        const result = getTreeRowsSelector(nextState, nextProps);
+        this._finalGridRows = result.data;
+        this._quickGrid.updateColumnWidth(2, (old) => {
+            let minWidth = 20 + result.maxExpandedLevel * 20 + 40;
+            return Math.max(minWidth, old);
+        });
     }
 
     treeCellRenderer = (args: ICustomCellRendererArgs) => {
@@ -238,6 +244,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
+    private _getQuickGridRef = (c) => { this._quickGrid = c; };
+
     private _getSortInfo = (newSortColumn, newSortDirection) => {
         this.setState(oldState => ({ sortColumn: newSortColumn, sortDirection: newSortDirection, sortRequestId: oldState.sortRequestId + 1 }));
     }
@@ -249,6 +257,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     public render(): JSX.Element {
         return (
             <QuickGrid
+                ref = {this._getQuickGridRef}
                 rows={this._finalGridRows}
                 columns={this.state.columnsToDisplay}
                 gridActions={this.props.gridActions}

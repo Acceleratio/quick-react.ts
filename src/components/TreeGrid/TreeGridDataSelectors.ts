@@ -31,8 +31,8 @@ const transformData = (tree: TreeDataSource,
     root.isExpanded = true;
     sortData(root, sortColumn, sortDirection, sortRequestId);
     let flattenedData: Array<IFinalTreeNode> = [];
-    flatten(root.children, flattenedData);
-    return flattenedData;
+    let maxExpandedLevel = flatten(root.children, flattenedData);
+    return { data: flattenedData, maxExpandedLevel};
 };
 
 const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number): void => {
@@ -128,15 +128,19 @@ function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boole
     processNode(root);
 }
 
-export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0) {
+export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0) : number {
     level++;
+    let maxChildLevel = level;
     for (let child of tree) {
+        
         if (child.isVisible === false) {
             continue;
         }
+        let thisChildDepth = child.nodeLevel;
         resultArray.push(child);
         if (child.children && child.children.length > 0 && child.isExpanded) {
-            flatten(child.children, resultArray, level);
+           thisChildDepth =  flatten(child.children, resultArray, level);
+           
         } else if (child.hasChildren && child.isExpanded && (!child.children || child.children.length === 0)) {
             resultArray.push(<IFinalTreeNode>{
                 nodeLevel: child.nodeLevel + 1,
@@ -147,8 +151,14 @@ export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number 
                 isAsyncLoadingDummyNode: true,
                 sortRequestId: child.sortRequestId
             });
+            thisChildDepth++;
+        }
+        if (thisChildDepth > maxChildLevel) {
+            maxChildLevel = thisChildDepth;
         }
     }
+
+    return Math.max(maxChildLevel, level);
 }
 
 export const getTreeRowsSelector = createSelector(getTreeData,

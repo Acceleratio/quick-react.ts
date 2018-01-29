@@ -57,6 +57,7 @@ export interface IQuickGridState {
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;
+    hasVerticalScroll: boolean;
 }
 
 export interface GroupRow {
