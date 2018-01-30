@@ -3,7 +3,7 @@ import { IDropdownProps, IDropdownOption, DropdownType } from './Dropdown.Props'
 import { DirectionalHint } from '../../utilities/DirectionalHint';
 import { Callout } from '../Callout/Callout';
 import { Icon } from '../Icon/Icon';
-import { Tooltip } from '../ToolTip/Tooltip';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { KeyCodes } from '../../utilities/KeyCodes';
 import * as classNames from 'classnames';
 import { findIndex } from '../../utilities/array';
