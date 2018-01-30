@@ -5,6 +5,7 @@ import { ActionItem } from './QuickGrid.Props';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { DropdownType } from '../Dropdown/Dropdown.Props';
 import { Tooltip } from '../Tooltip/Tooltip';
+import { DirectionalHint } from '../../index';
 
 
 export interface IQuickGridRowAContextActionsHandlerProps {
@@ -117,7 +118,7 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
 
     componentWillUnmount() {
         this.clearHoveredElement();
-    }    
+    }
 }
 
 function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
@@ -126,8 +127,8 @@ function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionCli
     }
 
     const mapAction = (x: ActionItem) => {
-        const mappedAction = <Icon key={x.commandName} iconName={x.iconName} title={x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
-        return  x.tooltip !== undefined ? <Tooltip key={x.commandName} {...x.tooltip}> {mappedAction} </Tooltip> : mappedAction;
+        const mappedAction = <Icon key={x.commandName} iconName={x.iconName} title={x.tooltip ? undefined : x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
+        return x.tooltip !== undefined ? <Tooltip key={x.commandName} {...x.tooltip} delayMs={1000} >  {mappedAction} </Tooltip> : mappedAction;
     };
 
     let renderDropDown = actions.length >= 4;
@@ -137,7 +138,11 @@ function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionCli
         elements.push(mapAction(actions[1]));
         let actionOptions = [];
         for (let i = 2; i < actions.length; i++) {
-            actionOptions.push({ key: actions[i].commandName, icon: actions[i].iconName, text: actions[i].name });
+            let tooltipInfo = actions[i].tooltip;
+            if (tooltipInfo && !tooltipInfo.directionalHint) {
+                tooltipInfo = { ...tooltipInfo, directionalHint: DirectionalHint.leftCenter };
+            }
+            actionOptions.push({ key: actions[i].commandName, icon: actions[i].iconName, text: actions[i].name, tooltipInfo });
         }
         elements.push(
             <Dropdown

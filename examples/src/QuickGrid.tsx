@@ -26,10 +26,34 @@ const columnSummaries = {
 export class Index extends React.Component<any, any> {
     gridActions: QuickGridActions = {
         actionItems: [
-            { name: 'Action 1', iconName: 'icon-add', commandName: 'command1' },
-            { name: 'Action 2', iconName: 'icon-user', commandName: 'command2' },
-            { name: 'Action 3', commandName: 'command3' },
-            { name: 'Action 4', commandName: 'command4', parameters: { key: 'someParam' } }
+            {
+                name: 'Action 1', iconName: 'icon-add', commandName: 'command1',
+                tooltip: {
+                    content: 'Action 1 tooltip content',
+                    title: 'Action 1'
+                }
+            },
+            {
+                name: 'Action 2', iconName: 'icon-user', commandName: 'command2',
+                tooltip: {
+                    content: 'Action 2 tooltip content',
+                    title: 'Action 2'
+                }
+            },
+            {
+                name: 'Action 3', iconName: 'icon-user', commandName: 'command3',
+                tooltip: {
+                    content: 'Action 3 tooltip content',
+                    title: 'Action 3'
+                }
+            },
+            {
+                name: 'Action 4', iconName: 'icon-user', commandName: 'command4', parameters: { key: 'someParam' },
+                tooltip: {
+                    content: 'Action 4 tooltip content',
+                    title: 'Action 4'
+                }
+            }
         ],
         actionsBehaviour: QuickGridActionsBehaviourEnum.ShowOnRowHover,
         actionIconName: 'icon-ghost',
@@ -39,7 +63,7 @@ export class Index extends React.Component<any, any> {
             alert(commandName + ' clicked.');
         }
     };
-    
+
     state = {
         data: getGridData(numOfRows),
         columns: gridColumns2,
@@ -65,9 +89,9 @@ export class Index extends React.Component<any, any> {
                             ]}
                     />
                 </div>
-                <Checkbox label="Show actions as row context actions" 
-                checked={this.state.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowOnRowHover} 
-                onChange={this.onRowHoverActionsChecked } /> <br />
+                <Checkbox label="Show actions as row context actions"
+                    checked={this.state.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowOnRowHover}
+                    onChange={this.onRowHoverActionsChecked} /> <br />
                 <Button onClick={this.refreshData}>Refresh data</Button>
 
                 <Resizable width={1000} height={700} >
@@ -89,10 +113,10 @@ export class Index extends React.Component<any, any> {
         );
     }
 
-    onRowHoverActionsChecked = (ev, value) => {        
+    onRowHoverActionsChecked = (ev, value) => {
         this.setState(prev => {
-            const newBehaviour =  prev.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowAsFirstColumn  ? QuickGridActionsBehaviourEnum.ShowOnRowHover : QuickGridActionsBehaviourEnum.ShowAsFirstColumn;
-            return { gridActions: {...prev.gridActions, actionsBehaviour: newBehaviour }};
+            const newBehaviour = prev.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowAsFirstColumn ? QuickGridActionsBehaviourEnum.ShowOnRowHover : QuickGridActionsBehaviourEnum.ShowAsFirstColumn;
+            return { gridActions: { ...prev.gridActions, actionsBehaviour: newBehaviour } };
         });
     }
 
