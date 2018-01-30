@@ -170,7 +170,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.columns !== this.props.columns || prevState.groupBy !== this.state.groupBy || prevState.columnWidths !== this.state.columnWidths) {
+        if (prevProps.columns !== this.props.columns 
+            || prevState.groupBy !== this.state.groupBy 
+            || prevState.columnWidths !== this.state.columnWidths
+            || prevState.hasVerticalScroll !== this.state.hasVerticalScroll) {
             this._grid.recomputeGridSize();
         } else if (this.state.sortDirection !== prevState.sortDirection || this.state.sortColumn !== prevState.sortColumn) {
             this._grid.forceUpdate();
