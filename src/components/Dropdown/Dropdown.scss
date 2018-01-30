@@ -255,6 +255,10 @@
                     cursor: pointer;
                     display: block;
 
+                    >.tooltip-container {
+                        display: block;
+                    }
+
                     &.is-selected {
                         background-color: $white-color;
                         color: $primary-color;
@@ -263,7 +267,15 @@
                     &:hover {
                         background-color: $primary-background-hover-color;
                     }
-                }
+
+                    &.has-tooltip {
+                        padding: 0;
+
+                        >.tooltip-container {
+                            padding: 0 10px;
+                        }
+                    }
+                }               
             }
         }
     }

@@ -3,6 +3,7 @@ import { IDropdownProps, IDropdownOption, DropdownType } from './Dropdown.Props'
 import { DirectionalHint } from '../../utilities/DirectionalHint';
 import { Callout } from '../Callout/Callout';
 import { Icon } from '../Icon/Icon';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { KeyCodes } from '../../utilities/KeyCodes';
 import * as classNames from 'classnames';
 import { findIndex } from '../../utilities/array';
@@ -151,7 +152,7 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
         if (this.props.dropdownType !== DropdownType.actionDropdown && this.props.options.length > 0) {
             let longest = this.props.options.reduce((a, b) => { return a.text.length > b.text.length ? a : b; });
             const arrowIconWidth = this.props.showArrowIcon ? 50 : 25;
-            const accualWitdh = longest.text.length * 8  + arrowIconWidth;
+            const accualWitdh = longest.text.length * 8 + arrowIconWidth;
             return Math.max(accualWitdh, 60) + 'px';
         }
         return;
@@ -190,15 +191,26 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
                 {options && options.map((option, index) => (
                     <li
                         id={id + '-list' + option.key}
-                        title={option.text}
+                        title={option.tooltipInfo ? undefined : option.text}
                         key={option.key}
                         data-index={index}
-                        className={'dropdown-item'}
+                        className={classNames('dropdown-item', { 'has-tooltip': option.tooltipInfo !== undefined })}
                         onClick={() => this.onActionItemClick(option, index)}
                         role="option"
                     >
-                        {option.icon ? <Icon iconName={option.icon}></Icon> : null}
-                        {option.text}
+                        {
+                            option.tooltipInfo && <Tooltip {...option.tooltipInfo} delayMs={1000}>
+                                {option.icon ? <Icon iconName={option.icon}></Icon> : null}
+                                {option.text}
+                            </Tooltip>
+                        }
+                        {
+                            !option.tooltipInfo && option.icon ? <Icon iconName={option.icon}></Icon> : null
+                        }
+                        {
+                            !option.tooltipInfo && option.text
+                        }
+
                     </li>
                 ))}
             </ul>
@@ -225,17 +237,26 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
                 {options && options.map((option, index) => (
                     <li id={id + '-list' + index.toString()}
                         ref={Dropdown.Option + index.toString()}
-                        title={option.text}
+                        title={option.tooltipInfo ? undefined : option.text}
                         key={option.key}
                         data-index={index}
                         data-is-focusable={true}
-                        className={classNames('dropdown-item', { 'is-selected': selectedIndex === index })}
+                        className={classNames('dropdown-item', { 'is-selected': selectedIndex === index, 'has-tooltip': option.tooltipInfo !== undefined })}
                         onClick={() => this._onItemClick(index)}
                         onFocus={() => this.setSelectedIndex(index)}
                         role="option">
-                        {option.icon ? <Icon iconName={option.icon}></Icon>
-                            : null}
-                        {option.text}
+                        {
+                            option.tooltipInfo && <Tooltip {...option.tooltipInfo} delayMs={1000}>
+                                {option.icon ? <Icon iconName={option.icon}></Icon> : null}
+                                {option.text}
+                            </Tooltip>
+                        }
+                        {
+                            !option.tooltipInfo && option.icon ? <Icon iconName={option.icon}></Icon> : null
+                        }
+                        {
+                            !option.tooltipInfo && option.text
+                        }
                     </li>
                 ))}
             </ul>

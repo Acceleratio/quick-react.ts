@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DirectionalHint } from '../../index';
 
 export interface IRenderFunction<P> {
     (props?: P, defaultRender?: (props?: P) => JSX.Element): JSX.Element;
@@ -36,6 +37,7 @@ export interface IDropdownOption {
     selected?: boolean;
     href?: string;
     icon?: string;
+    tooltipInfo?: { title: string, content: string, directionalHint?: DirectionalHint; };
 }
 
 export enum DropdownType {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {ICompareComponentState, ICompareComponentProp, CompareDifference, CompareDifferenceType} from './CompareComponent.Props';
 import { Button } from '../Button/Button';
-import { GridColumn } from '../QuickGrid/QuickGrid.Props';
+import { GridColumn, getColumnMinWidth } from '../QuickGrid/QuickGrid.Props';
 import { GridHeader } from '../QuickGrid/QuickGridHeader';
 import { Icon } from '../Icon/Icon';
 import { autobind } from '../../utilities/autobind';
@@ -56,7 +56,7 @@ export class CompareComponent extends React.PureComponent<ICompareComponentProp,
             const totalWidth = columnsToDisplay.map(x => x.width).reduce((a, b) => a + b, 0);
             return columnsToDisplay.map((col) => this.getColumnWidthInPx(available, totalWidth, col.width));
         } else {
-            return columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth);
+            return columnsToDisplay.map(x => getColumnMinWidth(x) || defaultMinColumnWidth);
         }
     }
 

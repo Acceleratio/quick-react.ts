@@ -46,7 +46,7 @@ export interface ICustomCellRendererArgs {
     onMouseEnter: any;
     onMouseClick: any;
     isSelectedRow: boolean;
-    rowActionsRender: (rowIndex: number, rowData: any) => React.ReactNode;
+    rowActionsRender: (rowIndex: number, rowData: any, isSelectedRow: boolean) => React.ReactNode;
 }
 
 export interface IQuickGridState {
@@ -57,6 +57,7 @@ export interface IQuickGridState {
     columnWidths: Array<number>;
     selectedRowIndex?: number;
     columnsToDisplay: Array<GridColumn>;
+    hasVerticalScroll: boolean;
 }
 
 export interface GroupRow {
@@ -83,13 +84,20 @@ export interface GridColumn {
     isGroupable?: boolean; // default true
     sortByValueGetter?: (cellData, sortDirection: SortDirection) => any;
     width: number;
-    minWidth?: number;
+    minWidth?: number | (() => number);
     fixedWidth?: boolean;
     dataMember?: string;
     cellFormatter?: (cellData, rowData) => any;
     cellClassName?: string;
     headerClassName?: string;
     headerTooltip?: string;
+}
+
+export function getColumnMinWidth(col: GridColumn): number {
+    if (col.minWidth instanceof Function) {
+        return col.minWidth();
+    }
+    return col.minWidth;
 }
 
 export const lowercasedColumnPrefix = 'lowercase_';

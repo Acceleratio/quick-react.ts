@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { IGridHeaderState, IGridHeaderProps } from './QuickGridHeader.Props';
-import { GridColumn, SortDirection } from './QuickGrid.Props';
+import { GridColumn, SortDirection, getColumnMinWidth } from './QuickGrid.Props';
 import { GroupByToolbar } from './GroupByToolbar';
 import { HeaderColumn } from './HeaderColumn';
 import { Grid, SortIndicator } from 'react-virtualized';
@@ -28,8 +28,8 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
         this.columnMinWidths = this.getColumnMinWidths(props.headerColumns);
     }
 
-    getColumnMinWidths(columns) {
-        return columns.map((col) => { return col.minWidth || 20; });
+    getColumnMinWidths(columns: Array<GridColumn>) {
+        return columns.map((col) => { return getColumnMinWidth(col) || 20; });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -86,6 +86,13 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
     }
 
     getHeaderColumnWidth = ({ index }) => {
+
+        // this hachish code is beceause of some strange behavior when the horizontal scrollbar actually belongs to the inner grid(that can potentially have a vertical scrollbar)
+        // the sizes of the header grid and the inner grid do not align properly and when scrolled to to far right 2 pixels are missing
+        // it could be that the actual solution is somewhere in the code below that does the column size recalculation
+        if (index === this.state.columnWidths.length - 1 && this._headerGrid._scrollingContainer.scrollLeft > 2) {
+            return this.state.columnWidths[index] - 2;
+        }
         return this.state.columnWidths[index];
     }
 

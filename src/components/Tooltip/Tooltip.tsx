@@ -34,6 +34,12 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
         }
     }
 
+    public componentWillUnmount() {
+        if (this.timer && this.timer !== null) {
+            clearTimeout(this.timer);
+        }
+    }
+
     public render() {
         let { className, targetElement, directionalHint, content, children, title } = this.props;
 
@@ -86,6 +92,9 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
     // Show Tooltip
     @autobind
     private _onTooltipMouseEnter(ev: any) {
+        if (this.timer !== null) {
+            return;
+        }
         this.timer = setTimeout(() => this._toggleTooltip(true), this.props.delayMs);
     }
 
