@@ -80,7 +80,7 @@ export class Checkbox extends CommonComponent<ICheckboxProps, ICheckboxState> {
                     onBlur={this._onBlur}
                 />
 
-                <label htmlFor={this.id} className={labelClassName} title={label}>
+                <label htmlFor={this.id} className={labelClassName} title={this.props.tooltip ? undefined : label}>
                     {isChecked && <Icon htmlFor={this.id} className={'checkboxCheckmark'} iconName={'icon-checkmark'} ></Icon>}
                     {iconClassName && <Icon htmlFor={this.id} iconName={iconClassName} className={'label-icon'} />}
                     {label && <span className={innerLabelClassName}>{label}</span>}
