@@ -43,3 +43,4 @@ lib/
 quick-react-ts*
 
 src/mockData/largeFarms.ts
+.vs
