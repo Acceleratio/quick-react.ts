@@ -91,6 +91,7 @@ export class TreeDataSource {
         return (<Array<TreeNode>>input).slice !== undefined;
     }
 
+    public updateNode<T>(nodeId: number, props: Partial<IFinalTreeNode & T>): TreeDataSource;    
     public updateNode(nodeId: number, props: Partial<IFinalTreeNode>): TreeDataSource {
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {
@@ -118,12 +119,13 @@ export class TreeDataSource {
     public getTreeStructure(): IFinalTreeNode {
         return this.treeStructure;
     }
-
+    public getNodeById<T>(nodeId: number): IFinalTreeNode & T;   
     public getNodeById(nodeId: number): IFinalTreeNode {
         return this.nodesById[nodeId];
     }
 
-    public findNode(nodePredicate: (node) => boolean): IFinalTreeNode {
+    public findNode<T>(nodePredicate: (node: IFinalTreeNode & T) => boolean): IFinalTreeNode & T;   
+    public findNode(nodePredicate: (node: IFinalTreeNode) => boolean): IFinalTreeNode {
         // tslint:disable-next-line:forin
         for (let key in this.nodesById) {
             let candidate = this.nodesById[key];
