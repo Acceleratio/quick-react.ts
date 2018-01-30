@@ -240,6 +240,15 @@
                                 margin: 0;
                             }
                         }
+
+                        >.icon:last-child, >.tooltip-container:last-child>.icon {
+                            margin-right: 0;
+                        }
+
+                        >.tooltip-container {
+                            display: inline-flex;
+                            height: 16px;
+                        }
                     }
                 }
         }

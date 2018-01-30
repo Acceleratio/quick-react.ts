@@ -159,6 +159,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 onClickParameter={rowData}
                 rowClass={rowClass}
                 rowData={rowData}
+                rowIndex={rowIndex}
                 element={icon}
             />
         );
@@ -252,12 +253,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         });
     }
 
-    private _onInnerGridSelectedRowChanged = (rowIndex: number) => {
-        if (this.props.onSelectedNodeChanged) {
-            this.props.onSelectedNodeChanged(this._finalGridRows[rowIndex]);
-        }
-    }
-
+  
     private _getQuickGridRef = (c) => { this._quickGrid = c; };
 
     private _getSortInfo = (newSortColumn, newSortDirection) => {
@@ -266,6 +262,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     private _setSelectedNode = (rowIndex: number, nodeData: IFinalTreeNode) => {
         this.setState({selectedNodeId : nodeData.nodeId});
+        if (this.props.onSelectedNodeChanged) {
+            this.props.onSelectedNodeChanged(this._finalGridRows[rowIndex]);
+        }
     }
 
     public render(): JSX.Element {
@@ -277,7 +276,6 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 gridActions={this.props.gridActions}
                 sortDirection={this.state.sortDirection}
                 sortColumn={this.state.sortColumn}
-                onSelectedRowChanged={this._onInnerGridSelectedRowChanged}
                 tooltipsEnabled={false}
                 customCellRenderer={this.treeCellRenderer}
                 hasCustomRowSelector={true}
