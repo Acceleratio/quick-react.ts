@@ -130,6 +130,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
             'wizard-step-window',
             this.stepClassName
         );
+        const currentStepProp = this.props.steps[this.state.currentStep];
 
         return (
             <div className="wizard-container">
@@ -146,6 +147,11 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
                     />
                 </div>
                 <div className={stepWindowClassName}>
+                    {
+                        currentStepProp.description && <div className="wizard-step_header">
+                            {currentStepProp.description}
+                        </div>
+                    }
                     {
                         this.props.onPageRender(this.state.currentStep)
                     }

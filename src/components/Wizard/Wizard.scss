@@ -17,6 +17,20 @@
   .wizard-step-window {
     height: calc(100% - 62px);
     flex: 1;
+
+    .wizard-step_header {
+      height: 42px;
+      border-left-style: solid;
+      border-left-width: 2px;
+      border-left-color: $header-border-color;
+
+      margin-bottom: 20px;
+
+      text-align: left;
+      font-size: 16px;
+      font-family: "Segoe UI";
+      padding-left: 6px;
+    }
   }
 
   .wizard-content {

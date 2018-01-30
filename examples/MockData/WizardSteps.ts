@@ -3,7 +3,8 @@ import { IWizardStep } from '../../src/components/Wizard/Wizard.Props';
 export const steps: Array<IWizardStep> = [
     {
         title: 'Script Details',
-        index: 0
+        index: 0,
+        description: 'Description of script details'
     },
     {
         title: 'Enter Powershell',

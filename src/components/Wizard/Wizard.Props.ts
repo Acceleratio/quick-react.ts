@@ -13,6 +13,7 @@ export enum WizardStepDirection {
 export interface IWizardStep {
     index: number;
     title: string;
+    description?: string;
     optionalButtons?: Array<IButtonProps>;
     className?: string;
 }
