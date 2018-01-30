@@ -1,5 +1,6 @@
 import { GridColumn, DataTypeEnum, SortDirection } from '../../src/components/QuickGrid/QuickGrid.Props';
-import { TreeNode } from '../../src/components/TreeGrid/TreeGrid.Props';
+import { TreeNode, TreeDataSource } from '../../src/models/TreeData';
+
 
 
 const RANDOM_WORDS = ['abstrusity', 'advertisable', 'bellwood', 'benzole', 'disputative', 'djilas', 'ebracteate', 'zonary'];
@@ -9,6 +10,7 @@ const RANDOM_Animal = ['Dog', 'Cat', 'Mouse'];
 const RANDOM_City = ['Zagreb', 'Vienna', 'London', 'Amsterdam', 'Barcelona'];
 const RANDOM_CarBrand = ['Audi', 'BMW', 'Mercedes', 'Opel', 'VW', 'Lada', 'Ford', 'Mazda'];
 const RANDOM_Mix = ['1', 2, '3', 4, 'A', 'B', 'C', '10'];
+const RANDOM_ActionIcons = ['svg-icon-add', 'svg-icon-camera', 'svg-icon-edit', 'svg-icon-open', 'svg-icon-settings', 'svg-icon-user', 'svg-icon-reset'];
 
 export interface GridData extends TreeNode {
     Name: string;
@@ -19,6 +21,47 @@ export interface GridData extends TreeNode {
 }
 
 let totalItems = 0;
+
+const randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
+
+export const nodeActions = [
+    {
+        name: 'Test Action 1',
+        commandName: 'TestAction1',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    },
+    {
+        name: 'Test Action 2',
+        commandName: 'TestAction2',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    },
+    {
+        name: 'Random Action ' + Math.floor(Math.random() * 10),
+        commandName: 'Random Action 1',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    },
+    {
+        name: 'Random Action ' + Math.floor(Math.random() * 10),
+        commandName: 'Random Action 2',
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+    }
+];
+
+export const generateTreeNode = () => {
+    totalItems++;  
+    return {                        
+        isExpanded: true,            
+        children: [],
+        iconName: 'svg-icon-world',
+        hasChildren: true,       
+        Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
+        Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
+        Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
+        Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
+        Numbers: Math.floor(Math.random() * 30)
+
+    };
+};
 const generateTreeData = (size: number): TreeNode => {
     let treeSize: Array<number>;
     if (size === 0) {
@@ -26,47 +69,30 @@ const generateTreeData = (size: number): TreeNode => {
     } else {
         treeSize = [10, 1000, 5, 10];
     }
-    let result: Array<TreeNode> = [];
-    let randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
+    let result: Array<TreeNode> = [];   
 
-    const generateEntry = (id: string, parent: string): GridData => {
-        totalItems++;
-        return {
-            treeId: id,
-            parentId: parent,
-            isExpanded: true,
-            children: [],
-            Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)] + Math.random() * 100,
-            Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
-            Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
-            Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
-            Numbers: Math.floor(Math.random() * 30)
 
-        };
-    };
 
     for (let i = 0; i < treeSize[0]; i++) {
-        let treeEntry = generateEntry(i + '.', null);
+        let treeEntry = generateTreeNode();
         for (let j = 0; j < treeSize[1]; j++) {
-            let treeEntry1 = generateEntry(treeEntry.treeId + j + '.', treeEntry.treeId);
+            let treeEntry1 = generateTreeNode();
             for (let k = 0; k < treeSize[2]; k++) {
-                let treeEntry2 = generateEntry(treeEntry1.treeId + k + '.', treeEntry1.treeId);
+                let treeEntry2 = generateTreeNode();
                 for (let l = 0; l < treeSize[3]; l++) {
-                    let treeEntry3 = generateEntry(treeEntry2.treeId + l + '.', treeEntry2.treeId);
-                    // treeEntry3.isExpanded = false;
+                    let treeEntry3 = generateTreeNode();
+                     treeEntry3.isExpanded = false;
                     treeEntry2.children.push(treeEntry3);
                 }
-                // treeEntry2.isExpanded = false;
+                 treeEntry2.isExpanded = false;
                 treeEntry1.children.push(treeEntry2);
             }
             treeEntry.children.push(treeEntry1);
         }
         result.push(treeEntry);
     }
-    // alert(totalItems);
+    //  alert(totalItems);
     return {
-        treeId: '',
-        parentId: '',
         children: result
     };
 };
@@ -104,8 +130,8 @@ export const gridColumns1: Array<GridColumn> = [
 
 
 
-export function getTreeGridData(size: number) {
-    const treeData = generateTreeData(size);
+export function getTreeGridData(size: number): TreeDataSource {
+    const treeData = new TreeDataSource(generateTreeData(size));
     return treeData;
 }
 

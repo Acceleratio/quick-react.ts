@@ -74,6 +74,15 @@ $button-height: 32px;
             background-color: $primary-disabled-color;
             border-color: $primary-disabled-color;
         }
+
+        .spinner {
+            .spinner-circle {
+                border-top: 1.4em solid $primary-disabled-color;
+                border-right: 1.4em solid $primary-disabled-color;
+                border-bottom: 1.4em solid $primary-disabled-color;
+                border-left: 1.4em solid  $white-color;
+            }
+        }
     }
 
     &.button-primary-gray {
@@ -90,6 +99,15 @@ $button-height: 32px;
         &:disabled {
             background-color: $secondary-disabled-color;
             border-color: $secondary-disabled-color;
+        }
+
+        .spinner {
+            .spinner-circle {
+                border-top: 1.4em solid $secondary-disabled-color;
+                border-right: 1.4em solid $secondary-disabled-color;
+                border-bottom: 1.4em solid $secondary-disabled-color;
+                border-left: 1.4em solid  $white-color;
+            }
         }
     }
 
@@ -206,6 +224,15 @@ $button-height: 32px;
                 fill: $tertiary-disabled-color !important;
             }
         }
+
+        .spinner {
+            .spinner-circle {
+                border-top: 1.4em solid $tertiary-disabled-color;
+                border-right: 1.4em solid $tertiary-disabled-color;
+                border-bottom: 1.4em solid $tertiary-disabled-color;
+                border-left: 1.4em solid  $tertiary-color;
+            }
+        }
     }
 
     &.button-tertiary {
@@ -222,6 +249,15 @@ $button-height: 32px;
         &:disabled {
             background-color: $tertiary-disabled-color;
             border-color: $tertiary-disabled-color;
+        }
+
+        .spinner {
+            .spinner-circle {
+                border-top: 1.4em solid $tertiary-disabled-color;
+                border-right: 1.4em solid $tertiary-disabled-color;
+                border-bottom: 1.4em solid $tertiary-disabled-color;
+                border-left: 1.4em solid  $white-color;
+            }
         }
     }
 
@@ -265,6 +301,74 @@ $button-height: 32px;
                 fill: $primary-disabled-color !important;
             }
         }
+    }
+
+    &.button-error {
+        background-color: $error-color;
+        border-color: $error-color;
+
+        &:hover,
+        &:focus,
+		&:active {
+			background-color: $error-hover-color;
+            border-color: $error-hover-color;
+        }
+
+        &:disabled {
+            background-color: $error-disabled-color;
+            border-color: $error-disabled-color;
+        }
+
+        .icon {
+            margin-right: 0;
+            fill: $white-color;
+            color: $white-color;
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            .icon {
+                fill: $white-color;
+                color: $white-color;
+            }
+        }
+    }
+
+    &.button-succes {
+        background-color: $success-color;
+        border-color: $success-color;
+
+        &:hover,
+        &:focus,
+		&:active {
+			background-color: $success-hover-color;
+            border-color: $success-hover-color;
+        }
+
+        &:disabled {
+            background-color: $success-disabled-color;
+            border-color: $success-disabled-color;
+        }
+
+        .icon {
+            margin-right: 0;
+            fill: $white-color;
+            color: $white-color;
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            .icon {
+                fill: $white-color;
+                color: $white-color;
+            }
+        }
+    }
+
+    &.button-loading {
+        pointer-events: none;
     }
 }
 

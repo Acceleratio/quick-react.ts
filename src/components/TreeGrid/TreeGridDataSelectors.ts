@@ -1,32 +1,30 @@
-import { ITreeGridState, ITreeGridProps, TreeNode } from './TreeGrid.Props';
+import { ITreeGridState, ITreeGridProps } from './TreeGrid.Props';
 import { SortDirection } from '../QuickGrid/QuickGrid.Props';
+import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
 const createSelector = require('reselect').createSelector;
 
-export interface IFinalTreeNode extends TreeNode {
-    nodeLevel: number;
-    sortRequestId: number;
-}
 
 const getChangeRequestIds = (state: ITreeGridState, props: ITreeGridProps) => ({ sortRequestId: state.sortRequestId, structureRequestChangeId: state.structureRequestChangeId });
 const getSortColumn = (state: ITreeGridState, props: ITreeGridProps) => state.sortColumn;
 const getSortDirection = (state: ITreeGridState, props: ITreeGridProps) => state.sortDirection;
-const getTreeData = (state: ITreeGridState, props: ITreeGridProps) => props.tree;
+const getTreeData = (state: ITreeGridState, props: ITreeGridProps) => props.treeDataSource;
 
 
-const transformData = (tree: TreeNode, sortColumn: string, sortDirection: SortDirection, sortRequestId: number) => {
-    if (tree.children.length === 0) {
+const transformData = (tree: TreeDataSource , sortColumn: string, sortDirection: SortDirection, sortRequestId: number) => {
+    let root = tree.getTreeStructure();
+    if (root.children.length === 0) {
         return [];
     }
     
     // 0 level, the node that contains the root nodes must be expanded for sort to kick in
-    tree.isExpanded = true;
-    sortData(tree, sortColumn, sortDirection, sortRequestId);
+    root.isExpanded = true;
+    sortData(root, sortColumn, sortDirection, sortRequestId);
     let flattenedData: Array<IFinalTreeNode> = [];
-    flatten(tree.children, flattenedData);    
+    flatten(root.children, flattenedData);    
     return flattenedData;
 };
 
-const sortData = (treeNode: TreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number): void => {
+const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number): void => {
 
     if (!treeNode.children || treeNode.children.length === 0) {
         return;
@@ -78,13 +76,22 @@ const sort = (input, sortDirection, sortColumn) => {
     input.sort(sortFunction);
 };
 
-export function flatten(tree, resultArray: Array<TreeNode>, level: number = 0) {
+export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0) {
     level++;
     for (let child of tree) {
         resultArray.push(child);
-        child.nodeLevel = level;
         if (child.children && child.children.length > 0 && child.isExpanded) {
             flatten(child.children, resultArray, level);
+        } else if (child.hasChildren && child.isExpanded && (!child.children || child.children.length === 0)) {
+            resultArray.push(<IFinalTreeNode>{
+                nodeLevel: child.nodeLevel + 1,
+                treeId: child.treeId + '_ASYNC',
+                parentId: child.id,
+                parent: child,
+                children: [],
+                isAsyncLoadingDummyNode: true,
+                sortRequestId: child.sortRequestId
+            });
         }
     }
 }

@@ -4,7 +4,7 @@ import * as classNames from 'classnames';
 import { AutoSizer, Table, Column, ColumnProps, ScrollSync, Grid } from 'react-virtualized';
 import {
     IQuickGridProps, IQuickGridState, GridColumn, GroupRow,
-    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix
+    IGroupBy, SortDirection, DataTypeEnum, lowercasedColumnPrefix, QuickGridActionsBehaviourEnum, ActionItem
 } from './QuickGrid.Props';
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 import { getRowsSelector } from './DataSelectors';
@@ -19,6 +19,7 @@ import { groupBy as arrayGroupBy } from '../../utilities/array';
 const createSelector = require('reselect').createSelector;
 import { GridFooter } from './QuickGridFooter';
 import './QuickGrid.scss';
+import { QuickGridRowContextActionsHandler } from './QuickGridRowContextActionsHandler';
 
 const getActionItems = (props: IQuickGridProps) => props.gridActions.actionItems;
 const getActionItemOptions = createSelector([getActionItems], (actionItems) => {
@@ -33,18 +34,21 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         groupBy: [],
         rowHeight: 28,
         tooltipsEnabled: true,
-        actionsTooltip: 'Actions'
+        actionsTooltip: 'Actions',
+        columnHeadersVisible: true
     };
-    private finalGridRows: Array<any>;
+
+    private _finalGridRows: Array<any>;
     private _grid: any;
     private _headerGrid: any;
-    private parentElement: HTMLElement;
-    private columnsMinTotalWidth = 0;
+    private _parentElement: Element;
+    private _columnsMinTotalWidth = 0;
+    private _rowContextActionsHandler: QuickGridRowContextActionsHandler;
+
     constructor(props: IQuickGridProps) {
         super(props);
-        const hasActionColumn = props.gridActions != null;
         const groupByState = this.getGroupByFromProps(props.groupBy);
-        const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupByState, hasActionColumn);
+        const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupByState, this._shouldRenderActionsColumn(props));
         this.state = {
             columnWidths: this.getColumnWidths(columnsToDisplay),
             columnsToDisplay: columnsToDisplay,
@@ -54,9 +58,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             sortDirection: props.sortDirection,
             groupBy: groupByState
         };
-        this.columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
+
+        this._columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         this.onGridResize = _.debounce(this.onGridResize, 100);
-        this.finalGridRows = props.hasCustomRowSelector ? props.rows : getRowsSelector(this.state, props);
+        this._finalGridRows = props.hasCustomRowSelector ? props.rows : getRowsSelector(this.state, props);
     }
 
     expandAll = (event) => {
@@ -137,18 +142,19 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     componentWillReceiveProps(nextProps: IQuickGridProps) {
-        if (nextProps.columns !== this.props.columns || nextProps.groupBy !== this.props.groupBy) {
+        if (nextProps.columns !== this.props.columns || nextProps.groupBy !== this.props.groupBy
+            || nextProps.gridActions !== this.props.gridActions) {
             const newGroupBy = this.getGroupByFromProps(nextProps.groupBy);
-            const hasActionColumn = nextProps.gridActions != null;
+            const hasActionColumn = this._shouldRenderActionsColumn(nextProps);
             const columnsToDisplay = nextProps.hasStaticColumns ? nextProps.columns : this.getColumnsToDisplay(nextProps.columns, newGroupBy, hasActionColumn);
             const columnWidths = this.getColumnWidths(columnsToDisplay);
             this.setState((prevState) => { return { ...prevState, columnsToDisplay: columnsToDisplay, columnWidths: columnWidths, groupBy: newGroupBy }; });
-            this.columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
+            this._columnsMinTotalWidth = columnsToDisplay.map(x => x.minWidth || defaultMinColumnWidth).reduce((a, b) => a + b, 0);
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        this.finalGridRows = nextProps.hasCustomRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
+        this._finalGridRows = nextProps.hasCustomRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -157,17 +163,43 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         } else if (this.state.sortDirection !== prevState.sortDirection || this.state.sortColumn !== prevState.sortColumn) {
             this._grid.forceUpdate();
         }
+        this._rowContextActionsHandler.clearHoveredElement();
     }
 
+    private _mounted: boolean;
+    componentDidMount() {
+        // we need to hook up to the actual mouse leave event
+        // the react event does not function correctly with our custom rendered hover actions, probably because of the ReactDom.render usage
+        let domElement = ReactDOM.findDOMNode(this);
+        this._parentElement = domElement;
+        domElement.addEventListener('mouseleave', this.nativeMouseLeaveListener);
+        this._rowContextActionsHandler.setGridRootElement(domElement);
+        this._mounted = true;
+
+        // this will have a consequence of a double render, but we need it here to handle the column sizing correctly
+        // the previous implementation relied on a global div with a specific class. This was troublesome for multiple reasons
+        // one of them being that you could not have two quickgrid in the same document (different widths)
+        this.onGridResizeCore();
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
+        this._rowContextActionsHandler.clearHoveredElement();
+        ReactDOM.findDOMNode(this).removeEventListener('mouseleave', this.nativeMouseLeaveListener);
+    }
+
+    private nativeMouseLeaveListener= () => {
+        this._rowContextActionsHandler.clearHoveredElement();
+    }
+
+
     getViewportWidth() {
-        let width = 0;
-        if (document.getElementsByClassName('viewport-height')[0] !== undefined) {
-            width = document.getElementsByClassName('viewport-height')[0].clientWidth;
-        } else {
-            width = document.getElementById('root').clientWidth;
+        let width = 800;
+        if (this._parentElement) {
+            width = this._parentElement.clientWidth;
         }
-        // 35px margins
-        return width - 35;
+                
+        return width;
     }
 
     getGridWidth() {
@@ -177,6 +209,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     getGridHeight = (height: number) => {
         return height - this.groupByToolboxHeight()
             - this.gridFooterContainerHeight();
+    }
+
+    private _shouldRenderActionsColumn(props: IQuickGridProps): boolean {
+        return props.gridActions != null && (props.gridActions.actionsBehaviour === undefined || props.gridActions.actionsBehaviour === QuickGridActionsBehaviourEnum.ShowAsFirstColumn);
     }
 
     onRowExpandToggle(name, shouldExpand) {
@@ -215,26 +251,56 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
-        const rowData = this.finalGridRows[rowIndex]; 
+        const rowData = this._finalGridRows[rowIndex];
+        const onClick = (e) => {
+            // https://github.com/facebook/react/issues/1691 funky bussinese because of multiple mount points in the hover actions            
+            // so stopPropagation and preventDefault do not work there, manually checking if row actions were clicked
+            if (e.currentTarget !== e.target) {
+                const rowActionsContainer = e.currentTarget.getElementsByClassName('hoverable-items-container__btn')[0];
+                if (rowActionsContainer && rowActionsContainer.contains(e.target)) {
+                    return;
+                }                
+            }
+
+            this.setSelectedRowIndex(rowIndex, rowData);
+        };
+
+
+        let defaultRender = (overridenStyle) => {
             if (rowData.type === 'GroupRow') { // todo Different member - > true
-                return this.renderGroupCell(columnIndex, key, rowIndex, rowData, style);
+                return this.renderGroupCell(columnIndex, key, rowIndex, rowData, overridenStyle);
             } else {
-                if (columnIndex === 0 && this.props.gridActions != null) {
-                    return this.renderActionCell(key, rowIndex, rowData, style);
+                if (columnIndex === 0 && this._shouldRenderActionsColumn(this.props)) {
+                    return this.renderActionCell(key, rowIndex, rowData, overridenStyle);
                 }
                 if (columnIndex < this.props.groupBy.length) {
-                    return this.renderEmptyCell(key, rowIndex, rowData, style);
+                    return this.renderEmptyCell(key, rowIndex, rowData, overridenStyle);
                 }
-                return this.renderBodyCell(columnIndex, key, rowIndex, rowData, style);
+                return this.renderBodyCell(columnIndex, key, rowIndex, rowData, overridenStyle, onClick);
             }
+        };
+
+        if (this.props.customCellRenderer) {
+            return this.props.customCellRenderer({
+                columnIndex,
+                key,
+                rowIndex,
+                style,
+                onMouseEnter: this.onMouseEnterCell,
+                onMouseClick: onClick,
+                rowActionsRender: this.renderRowContextActions,
+                isSelectedRow: rowIndex === this.state.selectedRowIndex
+            });
+        }
+
+        return defaultRender(style);
     }
 
-   
+
 
     renderEmptyCell(key, rowIndex, rowData, style) {
         const rowClass = 'grid-row-' + rowIndex;
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
         const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
 
         const onDoubleClick = () => {
@@ -255,7 +321,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 key={key}
                 className={className}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
             />
@@ -266,17 +331,16 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const { onActionSelected, actionItems } = this.props.gridActions;
         if (onActionSelected) {
             const action = actionItems[actionIndex];
-            const rowData = this.finalGridRows[rowIndex];
+            const rowData = this._finalGridRows[rowIndex];
             onActionSelected(action.commandName, action.parameters, rowData);
         }
     }
 
-    renderActionCell(key, rowIndex: number, rowData, style) {        
+    renderActionCell(key, rowIndex: number, rowData, style) {
         let actionsTooltip = this.props.actionsTooltip;
 
         const rowClass = 'grid-row-' + rowIndex;
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
+        const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
         const actionOptions = getActionItemOptions(this.props);
         const { actionIconName } = this.props.gridActions;
         const title = this.props.tooltipsEnabled ? actionsTooltip : null;
@@ -291,7 +355,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 style={style}
                 className={className}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
                 title={title}
             >
                 <Dropdown
@@ -306,7 +369,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         );
     }
 
-    
+
 
     renderGroupCell(columnIndex: number, key, rowIndex: number, rowData: GroupRow, style) {
         if (columnIndex === 0) {
@@ -344,26 +407,14 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    onMouseEnterCell = (rowClass) => {
-        const rowElements = document.getElementsByClassName(rowClass);
-        for (let i = 0; i < rowElements.length; i++) {
-            rowElements[i].classList.add('is-hover');
-        }
+    onMouseEnterCell = (rowIndex: number) => {
+        this._rowContextActionsHandler.markRowAsHovered(rowIndex);
     }
 
-    onMouseLeaveCell = (rowClass) => {
-        const rowElements = document.getElementsByClassName(rowClass);
-        for (let i = 0; i < rowElements.length; i++) {
-            const classList = rowElements[i].classList;
-            if (classList.contains('is-hover')) {
-                classList.remove('is-hover');
-            }
-        }
-    }
-
-    renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style) {
+    renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style, onCellClick) {
         const columns = this.state.columnsToDisplay;
         const notLastIndex = columnIndex < (columns.length - 1);
+        const isLastColumn = !notLastIndex;
         const column = columns[columnIndex];
         const dataKey = column.dataMember || column.valueMember;
         const cellData = rowData[dataKey];
@@ -375,10 +426,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             { 'border-column-cell': notLastIndex },
             { 'is-selected': rowIndex === this.state.selectedRowIndex });
 
-        const onMouseEnter = () => { this.onMouseEnterCell(rowClass); };
-        const onMouseLeave = () => { this.onMouseLeaveCell(rowClass); };
-        const onClick = () => { this.setSelectedRowIndex(rowIndex, rowData); };
-
+        const onMouseEnter = () => { this.onMouseEnterCell(rowIndex); };
+      
         const onDoubleClick = () => {
             if (this.props.onRowDoubleClicked) {
                 this.props.onRowDoubleClicked(rowData);
@@ -390,7 +439,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 return column.cellFormatter(cellData, rowData);
             } else {
                 return (
-                    <div style={{ padding: '3px 5px 0 5px' }} >
+                    <div className="grid-component-cell-inner" >
                         {cellData}
                     </div>
                 );
@@ -403,14 +452,33 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 style={style}
                 className={className}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                onClick={onClick}
+                onClick={onCellClick}
                 onDoubleClick={onDoubleClick}
                 title={title}
             >
                 {columnElement()}
+                {isLastColumn && this.renderRowContextActions(rowIndex, rowData)}
             </div>
         );
+    }
+
+    renderRowContextActions = (rowIndex, rowData) => {        
+        let actions: Array<ActionItem> = this.getRowContextActions(rowIndex);
+        if (!actions || actions.length === 0) {
+            return;
+        }
+
+        if (rowIndex === this.state.selectedRowIndex) {
+            return <span key="nonHover" className="hoverable-items-container__btn is-selected">
+                {
+                    this._rowContextActionsHandler.getRenderedActions(rowIndex)
+                }
+            </span>;
+        } else {
+            // this is a hook element where the hovered contex row actions will be rendered                        
+            return <span key="hover" className="hoverable-items-container__btn hover-allowed">
+            </span>;
+        }
     }
 
     setSelectedRowIndex = (rowIndex: number, rowData: any) => {
@@ -420,7 +488,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    onGridResize = () => {        
+    onGridResize = () => {
+       this.onGridResizeCore();
+    }
+
+    onGridResizeCore = () => {
         let columnWidths = this.getColumnWidths(this.state.columnsToDisplay);
         this.setState((prevState) => ({ ...prevState, columnWidths }));
     }
@@ -432,7 +504,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             fixedColumnsTotalWidth = fixedColumns.map(col => col.width).reduce((a, b) => a + b);
         }
         const available = this.getGridWidth() - fixedColumnsTotalWidth;
-        if (available > this.columnsMinTotalWidth) {
+        if (available > this._columnsMinTotalWidth) {
             const totalWidth = columnsToDisplay.map(x => x.width).reduce((a, b) => a + b, 0) - fixedColumnsTotalWidth;
             return columnsToDisplay.map((col) => this.getColumnWidthInPx(available, totalWidth, col.width, col.fixedWidth));
         } else {
@@ -452,6 +524,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     groupByToolboxHeight = () => {
+        if (!this.props.columnHeadersVisible) {
+            return 2;
+        }
         return 30 + (this.props.displayGroupContainer ? 62 : 0); // header height + Drag&Drop height+padding
     }
 
@@ -474,21 +549,38 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return totalColumnsWidth > viewportWidth;
     }
 
-    setHeaderGridReference = (ref) => { this._headerGrid = ref; };
-    setGridReference = (ref) => { this._grid = ref; };
+    getRowContextActions = (rowIndex: number) => {
+        if (!this.props.gridActions || this.props.gridActions.actionsBehaviour !== QuickGridActionsBehaviourEnum.ShowOnRowHover) {
+            return;
+        }
+        const actions = this.props.gridActions.onGetSingleRowContextActions && this.props.gridActions.onGetSingleRowContextActions(this._finalGridRows[rowIndex]) || this.props.gridActions.actionItems;
+        return actions;
+    }
+
+    onRowContextActionClicked = (rowIndex: number, action: ActionItem) => {
+        this.props.gridActions.onActionSelected(action.commandName, action.parameters, this._finalGridRows[rowIndex]);
+    }
+
+    private _setHeaderGridReference = (ref) => { this._headerGrid = ref; };
+    private _setGridReference = (ref) => { this._grid = ref; };
+    private _setRowContextActionsHandler = (ref) => { this._rowContextActionsHandler = ref; };
 
     render() {
         let mainClass = classNames('grid-component-container', this.props.gridClassName);
         let headerClass = classNames('grid-component-header', this.props.headerClassName);
         return (
             <div className={mainClass}>
+                <div className="hoverActions">
+                    <QuickGridRowContextActionsHandler ref={this._setRowContextActionsHandler} onGetRowActions={this.getRowContextActions} onActionClicked={this.onRowContextActionClicked} />
+                </div>
                 <AutoSizer onResize={this.onGridResize}>
                     {({ height, width }) => (
                         <ScrollSync>
                             {({ onScroll, scrollLeft }) => (
                                 <div style={{ width, height }} >
-                                    <GridHeader
-                                        ref={this.setHeaderGridReference}
+                                    {
+                                     this.props.columnHeadersVisible && <GridHeader
+                                        ref={this._setHeaderGridReference}
                                         allColumns={this.props.columns}
                                         headerColumns={this.state.columnsToDisplay}
                                         columnWidths={this.state.columnWidths}
@@ -503,25 +595,26 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                         onGroupByChanged={this.props.onGroupByChanged}
                                         displayGroupContainer={this.props.displayGroupContainer}
                                         onGroupBySort={this.onGroupBySort}
-                                        hasActionColumn={this.props.gridActions != null}
+                                        hasActionColumn={this._shouldRenderActionsColumn(this.props)}
                                         onCollapseAll={this.collapseAll}
                                         onExpandAll={this.expandAll}
                                         tooltipsEnabled={this.props.tooltipsEnabled}
                                     />
+                                    }
 
                                     <Grid
-                                        ref={this.setGridReference}
+                                        ref={this._setGridReference}
                                         height={this.getGridHeight(height)}
                                         width={width}
                                         onScroll={onScroll}
                                         scrollLeft={scrollLeft}
-                                        cellRenderer={this.props.customCellRenderer || this.cellRenderer}
+                                        cellRenderer={this.cellRenderer}
                                         overscanRowCount={this.props.overscanRowCount}
                                         columnWidth={this.getColumnWidth}
                                         rowHeight={this.props.rowHeight}
                                         className={classNames('grid-component',
                                             { 'no-scrollbar': this.props.columnSummaries })}
-                                        rowCount={this.finalGridRows.length}
+                                        rowCount={this._finalGridRows.length}
                                         columnCount={this.state.columnsToDisplay.length}
                                         {...this.state} // force update on any state change
                                         {...this.props} // force update on any prop change

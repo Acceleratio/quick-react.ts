@@ -9,19 +9,19 @@ export class CellElement extends React.PureComponent<ICellElementProps, {}> {
     @autobind
     private _onMouseEnter() { 
         if (this.props.onMouseEnter) {
-            this.props.onMouseEnter(this.props.rowClass);
+            this.props.onMouseEnter(this.props.rowIndex);
         }
     }
     @autobind
     private _onMouseLeave() { 
         if (this.props.onMouseLeave) {
-            this.props.onMouseLeave(this.props.rowClass); 
+            this.props.onMouseLeave(this.props.rowIndex); 
         }
     }
     @autobind
-    private _onClick() { 
+    private _onClick(ev) { 
         if (this.props.onClick) {
-            this.props.onClick(this.props.onClickParameter); 
+            this.props.onClick(ev, this.props.onClickParameter); 
         }
     }
     @autobind
