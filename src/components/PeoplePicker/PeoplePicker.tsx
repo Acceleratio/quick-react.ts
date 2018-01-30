@@ -61,10 +61,10 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                 {this.props.loadingSuggestionList && <Spinner type={SpinnerType.small} />}
                 {!this.props.loadingSuggestionList && this.props.suggestionList.map((principal, index) => {
                     const alreadySelected = this.state.selectedPrincipalList 
-                        && this.state.selectedPrincipalList.find(selected => selected.id === principal.id) !== undefined;
+                        && this.state.selectedPrincipalList.find(selected => selected.identifier === principal.identifier) !== undefined;
 
                     return !alreadySelected && <Principal
-                        key={principal.id}
+                        key={principal.identifier}
                         principal={principal}
                         isSelected={false}
                         onSelect={this._onSuggestionClick}
@@ -79,7 +79,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
         this.setState({ suggestionsVisible: false, value: '' });
 
         if (this.state.selectedPrincipalList !== null) {
-            if (!this.state.selectedPrincipalList.find(x => x.id === principal.id)) {
+            if (!this.state.selectedPrincipalList.find(x => x.identifier === principal.identifier)) {
                 this.setState({ selectedPrincipalList: [...this.state.selectedPrincipalList, principal] }, this._onUpdateSelection);
             }
         } else {
@@ -123,7 +123,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                     content={this.props.errorMessage}
                     className="tooltip-error"
                     showTooltip={this.state.isFocused}
-                    directionalHint={DirectionalHint.bottomLeftEdge}>
+                    directionalHint={DirectionalHint.topLeftEdge}>
                     <div className="people-picker-input-error-content">
                         <input
                             type={'text'}
@@ -197,7 +197,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
     @autobind
     private _onSuggestionDelete(selectedPrincipal: IPrincipal) {
         const newPrincipalList = this.state.selectedPrincipalList.filter((principal, index) => {
-            if (principal.id !== selectedPrincipal.id) {
+            if (principal.identifier !== selectedPrincipal.identifier) {
                 return principal;
             }
         });

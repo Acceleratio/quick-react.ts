@@ -9,7 +9,7 @@ export interface IPrincipalProps extends React.Props<Principal> {
 }
 
 export interface IPrincipal {
-    id: string;
+    identifier: string;
     displayName: string;
     email: string;
     type: PrincipalType;
