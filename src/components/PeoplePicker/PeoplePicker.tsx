@@ -38,7 +38,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             this.state.selectedPrincipalList.push(...this.props.selectedPrincipalList);
         }
 
-        this._delayedSearch = _.debounce(this._onSearch, 1000);
+        this._delayedSearch = _.debounce(this._onSearch, 800);
     }
 
     @autobind
@@ -171,7 +171,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
         if (this.props.singleSelect) {
             return (
-                <div>
+                <div className="people-picker-single-selected">
                     {this.state.selectedPrincipalList && selectedPrincipalList}
                 </div>
             );
