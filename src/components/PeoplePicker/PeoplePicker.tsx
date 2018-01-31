@@ -11,6 +11,7 @@ import { SpinnerType } from '../Spinner/Spinner.Props';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { DirectionalHint } from '../../utilities/DirectionalHint';
 import { Icon } from '../Icon/Icon';
+import * as _ from 'lodash';
 
 export interface IPeoplePickerState {
     isFocused?: boolean;
@@ -21,6 +22,7 @@ export interface IPeoplePickerState {
 
 export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeoplePickerState> {
     private _field;
+    private _delayedSearch;
 
     constructor(props) {
         super(props);
@@ -35,6 +37,8 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
         if (this.props.selectedPrincipalList) {
             this.state.selectedPrincipalList.push(...this.props.selectedPrincipalList);
         }
+
+        this._delayedSearch = _.debounce(this._onSearch, 1000);
     }
 
     @autobind
@@ -46,6 +50,11 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             value: value
         });
 
+        this._delayedSearch(value);
+    }
+
+    @autobind
+    private _onSearch(value: string) {
         if (value.length >= 3) {
             this.setState({ suggestionsVisible: true });
             this.props.onSearch(value);
