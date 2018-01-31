@@ -17,6 +17,19 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     private _quickGrid: any;
     private _finalGridRows: Array<IFinalTreeNode>;
     private _maxExpandedLevel: number;
+    private _overscanProps = {
+        // we are setting the overscanColumn property in hope of rendering the expand collapse column
+        overscanColumnCount: 3,
+        // but for some reason, setting the overscanColumnCount property is not enough
+        // and we need some additional custom logic
+        overscanIndicesGetter: ({ direction, cellCount, scrollDirection, overscanCellsCount, startIndex, stopIndex }) => {
+            return {
+                overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
+                overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
+            };
+        }
+    };
+    
     constructor(props: ITreeGridProps) {
         super(props);
         this.state = {
@@ -37,14 +50,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         expandedColumns.push({
             isSortable: false,
             width: 16,
-            minWidth: 30,
+            minWidth: 16,
             fixedWidth: true
-        });
-        expandedColumns.push({
-            dataType: DataTypeEnum.String,
-            valueMember: 'TreeId',
-            headerText: 'TreeId',
-            width: 0
         });
         const replacementFirstColumn: GridColumn = {
             ...columns[0],
@@ -71,8 +78,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const result = getTreeRowsSelector(nextState, nextProps);
         this._finalGridRows = result.data;
         this._maxExpandedLevel = result.maxExpandedLevel;
-        this._quickGrid.updateColumnWidth(2, (old) => {
-            return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[2]));
+        this._quickGrid.updateColumnWidth(1, (old) => {
+            return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[1]));
         });
     }
 
@@ -84,7 +91,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const indentSize = 20;
         let indent = 0;
         let level = rowData.nodeLevel;
-        if ((columnIndex === 0 || columnIndex === 2)) {
+        if ((columnIndex === 0 || columnIndex === 1)) {
 
             indent = level * indentSize;
         }
@@ -95,17 +102,14 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             } else if (style.left < indent) {
                 shouldIndent = true;
             }
-        } else if (columnIndex === 2) {
+        } else if (columnIndex === 1) {
             if (level === 0) {
                 shouldIndent = false;
             } else if (style.left < (indent + indentSize)) {
                 shouldIndent = true;
             }
         }
-        if (columnIndex === 1) {
-            return this._renderHiddenTreeCell(key, columnIndex, rowID);
-        }
-        if (columnIndex === 2 && shouldIndent) {
+        if (columnIndex === 1 && shouldIndent) {
             style = { ...style, width: style.width - indent };
         }
         if (shouldIndent) {
@@ -193,7 +197,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             this._setSelectedNode(rowIndex, rowData);
         };
         onCellClick =  rowData.isAsyncLoadingDummyNode ? undefined : onCellClick;
-        if (rowData.isAsyncLoadingDummyNode && columnIndex === 2) {
+        if (rowData.isAsyncLoadingDummyNode && columnIndex === 1) {
             columnElement = <div className="loading-container">
                 <Spinner className="async-loading-spinner"
                     type={SpinnerType.small}
@@ -206,7 +210,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             columnElement = column.cellFormatter(cellData, rowData);
         } else {
             columnElement = [
-                columnIndex === 2 && rowData.iconName ? <span key="cellIcon" style={{display: 'flex'}} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} /></span> : null,
+                columnIndex === 1 && rowData.iconName ? <span key="cellIcon" style={{display: 'flex'}} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} /></span> : null,
                 <div key="cellData" className="grid-component-cell-inner" >
                     {cellData}
                 </div>
@@ -283,6 +287,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 customRowSorter={this._getSortInfo}
                 columnSummaries={this.props.columnSummaries}
                 columnHeadersVisible={this.props.columnHeadersVisible}
+                {...this._overscanProps}
             />
         );
     }
