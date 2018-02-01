@@ -38,7 +38,8 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
             acceptButtonDisabled,
             bulletedList,
             iconName,
-            className
+            className,
+            iconStyle
         } = this.props;
 
         const mappedButtons = buttons && buttons.map((button, index) => {
@@ -77,6 +78,12 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
         }
 
         let containerClassName = classNames('message-box-container', className);
+        let iconElement = null;
+        if (iconStyle) {
+            iconElement = <Icon iconName={iconToBeUsed} style={iconStyle}/>;
+        } else {
+            iconElement = <Icon iconName={iconToBeUsed} />;
+        }
 
         return (
             <Dialog
@@ -87,7 +94,7 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
                 containerClassName="message-box-dialog"
             >
                 <div className={containerClassName}>
-                    <Icon iconName={iconToBeUsed} />
+                    {iconElement}
                     {message}
                 </div>
                 {this._renderBulletList()}

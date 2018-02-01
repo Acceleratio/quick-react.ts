@@ -49,6 +49,7 @@ export class Index extends React.Component<any, any> {
                     onClose={() => console.log('On close')}
                     isLoading={this.state.isLoading}
                     errorMessage={this.state.errorMessage}
+                    iconStyle={{fontSize: '32px'}}
                     // bulletedList={['SpFarm', 'SpFarm 2013', 'SpFarm 2016']}
                 />
             </div>

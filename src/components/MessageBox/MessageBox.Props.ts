@@ -15,6 +15,7 @@ export interface IMessageBoxProps {
     title?: string;
     level?: MessageLevel;
     iconName?: string;
+    iconStyle?: any;
     className?: string;
     onDismiss?(): void;
     onClose?(): void;
