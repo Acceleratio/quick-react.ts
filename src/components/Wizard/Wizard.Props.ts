@@ -30,6 +30,7 @@ export interface IWizardProps {
     currentPage?: IPage;
     title?: string;
     nextBtnState?: boolean;
+    backBtnState?: boolean;
     showNavigationButtons?: boolean;
     nextButtonText?: string;
     backButtonText?: string;
