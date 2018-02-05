@@ -23,6 +23,9 @@ export interface IPeoplePickerState {
 export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeoplePickerState> {
     private _field;
     private _delayedSearch;
+    public static defaultProps: Partial<IPeoplePickerProps> = {
+        noResultText: 'No Result'
+    };
 
     constructor(props) {
         super(props);
@@ -65,13 +68,15 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
     @autobind
     private _renderSuggestions(): JSX.Element {
+        let allSelected: boolean = true;
         return (
             <div className="people-picker-suggestions">
                 {this.props.loadingSuggestionList && <Spinner type={SpinnerType.small} />}
-                {!this.props.loadingSuggestionList && this.props.suggestionList.map((principal, index) => {
+                {!this.props.loadingSuggestionList && this.props.suggestionList.length > 0 && this.props.suggestionList.map((principal, index) => {
                     const alreadySelected = this.state.selectedPrincipalList 
                         && this.state.selectedPrincipalList.find(selected => selected.identifier === principal.identifier) !== undefined;
 
+                    allSelected = allSelected && alreadySelected;    
                     return !alreadySelected && <Principal
                         key={principal.identifier}
                         principal={principal}
@@ -79,6 +84,9 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                         onSelect={this._onSuggestionClick}
                     />;
                 })}
+                {!this.props.loadingSuggestionList && (this.props.suggestionList.length === 0 || allSelected) && <div className="no-result">
+                    {this.props.noResultText}
+                </div>}
             </div>
         );
     }
