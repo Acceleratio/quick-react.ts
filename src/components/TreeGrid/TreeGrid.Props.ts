@@ -14,6 +14,7 @@ export interface ITreeGridProps {
     columnSummaries?: any;
     columnHeadersVisible?: boolean;
     filterString?: string;
+    selectedNodeId?: number;
 }
 
 export interface ITreeGridState {    
