@@ -38,11 +38,14 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             sortDirection: props.sortDirection,
             sortRequestId: 0,
             structureRequestChangeId: 0,
-            selectedNodeId: -1
+            selectedNodeId: props.selectedNodeId
         };
         const result =  getTreeRowsSelector(this.state, props);
         this._finalGridRows = result.data;
         this._maxExpandedLevel = result.maxExpandedLevel;
+        if (props.selectedNodeId > 0) {
+            this._setSelectedNodeAndState(props.selectedNodeId);
+        }
     }
 
     private _getTreeColumnsToDisplay(columns: Array<GridColumn>) {
@@ -81,6 +84,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this._quickGrid.updateColumnWidth(1, (old) => {
             return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[1]));
         });
+        if (this.props.selectedNodeId !== nextProps.selectedNodeId) {
+            this._setSelectedNodeAndState(nextProps.selectedNodeId);
+        }
     }
 
     treeCellRenderer = (args: ICustomCellRendererArgs) => {
@@ -268,6 +274,14 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this.setState({selectedNodeId : nodeData.nodeId});
         if (this.props.onSelectedNodeChanged) {
             this.props.onSelectedNodeChanged(this._finalGridRows[rowIndex]);
+        }
+    }
+
+    private _setSelectedNodeAndState = (nodeId: number) => {
+        this.setState({selectedNodeId : nodeId});
+        if (this.props.onSelectedNodeChanged) {
+            const selectedNode = this._finalGridRows.find((element) => {return element.nodeId === nodeId; } );
+            this.props.onSelectedNodeChanged(selectedNode);
         }
     }
 
