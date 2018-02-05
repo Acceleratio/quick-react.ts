@@ -1,6 +1,7 @@
 @import '../../index.scss';
 
 .people-picker {
+    position: relative;
     .label {
         margin-left: 2px;
     }
@@ -44,8 +45,14 @@
         border: 1px solid $white-background-lines;
         border-radius: 8px;
         border-color: $primary-color;
+        background-color: $white-color;
         width: calc(100% - 30px);
+        max-height: 200px;
+        overflow-y: auto;
         outline: 0;
+
+        position: absolute;
+        z-index: 100;
     }
 
     .people-picker-selected {
