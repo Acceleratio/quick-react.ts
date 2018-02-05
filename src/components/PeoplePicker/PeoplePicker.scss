@@ -47,6 +47,7 @@
         border-color: $primary-color;
         background-color: $white-color;
         width: calc(100% - 30px);
+        min-height: 24px;
         max-height: 200px;
         overflow-y: auto;
         outline: 0;
