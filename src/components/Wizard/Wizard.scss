@@ -90,5 +90,21 @@
     align-items: center;
     box-sizing: border-box;
     padding: 0 30px;
+
+    .wizard-right-navigation-btn-page-container {
+      display: flex;
+      flex-direction: row;
+      width: calc(100% - 347px);
+      justify-content: flex-end;
+
+      .wizard-help {
+        margin-right: auto;
+        text-decoration: none;
+      }
+
+      .wizard-cancel {
+        margin-left: auto;
+      }
+    }
   }
 }

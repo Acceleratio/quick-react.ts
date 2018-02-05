@@ -62,9 +62,20 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
         const lastStep = steps.length - 1;
 
         let buttons: Array<JSX.Element> = [];
+        if (this.props.helpLink) {
+            buttons.push(
+                <Button
+                    className="link wizard-help"
+                    href={this.props.helpLink}
+                >
+                    Help
+                </Button>
+            );
+        }
+
         buttons.push(
             <Button
-                className="button-textual"
+                className="button-textual wizard-cancel"
                 onClick={this.props.onCancel}
             >
                 Cancel

@@ -32,6 +32,7 @@ export interface IWizardProps {
     nextBtnState?: boolean;
     backBtnState?: boolean;
     showNavigationButtons?: boolean;
+    helpLink?: string;
     nextButtonText?: string;
     backButtonText?: string;
     finishButtonText?: string;
