@@ -76,13 +76,11 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
         iconDetails = this._getIconDetails();
 
         return (
-            <span className="principal-container">
+            <span className="principal-container" onClick={this._onClickPrincipal}
+                onMouseOver={this._onMouseOver}
+                onMouseOut={this._onMouseOut} >
                 <Icon iconName={iconDetails.iconName} className={iconDetails.className} ></Icon>
-                <span
-                    onClick={this._onClickPrincipal}
-                    onMouseOver={this._onMouseOver}
-                    onMouseOut={this._onMouseOut}
-                >
+                <span>
                     {this.props.principal.displayName}
                 </span>
                 {this.props.isSelected &&
