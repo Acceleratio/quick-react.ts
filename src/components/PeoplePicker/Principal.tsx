@@ -23,7 +23,9 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
 
     @autobind
     private _onClickPrincipal(): void {
-        this.props.onSelect(this.props.principal);
+        if (this.props.onSelect) {
+            this.props.onSelect(this.props.principal);
+        }
     }
 
     @autobind
