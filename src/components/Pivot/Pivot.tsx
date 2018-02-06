@@ -88,14 +88,13 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
 
     private _renderLink(link: IPivotItemProps) {
         const { itemKey, itemCount } = link;
-        let { id } = this.state;
+        const { textSize } = this.props;
+        const { id } = this.state;
         let countText;
-        let { textSize } = this.props;
         let textStyle;
         if (textSize) {
             textStyle = {fontSize: textSize};
         }
-
         if (itemCount !== undefined && this.props.linkFormat !== PivotLinkFormat.tabs) {
             countText = <span className={'pivot-count'}>({itemCount})</span>;
         }
