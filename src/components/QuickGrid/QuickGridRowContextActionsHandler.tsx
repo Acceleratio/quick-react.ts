@@ -149,7 +149,7 @@ function renderActions(rowIndex: number, actions: Array<ActionItem>, onActionCli
                 key="hoverDropDown"
                 className="hoverable_items__btn-dropdown"
                 dropdownKey={rowIndex}
-                icon="svg-icon-in_progress"
+                icon="svg-icon-more"
 
                 dropdownType={DropdownType.actionDropdown}
                 displaySelection={false}

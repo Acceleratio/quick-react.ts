@@ -140,7 +140,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
     private _renderExpandCollapseButton(key, rowIndex: number, rowData: IFinalTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
         let actionsTooltip = rowData.isExpanded ? 'Collapse' : 'Expand';
-        let iconName = rowData.isExpanded ? 'svg-icon-arrow_down' : 'svg-icon-arrow_right';
+        let iconName = rowData.isExpanded ? 'svg-icon-arrowCollapse' : 'svg-icon-arrowExpand';
         let icon = null;
 
         if (rowData.children.length <= 0 && !rowData.hasChildren) {
