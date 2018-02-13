@@ -24,6 +24,7 @@ export interface IWizardProps {
     onPageEnter?: (currentStepIndex: number, nextStepIndex: number) => void;
     onPageLeaving?: (currentStepIndex: number, nextStepIndex: number, direction: WizardStepDirection) => boolean;
     onPageLeave?: (currentStepIndex: number, nextStepIndex: number, direction: WizardStepDirection) => void;
+    stepsVisible?: boolean;
     onFinish: () => void;
     onCancel: () => void;
     onHelpClicked?(): void;
@@ -38,6 +39,7 @@ export interface IWizardProps {
     backButtonText?: string;
     finishButtonText?: string;
     showContainer?: boolean;
+    isWizardFinishing?: boolean;
 }
 
 const nullFunc = (currentStepIndex?: number, nextStepIndex?: number, direction?: WizardStepDirection): void => { };
@@ -47,7 +49,9 @@ export const defaultProps: any = {
     onPageEnter: nullFunc,
     onPageLeave: nullFunc,
     showContainer: false,
+    nextBtnState: true,
     nextButtonText: 'Next',
     backButtonText: 'Back',
-    finishButtonText: 'Finish'
+    finishButtonText: 'Finish',    
+    stepsVisible: true
 };
