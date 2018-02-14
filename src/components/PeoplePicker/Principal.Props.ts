@@ -4,6 +4,7 @@ import { Principal } from './Principal';
 export interface IPrincipalProps extends React.Props<Principal> {
     principal?: IPrincipal;
     isSelected?: boolean;
+    isDisabled?: boolean;
     onSelect?(principal: IPrincipal): void;
     onDelete?(principal: IPrincipal): void;
 }

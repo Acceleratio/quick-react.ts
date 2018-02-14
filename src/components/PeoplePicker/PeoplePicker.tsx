@@ -111,6 +111,9 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
     @autobind
     private _focusInput(): void {
+        if (this.props.disabled) {
+            return;
+        }
         this._field.focus();
     }
 
@@ -178,6 +181,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             <Principal
                 principal={principal}
                 isSelected={true}
+                isDisabled={this.props.disabled}
                 onDelete={this._onSuggestionDelete}
             />
         ));
@@ -201,6 +205,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                         onBlur={this._onBlur}
                         className="people-picker-selected-input"
                         onKeyDown={this._handleOnKeyDown}
+                        disabled={this.props.disabled}
                     />
                 </div>
             );

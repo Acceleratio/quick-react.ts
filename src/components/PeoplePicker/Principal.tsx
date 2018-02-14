@@ -85,7 +85,7 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
                 <span>
                     {this.props.principal.displayName}
                 </span>
-                {this.props.isSelected &&
+                {this.props.isSelected && !this.props.isDisabled &&
                     <Icon
                         iconName="icon-delete"
                         className="principal-delete-icon"
