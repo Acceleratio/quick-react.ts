@@ -66,7 +66,7 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
         if (!iconToBeUsed) {
             switch (level) {
                 case MessageLevel.Information:
-                    iconToBeUsed = 'icon-details';
+                    iconToBeUsed = 'icon-info';
                     break;
                 case MessageLevel.Warning:
                     iconToBeUsed = 'icon-warning';

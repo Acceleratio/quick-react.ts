@@ -19,7 +19,7 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
     };
 
     private ICON_MAP = {
-        [MessageBarType.info]: 'icon-details',
+        [MessageBarType.info]: 'icon-info',
         [MessageBarType.warning]: 'icon-warning',
         [MessageBarType.error]: 'icon-delete',
         [MessageBarType.success]: 'icon-checkmark'
