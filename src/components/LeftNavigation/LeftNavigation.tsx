@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { ILeftNavigationProps, ILeftNavigationOption } from './LeftNavigation.Props';
+import { ILeftNavigationProps, ILeftNavigationOption, NavigationOptionCaptionsBehaviorEnum } from './LeftNavigation.Props';
 import { assign } from '../../utilities/object';
 import { findIndex } from '../../utilities/array';
 import { Icon } from '../../components/Icon/Icon';
@@ -18,7 +18,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
     private _target: HTMLElement | MouseEvent;
 
     public static defaultProps: Partial<ILeftNavigationProps> = {
-        expandOnClick: false,
+        captionsBehavior: NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnHover,
         onClick: nullFunc,
         otherOptions: []
     };
@@ -97,14 +97,14 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
 
     @autobind
     private onNavigationMouseOut() {
-        if (!this.props.expandOnClick && this.state.isOpen) {
+        if (this.props.captionsBehavior === NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnHover && this.state.isOpen) {
             this.setState({ isOpen: false });
         }
     }
 
     @autobind
     private onNavigationMouseOver() {
-        if (!this.props.expandOnClick && !this.state.isOpen) {
+        if (this.props.captionsBehavior === NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnHover && !this.state.isOpen) {
             this.setState({ isOpen: true });
         }
     }
@@ -180,7 +180,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
                 onMouseLeave={this.onNavigationMouseOut}
             >
                 <div>
-                    {this.props.expandOnClick &&
+                    {this.props.captionsBehavior === NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnToggleButton &&
                         <div className="nav-item" onClick={this.setNavigationOpenState}>
                             <Icon iconName={'icon-switchView'} />
                         </div>

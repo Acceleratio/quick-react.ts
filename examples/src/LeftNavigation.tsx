@@ -6,6 +6,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { LeftNavigation } from './../../src/components/LeftNavigation/LeftNavigation';
+import { Checkbox } from './../../src/components/checkBox/checkBox';
+import { NavigationOptionCaptionsBehaviorEnum } from '../../src/index';
 
 const options = [
     { text: 'Home page', id: 'Home', href: 'http://Acceleratio.net', icon: 'icon-help' },
@@ -16,15 +18,36 @@ const options = [
 ];
 
 export class Index extends React.Component<any, any> {
+
+
+    
+
     public render() {
         return (
-            <div style={{ height: '500px' }}>
-                <LeftNavigation
-                    id={'leftNavigation'}
-                    options={options}
-                    expandOnClick={false}
-                />
+            <div>
+                <div style={{ height: '500px' }}>
+                    <LeftNavigation
+                        id={'leftNavigation'}
+                        options={options}
+                    />
+                </div>
+                <div style={{ height: '500px', marginTop: 50 }}>
+                    <LeftNavigation
+                        id={'leftNavigation'}
+                        options={options}
+                        captionsBehavior={NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnToggleButton}
+                    />
+                </div>
+                <div style={{ height: '500px', marginTop: 50 }}>
+                    <LeftNavigation
+                        id={'leftNavigation'}
+                        options={options}
+                        captionsBehavior={NavigationOptionCaptionsBehaviorEnum.AlwaysHideCaptions}
+                    />
+                </div>
             </div>
+
+            
         );
     }
 }
