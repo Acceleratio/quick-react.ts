@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { ILeftNavigationProps, ILeftNavigationOption, NavigationOptionCaptionsBehaviorEnum } from './LeftNavigation.Props';
+import { ILeftNavigationProps, ILeftNavigationOption, ExpandCaptionsBehaviorEnum } from './LeftNavigation.Props';
 import { assign } from '../../utilities/object';
 import { findIndex } from '../../utilities/array';
 import { Icon } from '../../components/Icon/Icon';
@@ -18,7 +18,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
     private _target: HTMLElement | MouseEvent;
 
     public static defaultProps: Partial<ILeftNavigationProps> = {
-        captionsBehavior: NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnHover,
+        expandCaptionsBehavior: ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover,
         onClick: nullFunc,
         otherOptions: []
     };
@@ -97,14 +97,14 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
 
     @autobind
     private onNavigationMouseOut() {
-        if (this.props.captionsBehavior === NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnHover && this.state.isOpen) {
+        if (this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover && this.state.isOpen) {
             this.setState({ isOpen: false });
         }
     }
 
     @autobind
     private onNavigationMouseOver() {
-        if (this.props.captionsBehavior === NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnHover && !this.state.isOpen) {
+        if (this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover && !this.state.isOpen) {
             this.setState({ isOpen: true });
         }
     }
@@ -180,7 +180,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
                 onMouseLeave={this.onNavigationMouseOut}
             >
                 <div>
-                    {this.props.captionsBehavior === NavigationOptionCaptionsBehaviorEnum.ShowCaptionsOnToggleButton &&
+                    {this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.ShowCaptionsOnToggleButton &&
                         <div className="nav-item" onClick={this.setNavigationOpenState}>
                             <Icon iconName={'icon-switchView'} />
                         </div>
