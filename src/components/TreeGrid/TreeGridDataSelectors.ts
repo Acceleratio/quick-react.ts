@@ -1,5 +1,5 @@
 import { ITreeGridState, ITreeGridProps } from './TreeGrid.Props';
-import { SortDirection, GridColumn } from '../QuickGrid/QuickGrid.Props'; 
+import { SortDirection, GridColumn } from '../QuickGrid/QuickGrid.Props';
 import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
 const createSelector = require('reselect').createSelector;
 
@@ -32,7 +32,7 @@ const transformData = (tree: TreeDataSource,
     sortData(root, sortColumn, sortDirection, sortRequestId);
     let flattenedData: Array<IFinalTreeNode> = [];
     let maxExpandedLevel = flatten(root.children, flattenedData);
-    return { data: flattenedData, maxExpandedLevel};
+    return { data: flattenedData, maxExpandedLevel };
 };
 
 const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number): void => {
@@ -102,7 +102,7 @@ function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boole
             let visible = false;
             for (let column of columns) {
                 let value = node[column];
-                if (typeof value  === 'string' && value.toLowerCase().search(filterText) !== -1) {
+                if (typeof value === 'string' && value.toLowerCase().search(filterText) !== -1) {
                     return true;
                 }
             }
@@ -113,6 +113,9 @@ function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boole
 
     let processNode = (node: IFinalTreeNode): boolean => {
 
+        if (!node.children) {
+            return node.isVisible;
+        }
         let anyChildVisible = false;
         for (let child of node.children) {
             anyChildVisible = processNode(child) || anyChildVisible;
@@ -128,19 +131,19 @@ function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boole
     processNode(root);
 }
 
-export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0) : number {
+export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0): number {
     level++;
     let maxChildLevel = level;
     for (let child of tree) {
-        
+
         if (child.isVisible === false) {
             continue;
         }
         let thisChildDepth = child.nodeLevel;
         resultArray.push(child);
         if (child.children && child.children.length > 0 && child.isExpanded) {
-           thisChildDepth =  flatten(child.children, resultArray, level);
-           
+            thisChildDepth = flatten(child.children, resultArray, level);
+
         } else if (child.hasChildren && child.isExpanded && (!child.children || child.children.length === 0)) {
             resultArray.push(<IFinalTreeNode>{
                 nodeLevel: child.nodeLevel + 1,

@@ -143,7 +143,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         let iconName = rowData.isExpanded ? 'svg-icon-arrowCollapse' : 'svg-icon-arrowExpand';
         let icon = null;
 
-        if (rowData.children.length <= 0 && !rowData.hasChildren) {
+        if ((!rowData.children || rowData.children.length <= 0) && !rowData.hasChildren) {
             icon = null;
             actionsTooltip = null;
         } else {
@@ -251,7 +251,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         // we are breaking immutability here and potential redux stores, but we need the performance
         rowData.isExpanded = !rowData.isExpanded;
         if (rowData.isExpanded
-            && rowData.children.length === 0
+            && (!rowData.children || rowData.children.length === 0)
             && rowData.hasChildren
             && this.props.onLazyLoadChildNodes
             && !rowData.isLazyChildrenLoadInProgress) {

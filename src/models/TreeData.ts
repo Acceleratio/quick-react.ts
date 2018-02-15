@@ -1,6 +1,6 @@
 export interface TreeNode { // extend this interface on a data structure to be used for row data    
     isExpanded?: boolean;
-    children: Array<TreeNode>;
+    children?: Array<TreeNode>;
     hasChildren?: boolean;
     iconName?: string;
     iconTooltipContent?: string;
@@ -47,7 +47,7 @@ export class TreeDataSource {
      * 
      * @param root warning: will be mutated and returned as ITreeDataSource
      */
-    constructor(input: TreeNode | TreeDataSource | Array<TreeNode>) {
+    constructor(input: TreeNode | TreeDataSource | Array<any>) {
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
@@ -83,11 +83,11 @@ export class TreeDataSource {
         }
     }
 
-    private isDataSource(input: TreeNode | TreeDataSource | Array<TreeNode>): input is TreeDataSource {
+    private isDataSource(input: TreeNode | TreeDataSource | Array<any>): input is TreeDataSource {
         return (<TreeDataSource>input).updateNode !== undefined;
     }
 
-    private isRootNodesArray(input: TreeNode | TreeDataSource | Array<TreeNode>): input is Array<TreeNode> {
+    private isRootNodesArray(input: TreeNode | TreeDataSource| Array<any>): input is Array<any> {
         return (<Array<TreeNode>>input).slice !== undefined;
     }
 
