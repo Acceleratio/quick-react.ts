@@ -73,7 +73,7 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
     private _getTooltipContent(): string {
         const {email, displayIdentifier, type} = this.props.principal;
         if (email) {
-            if (displayIdentifier && email === displayIdentifier || !displayIdentifier) {
+            if (displayIdentifier && email.toLowerCase() === displayIdentifier.toLowerCase() || !displayIdentifier || type !== PrincipalType.user) {
                 return email;
             } else if (displayIdentifier && type === PrincipalType.user) {
                 return `Email: ${email}\r\nUsername: ${displayIdentifier}`;
@@ -81,6 +81,8 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
         } else if (displayIdentifier) {
             return displayIdentifier;
         }
+
+        return null;
     }
 
     public render() {
@@ -90,6 +92,7 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
         };
 
         iconDetails = this._getIconDetails();
+        const tooltip = this._getTooltipContent();
 
         return (
             <span className="principal-container" onClick={this._onClickPrincipal}
@@ -106,9 +109,9 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
                         onClick={this._onClickDelete}
                     />
                 }
-                {(this.props.principal.email || this.props.principal.displayIdentifier) && <Tooltip
+                {tooltip && <Tooltip
                     className="tooltip-white"
-                    content={this._getTooltipContent()}
+                    content={tooltip}
                     directionalHint={DirectionalHint.topCenter}
                     showTooltip={this.state.showTooltip}
                 />}
