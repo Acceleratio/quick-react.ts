@@ -88,7 +88,7 @@ export class TreeDataSource {
     }
 
     private isRootNodesArray(input: TreeNode | TreeDataSource| Array<any>): input is Array<any> {
-        return (<Array<TreeNode>>input).slice !== undefined;
+        return (<Array<any>>input).slice !== undefined;
     }
 
     public updateNode<T>(nodeId: number, props: Partial<IFinalTreeNode & T>): TreeDataSource;    
