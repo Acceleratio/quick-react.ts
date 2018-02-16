@@ -6,7 +6,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { LeftNavigation } from './../../src/components/LeftNavigation/LeftNavigation';
-import { Checkbox } from './../../src/components/checkBox/checkBox';
 import { ExpandCaptionsBehaviorEnum } from '../../src/index';
 
 const options = [
