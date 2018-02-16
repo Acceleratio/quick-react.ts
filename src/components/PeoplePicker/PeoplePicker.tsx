@@ -169,10 +169,12 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
     @autobind
     private _renderSelectedPrincipal(): JSX.Element {
+        const isValid = !this.props.errorMessage;
         const peoplePickerSelectedClassName = classNames(
-            'people-picker-selected',
             {
-                'is-active': this.state.isFocused
+                'people-picker-selected': isValid,
+                'people-picker-selected-input-error': !isValid,
+                'is-active': isValid && this.state.isFocused
             },
             [this.props.className]
         );
@@ -194,20 +196,30 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             );
         } else {
             return (
-                <div className={peoplePickerSelectedClassName}>
-                    {this.state.selectedPrincipalList && selectedPrincipalList}
-                    <input
-                        type={'text'}
-                        ref={this._ref}
-                        value={this.state.value}
-                        onChange={this._onInputChange}
-                        onFocus={this._onFocus}
-                        onBlur={this._onBlur}
-                        className="people-picker-selected-input"
-                        onKeyDown={this._handleOnKeyDown}
-                        disabled={this.props.disabled}
-                    />
-                </div>
+                <Tooltip
+                    content={this.props.errorMessage}
+                    className="tooltip-error"
+                    showTooltip={this.state.isFocused && !isValid}
+                    directionalHint={DirectionalHint.topLeftEdge}>
+                    <div className={peoplePickerSelectedClassName}>
+                        <div className="people-picker-content">
+                            {this.state.selectedPrincipalList && selectedPrincipalList}
+                            <input
+                                type={'text'}
+                                ref={this._ref}
+                                value={this.state.value}
+                                onChange={this._onInputChange}
+                                onFocus={this._onFocus}
+                                onBlur={this._onBlur}
+                                className="people-picker-selected-input"
+                                onKeyDown={this._handleOnKeyDown}
+                                disabled={this.props.disabled}
+                            />
+                        </div>
+                        {!isValid && <Icon iconName="icon-warning2" className="people-picker-error-icon"></Icon>}
+                    </div>
+                </Tooltip>
+
             );
         }
     }

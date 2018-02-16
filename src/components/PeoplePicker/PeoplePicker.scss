@@ -123,6 +123,45 @@
         }
     }
 
+    .people-picker-selected-input-error {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        box-sizing: border-box;
+        border: 1px solid $error-color;
+        border-radius: 8px;
+        padding: 5px 5px 6px 10px;
+        width: 100%;
+        outline: 0;
+    
+        .people-picker-selected-input{
+            border: none!important;        
+            outline: 0!important;
+            padding-left: 5px!important;
+        }
+
+        &:hover {
+            border-color: $error-color;
+        }
+    
+        &:active,
+        &:focus {
+            border-color: $error-color;
+        }
+
+        .people-picker-content {
+            width: calc(100% - 20px);
+        }
+
+        .people-picker-error-icon {
+            display: flex;
+            margin-left: auto;
+            align-self: center;
+            font-size: 12px;
+            color: $error-color;
+        }
+    }
+
     .people-picker-single-selected {
         padding: 6px 11px 6px 0px;
     }
