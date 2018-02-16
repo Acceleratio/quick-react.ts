@@ -13,6 +13,7 @@ export interface IPrincipal {
     identifier: string;
     spid?: number;
     displayName: string;
+    displayIdentifier?: string;
     email: string;
     type: PrincipalType;
 }
