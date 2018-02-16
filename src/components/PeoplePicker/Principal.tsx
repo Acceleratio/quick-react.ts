@@ -71,11 +71,11 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
 
     @autobind
     private _getTooltipContent(): string {
-        const {email, displayIdentifier} = this.props.principal;
+        const {email, displayIdentifier, type} = this.props.principal;
         if (email) {
             if (displayIdentifier && email === displayIdentifier || !displayIdentifier) {
                 return email;
-            } else if (displayIdentifier) {
+            } else if (displayIdentifier && type === PrincipalType.user) {
                 return `Email: ${email}\r\nUsername: ${displayIdentifier}`;
             }
         } else if (displayIdentifier) {
