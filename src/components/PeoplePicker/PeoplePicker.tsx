@@ -181,6 +181,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
         let selectedPrincipalList = this.state.selectedPrincipalList.map((principal, index) => (
             <Principal
+                key={principal.identifier}
                 principal={principal}
                 isSelected={true}
                 isDisabled={this.props.disabled}
