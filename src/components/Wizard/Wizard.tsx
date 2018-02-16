@@ -29,6 +29,19 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
     }
 
     @autobind
+    public changeStep(stepIndex: number) {
+        if ((stepIndex) !== this.props.steps.length) {
+            const stepDirection = this.state.currentStep > stepIndex ? WizardStepDirection.Previous : WizardStepDirection.Next;
+            if (this.props.onPageLeaving && !this.props.onPageLeaving(this.state.currentStep, stepIndex, stepDirection)) {
+                return;
+            }
+            this.props.onPageLeave(this.state.currentStep, stepIndex, stepDirection);
+            this.setState({ currentStep: stepIndex });
+            this.props.onPageEnter(stepIndex, stepIndex + 1);
+        }
+    }
+
+    @autobind
     private _nextStep(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
         if ((this.state.currentStep + 1) !== this.props.steps.length) {
