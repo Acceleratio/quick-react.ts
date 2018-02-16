@@ -41,7 +41,6 @@
     .people-picker-suggestions {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
         box-sizing: border-box;
         border: 1px solid $white-background-lines;
         border-radius: 8px;
@@ -58,6 +57,10 @@
 
         .no-result {
             padding: 5px 0px 5px 10px;
+        }
+
+        .suggestion-loading {
+            padding: 10px 0px 10px 10px;
         }
     }
 

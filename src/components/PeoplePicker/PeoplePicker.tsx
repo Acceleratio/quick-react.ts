@@ -71,7 +71,9 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
         let allSelected: boolean = true;
         return (
             <div className="people-picker-suggestions">
-                {this.props.loadingSuggestionList && <Spinner type={SpinnerType.small} />}
+                {this.props.loadingSuggestionList && <div className="suggestion-loading">
+                    <Spinner type={SpinnerType.small} />
+                </div>}
                 {!this.props.loadingSuggestionList && this.props.suggestionList.length > 0 && this.props.suggestionList.map((principal, index) => {
                     const alreadySelected = this.state.selectedPrincipalList
                         && this.state.selectedPrincipalList.find(selected => selected.identifier === principal.identifier) !== undefined;
