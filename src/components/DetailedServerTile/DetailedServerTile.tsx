@@ -81,7 +81,7 @@ export class DetailedServerTile extends React.PureComponent<IDetailedServerProps
                 {this.props.status === ServerStatus.Offline &&
                     <div className={'counters-container'}>
                         <div className="offline-server-message">
-                            <Icon iconName={'icon-details'}></Icon>
+                            <Icon iconName={'icon-Info_krug'}></Icon>
                             The server is offline!
                         </div>
                     </div>
@@ -89,7 +89,7 @@ export class DetailedServerTile extends React.PureComponent<IDetailedServerProps
                 {this.props.status === ServerStatus.Disabled &&
                     <div className={'counters-container'}>
                         <div className="offline-server-message">
-                            <Icon iconName={'icon-details'}></Icon>
+                            <Icon iconName={'icon-Info_krug'}></Icon>
                             This server has performance counters disabled and is not monitored.
                         </div>
                     </div>
