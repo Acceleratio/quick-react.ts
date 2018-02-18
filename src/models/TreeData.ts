@@ -15,7 +15,8 @@ export interface IFinalTreeNode extends TreeNode {
     isAsyncLoadingDummyNode?: boolean;
     children: Array<IFinalTreeNode>;
     parent: IFinalTreeNode;
-    isVisible?: boolean;
+    satisfiesFilterCondition?: boolean;
+    descendantSatisfiesFilterCondition?: boolean;
 }
 
 interface ILookupTable {

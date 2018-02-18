@@ -113,19 +113,23 @@ function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boole
 
     let processNode = (node: IFinalTreeNode): boolean => {
 
-        if (!node.children) {
-            return node.isVisible;
-        }
-        let anyChildVisible = false;
-        for (let child of node.children) {
-            anyChildVisible = processNode(child) || anyChildVisible;
+
+        let anyDescendantSatisfies = false;
+        if (node.children) {
+            for (let child of node.children) {
+                anyDescendantSatisfies = processNode(child) || anyDescendantSatisfies;
+            }
         }
 
-        node.isVisible = anyChildVisible || doesSatisfyCondition(node);
-        if (anyChildVisible) {
-            node.isExpanded = true;
+        if (arg) {
+            node.satisfiesFilterCondition = doesSatisfyCondition(node);
+            node.descendantSatisfiesFilterCondition = anyDescendantSatisfies;
+        } else {
+            node.satisfiesFilterCondition = undefined;
+            node.descendantSatisfiesFilterCondition = undefined;
         }
-        return node.isVisible;
+
+        return node.satisfiesFilterCondition || node.descendantSatisfiesFilterCondition;
     };
 
     processNode(root);
@@ -136,12 +140,12 @@ export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number 
     let maxChildLevel = level;
     for (let child of tree) {
 
-        if (child.isVisible === false) {
+        if (child.satisfiesFilterCondition === false && child.descendantSatisfiesFilterCondition === false) {
             continue;
         }
         let thisChildDepth = child.nodeLevel;
         resultArray.push(child);
-        if (child.children && child.children.length > 0 && child.isExpanded) {
+        if (child.children && child.children.length > 0 && (child.isExpanded || child.descendantSatisfiesFilterCondition)) {
             thisChildDepth = flatten(child.children, resultArray, level);
 
         } else if (child.hasChildren && child.isExpanded && (!child.children || child.children.length === 0)) {
