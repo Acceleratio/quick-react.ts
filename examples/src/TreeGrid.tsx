@@ -27,7 +27,7 @@ export class Index extends React.Component<any, any> {
         data: getTreeGridData(0),
         columns: gridColumns1,
         selectedData: 1,
-        searchText: undefined
+        searchText: ''
     };
 
     gridActions: QuickGridActions = {
