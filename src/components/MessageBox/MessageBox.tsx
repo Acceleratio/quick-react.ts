@@ -78,6 +78,9 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
         }
 
         let containerClassName = classNames('message-box-container', className);
+        let dialogClassName = classNames('message-box-dialog', {
+            'is-loading': isLoading
+        });
         let iconElement = null;
         if (iconStyle) {
             iconElement = <Icon iconName={iconToBeUsed} style={iconStyle}/>;
@@ -91,7 +94,7 @@ export class MessageBox extends React.Component<IMessageBoxProps, {}> {
                 isOpen={isOpen}
                 onDismiss={onDismiss}
                 hasCloseXButton={hasCloseXButton}
-                containerClassName="message-box-dialog"
+                containerClassName={dialogClassName}
             >
                 <div className={containerClassName}>
                     {iconElement}
