@@ -78,7 +78,7 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
             } else if (displayIdentifier && type === PrincipalType.user) {
                 return `Email: ${email}\r\nUsername: ${displayIdentifier}`;
             }
-        } else if (displayIdentifier) {
+        } else if (displayIdentifier && type === PrincipalType.user) {
             return displayIdentifier;
         }
 
