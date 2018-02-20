@@ -1,0 +1,32 @@
+* {
+    font-family: 'Segoe UI';
+    font-size: 14px;
+    color: #4D4D4F;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #DADADB;
+    border: 2px solid transparent;
+    background-clip: content-box; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #AEAEAF;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4D4D4F;
+}
+
+.ReactVirtualized__Grid, .ReactVirtualized__Collection:focus {
+    outline: none !important;
+}

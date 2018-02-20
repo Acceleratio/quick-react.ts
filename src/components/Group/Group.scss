@@ -1,37 +1,17 @@
-@import '../../index.scss';
+@import '../../styles/variables.scss';
 
 .farm {
-    // width: calc(100% - 50px);
-    // float: left;
     padding: 5px;
     margin: 20px;
     position: relative;
 
-    // .farm-name{
-    //     position: absolute;
-    //     background: inherit;
-    //     top: -22px;
-    //     left: 30px;
-    //     padding: 5px;
-    //     padding-top: 0;
-    //     padding-bottom: 0;
-    
-    // }
-
     &.farm-name-inside {
         .farm-name {        
             position: absolute;
-            // background: inherit;
-            // font-size: 20px;
             padding: 5px 8px;
-            // padding-top: 10px;
             width: initial;
             top: -30px;
             user-select: none;
-            // padding-bottom: 0;
-            // top: -35px;
-            // left: -2px;
-            // padding-left: 15px;
 
             span {
                 display: inline-block;
@@ -43,13 +23,11 @@
             }
     
             .group-actions {
-                // position: relative;
                 display: inline-block;
                 padding: 0 0 5px 20px;
     
                 .icon {
                     visibility: hidden;
-                    // position: relative;
                     padding: 0 3px;
                 }
             }
@@ -66,7 +44,6 @@
             }
     
             .icon {
-                // padding: 2px;
                 padding-top: 5px;
                 position: relative;
                 float: right;
@@ -98,15 +75,4 @@
             }
         }
     }
-    
-
-    // .farm-name {
-    //     position: absolute;
-    //     background: inherit;
-    //     top: -22px;
-    //     left: 30px;
-    //     padding: 5px;
-    //     padding-top: 0;
-    //     padding-bottom: 0;
-    // }
 }

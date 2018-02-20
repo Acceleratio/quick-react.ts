@@ -1,9 +1,5 @@
-@import '../../index.scss';
-
-@keyframes fadeIn {
-  from { opacity: 0.1 }
-  to   { opacity: 1 }
-}
+@import '../../styles/animations.scss';
+@import '../../styles/variables.scss';
 
 .wizard-container {
   height: calc(100% - 40px);

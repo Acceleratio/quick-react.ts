@@ -1,4 +1,4 @@
-@import '../../index.scss';
+@import '../../styles/variables.scss';
 
 $button-height: 32px;
 
@@ -6,7 +6,6 @@ $button-height: 32px;
     display: none !important;
 }
 
-// Button
 .button {
     height: $button-height;
     box-sizing: border-box;
