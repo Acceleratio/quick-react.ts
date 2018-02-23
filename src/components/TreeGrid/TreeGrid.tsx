@@ -217,7 +217,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             columnElement = column.cellFormatter(cellData, rowData);
         } else {
             columnElement = [
-                columnIndex === 1 && rowData.iconName ? <span key="cellIcon" style={{display: 'flex'}} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} /></span> : null,
+                columnIndex === 1 && rowData.iconName ? <span key="cellIcon" style={{display: 'flex'}} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} className={rowData.iconClassName} /></span> : null,
                 <div key="cellData" className="grid-component-cell-inner" >
                     {cellData}
                 </div>
