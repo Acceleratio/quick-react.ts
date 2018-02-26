@@ -79,6 +79,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
             buttons.push(
                 <Button
                     href="#"
+                    key="help"
                     className="link wizard-help"
                     onClick={this.props.onHelpClicked}
                 >
@@ -89,6 +90,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
 
         buttons.push(
             <Button
+                key="cancel"
                 className="button-textual wizard-cancel"
                 onClick={this.props.onCancel}
             >
@@ -104,6 +106,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
 
         buttons.push(
             <Button
+                key="back"
                 disabled={!backBtnState}
                 className="button-primary-gray"
                 onClick={this._backStep}
@@ -125,6 +128,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
         if (currentStep !== lastStep) {
             buttons.push(
                 <Button
+                    key="next"
                     disabled={!this.props.nextBtnState}
                     className="button-primary"
                     onClick={this._nextStep}
@@ -135,6 +139,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
         } else {
             buttons.push(
                 <Button
+                    key="finish"
                     disabled={!this.props.nextBtnState}
                     className="button-primary"
                     onClick={this.props.onFinish}

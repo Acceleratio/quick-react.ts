@@ -149,9 +149,9 @@ export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number 
             thisChildDepth = flatten(child.children, resultArray, level);
 
         } else if (child.hasChildren && child.isExpanded && (!child.children || child.children.length === 0)) {
-            resultArray.push(<IFinalTreeNode>{
+            resultArray.push({
                 nodeLevel: child.nodeLevel + 1,
-                treeId: child.treeId + '_ASYNC',
+                nodeId: -child.nodeId,
                 parentId: child.id,
                 parent: child,
                 children: [],
