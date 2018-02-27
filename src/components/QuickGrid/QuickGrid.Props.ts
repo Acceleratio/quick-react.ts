@@ -121,6 +121,7 @@ export interface QuickGridActions {
      */
     onGetSingleRowContextActions?: (rowData) => Array<ActionItem>;
     onActionSelected: (commandName: string, parameters, rowData) => void;
+    hideDropdownActionIcons?: boolean;
 }
 
 export enum QuickGridActionsBehaviourEnum {

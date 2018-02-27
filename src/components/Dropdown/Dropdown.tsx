@@ -200,12 +200,12 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
                     >
                         {
                             option.tooltipInfo && <Tooltip {...option.tooltipInfo} delayMs={1000}>
-                                {option.icon ? <Icon iconName={option.icon}></Icon> : null}
+                                {option.icon && !this.props.hideIcons ? <Icon iconName={option.icon}></Icon> : null}
                                 {option.text}
                             </Tooltip>
                         }
                         {
-                            !option.tooltipInfo && option.icon ? <Icon iconName={option.icon}></Icon> : null
+                            !option.tooltipInfo && option.icon && !this.props.hideIcons ? <Icon iconName={option.icon}></Icon> : null
                         }
                         {
                             !option.tooltipInfo && option.text
@@ -247,12 +247,12 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
                         role="option">
                         {
                             option.tooltipInfo && <Tooltip {...option.tooltipInfo} delayMs={1000}>
-                                {option.icon ? <Icon iconName={option.icon}></Icon> : null}
+                                {option.icon && !this.props.hideIcons ? <Icon iconName={option.icon}></Icon> : null}
                                 {option.text}
                             </Tooltip>
                         }
                         {
-                            !option.tooltipInfo && option.icon ? <Icon iconName={option.icon}></Icon> : null
+                            !option.tooltipInfo && option.icon && !this.props.hideIcons ? <Icon iconName={option.icon}></Icon> : null
                         }
                         {
                             !option.tooltipInfo && option.text
