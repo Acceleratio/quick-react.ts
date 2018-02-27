@@ -142,7 +142,7 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
                 if (tooltipInfo && !tooltipInfo.directionalHint) {
                     tooltipInfo = { ...tooltipInfo, directionalHint: DirectionalHint.leftCenter };
                 }
-                actionOptions.push({ key: actions[i].commandName, icon: actions[i].iconName, text: actions[i].name, tooltipInfo });
+                actionOptions.push({ key: actions[i].commandName, icon: this.props.hideDropdownActionIcons === false ? actions[i].iconName : undefined, text: actions[i].name, tooltipInfo });
             }
             elements.push(
                 <Dropdown
@@ -150,7 +150,6 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
                     className="hoverable_items__btn-dropdown"
                     dropdownKey={rowIndex}
                     icon="svg-icon-more"
-                    hideIcons={this.props.hideDropdownActionIcons}
                     dropdownType={DropdownType.actionDropdown}
                     displaySelection={false}
                     onClick={(item) => onActionClicked(rowIndex, actions.find(x => x.commandName === item.key))}

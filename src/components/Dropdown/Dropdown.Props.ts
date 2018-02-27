@@ -28,7 +28,6 @@ export interface IDropdownProps {
     displaySelection?: boolean; // default true
     showArrowIcon?: boolean; // default true
     title?: string;
-    hideIcons?: boolean;
 }
 
 export interface IDropdownOption {
