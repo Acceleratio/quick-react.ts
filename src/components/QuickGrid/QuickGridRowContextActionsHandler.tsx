@@ -142,7 +142,7 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
                 if (tooltipInfo && !tooltipInfo.directionalHint) {
                     tooltipInfo = { ...tooltipInfo, directionalHint: DirectionalHint.leftCenter };
                 }
-                actionOptions.push({ key: actions[i].commandName, icon: this.props.hideDropdownActionIcons === false ? actions[i].iconName : undefined, text: actions[i].name, tooltipInfo });
+                actionOptions.push({ key: actions[i].commandName, icon: this.props.hideDropdownActionIcons === true ? undefined : actions[i].iconName, text: actions[i].name, tooltipInfo });
             }
             elements.push(
                 <Dropdown
