@@ -8,6 +8,7 @@ import { autobind } from '../../utilities/autobind';
 import { Stepper } from './Stepper/Stepper';
 import { WizardStepDirection, IWizardProps, IPage, defaultProps } from './Wizard.Props';
 import { Icon } from '../../components/Icon/Icon';
+import { IconSize } from '../Icon';
 
 export interface IWizardState {
     currentStep?: number;
@@ -172,7 +173,7 @@ export class Wizard extends React.Component<IWizardProps, IWizardState> {
                 <div className="wizard-content">
                     <div className="wizard-title-container">
                         <div className="wizard-back-icon-container">
-                            <Icon className="icon-arrow-left wizard-back-icon" onClick={this.props.onCancel} />
+                            <Icon className="icon-arrow-left wizard-back-icon" iconName="svg-icon-closeWizard" iconSize={IconSize.small} onClick={this.props.onCancel} />
                         </div>
                         <div className="wizard-title">{this.props.title}</div>
                     </div>
