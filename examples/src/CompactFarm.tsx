@@ -10,8 +10,8 @@ import { ICompactFarmProps } from './../../src/components/CompactFarm/CompactFar
 import { dummyDashboard, generateMeasures } from './../MockData/DashboardDummy';
 
 export class Index extends React.Component<any, any> {
-    public constructor() {
-        super();
+    public constructor(props) {
+        super(props);
         this.state = {
             farm: dummyDashboard.farms[0]
         };

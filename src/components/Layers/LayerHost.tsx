@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import { Fabric } from './Fabric/Fabric';
 import { autobind } from '../../utilities/autobind';
 import { findIndex } from '../../utilities/array';
@@ -21,7 +22,7 @@ const DEFAULT_HOST_ID = '__layerHost';
 
 export class LayerHost extends React.Component<ILayerHostProps, {}> {
   public static childContextTypes = {
-    layerHost: React.PropTypes.object
+    layerHost: PropTypes.object
   };
 
   private _layers: ILayer[];
@@ -69,7 +70,7 @@ export class LayerHost extends React.Component<ILayerHostProps, {}> {
     let divProps = getNativeAttributes(this.props, divAttributes);
 
     return (
-      <div { ...divProps } className={classNames('layer-host', [this.props.className])}>
+      <div {...divProps} className={classNames('layer-host', [this.props.className])}>
         <Fabric>
           {this.props.children}
           <div className="overlay">

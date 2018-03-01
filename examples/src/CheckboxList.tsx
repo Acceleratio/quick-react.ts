@@ -8,11 +8,11 @@ import { autobind } from './../../src/utilities/autobind';
 import { CheckboxList } from './../../src/components/CheckboxList/CheckboxList';
 
 export class Index extends React.Component<any, any> {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             checkboxElements: [
-                { id: 'A', text: 'Option A', checked: true, tooltip: {content: 'Option A tooltip'}},
+                { id: 'A', text: 'Option A', checked: true, tooltip: { content: 'Option A tooltip' } },
                 { id: 'B', text: 'Option B' },
                 { id: 'C', text: 'Option C' },
                 { id: 'E', text: 'Option E' },

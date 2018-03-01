@@ -33,8 +33,8 @@ export class Fabric extends React.Component<React.HTMLProps<HTMLDivElement>, IFa
 
   private _events: EventGroup;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       isFocusVisible: _lastIsFocusVisible
@@ -59,7 +59,7 @@ export class Fabric extends React.Component<React.HTMLProps<HTMLDivElement>, IFa
     });
 
     return (
-      <div { ...this.props } className={rootClass} ref="root" />
+      <div {...this.props} className={rootClass} ref="root" />
     );
   }
 

@@ -199,7 +199,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         if (!is24Hour) {
             if (hour >= 12) {
                 amPmDesignator = 'PM';
-                this.state.isPeriodPm = true;
+                this.setState({ isPeriodPm: true });
                 if (hour > 12) {
                     hourDisp -= 12;
                 }
@@ -208,7 +208,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                     hourDisp = 12;
                 }
                 amPmDesignator = 'AM';
-                this.state.isPeriodPm = false;
+                this.setState({ isPeriodPm: false });
             }
         }
         if (hourDisp < 10) {

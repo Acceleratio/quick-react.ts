@@ -10,12 +10,12 @@ import { CompareComponent } from './../../src/components/Compare/CompareComponen
 import { CompareDifferenceType } from './../../src/components/Compare/CompareComponent.Props';
 import * as MockData from '../MockData/CompareData';
 export class Index extends React.Component<any, any> {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
     public render() {
         return (
-            <div style={{'height' : '750', 'width' : '100%' }}>
+            <div style={{ 'height': '750', 'width': '100%' }}>
                 <CompareComponent
                     sourceRows={MockData.sourceRows}
                     targetRows={MockData.targetRows}

@@ -8,8 +8,8 @@ import { DateTimePicker } from '../../src/components/DateTimePicker/DateTimePick
 import { DateTimePickerBar } from '../../src/components/DateTimePickerBar/DateTimePickerBar';
 
 export class Index extends React.Component<any, any> {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             date: new Date(),

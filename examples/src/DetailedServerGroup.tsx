@@ -9,8 +9,8 @@ import { DetailedServerGroup } from './../../src/components/DetailedServerGroup/
 import { DemoServerGroup } from './../MockData/farms';
 
 export class Index extends React.Component<any, any> {
-    public constructor() {
-        super();
+    public constructor(props) {
+        super(props);
         this.state = {
             farm: DemoServerGroup
         };

@@ -153,7 +153,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         return displayColumns;
     }
 
-    componentWillReceiveProps(nextProps: IQuickGridProps) {
+    public componentWillReceiveProps(nextProps: IQuickGridProps) {
         if (nextProps.columns !== this.props.columns || nextProps.groupBy !== this.props.groupBy
             || nextProps.gridActions !== this.props.gridActions) {
             const newGroupBy = this.getGroupByFromProps(nextProps.groupBy);
@@ -165,11 +165,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         }
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    public componentWillUpdate(nextProps, nextState) {
         this._finalGridRows = nextProps.hasCustomRowSelector ? nextProps.rows : getRowsSelector(nextState, nextProps);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    public componentDidUpdate(prevProps, prevState) {
         if (prevProps.columns !== this.props.columns
             || prevState.groupBy !== this.state.groupBy
             || prevState.columnWidths !== this.state.columnWidths
@@ -595,7 +595,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         this.setState({ hasVerticalScroll: vertical });
     }
 
-    render() {
+    public render() {
         let mainClass = classNames('grid-component-container', this.props.gridClassName);
         let headerClass = classNames('grid-component-header', this.props.headerClassName);
         return (

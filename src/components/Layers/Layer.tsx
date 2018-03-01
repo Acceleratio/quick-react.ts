@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { ILayerProps } from './Layer.Props';
 import { LayerHost } from './LayerHost';
 import { ProjectedLayer } from './ProjectedLayer';
@@ -7,7 +8,7 @@ import './Layer.scss';
 
 export class Layer extends React.Component<ILayerProps, {}> {
   public static contextTypes = {
-    layerHost: React.PropTypes.object
+    layerHost: PropTypes.object
   };
 
   public context: {

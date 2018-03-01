@@ -35,9 +35,9 @@ function _getTodayFilterDate(): any {
 }
 
 export class Index extends React.Component<any, any> {
-    constructor() {
-        super();
-        this.state = { 
+    constructor(props) {
+        super(props);
+        this.state = {
             isOpen: false,
             startDate: _getTodayFilterDate().startDate,
             endDate: _getTodayFilterDate().endDate,
@@ -67,7 +67,7 @@ export class Index extends React.Component<any, any> {
 
     @autobind
     private toggleDialog() {
-        this.setState({ 
+        this.setState({
             isOpen: !this.state.isOpen,
             invalidDateRangeSelected: false,
             invalidErrorMessage: ''

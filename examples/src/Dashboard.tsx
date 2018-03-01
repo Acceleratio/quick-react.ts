@@ -12,8 +12,8 @@ import { IGroup, IServer, ServerStatus } from './../../src/models';
 const dummyDashboard = getDummyDashboard(true); // change to true/false to show/hide roles on tiles
 
 export class Index extends React.Component<any, any> {
-    public constructor() {
-        super();
+    public constructor(props) {
+        super(props);
         this.state = {
             farms: dummyDashboard.farms
         };

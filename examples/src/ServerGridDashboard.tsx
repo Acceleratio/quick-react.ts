@@ -13,8 +13,8 @@ import { convertFarm } from '../MockData/DashboardDummy';
 import '../../src/components/Dashboard/Dashboard.scss';
 
 export class Index extends React.Component<any, any> {
-    public constructor() {
-        super();
+    public constructor(props) {
+        super(props);
         this.state = {
             farms: createFarms(10, 20, 50, true).map(convertFarm)
         };
@@ -28,7 +28,7 @@ export class Index extends React.Component<any, any> {
 
     public render() {
         return (
-            <div style={{height: '1000px'}}>
+            <div style={{ height: '1000px' }}>
                 <ServerGridDashboard
                     className={'viewport-height'}
                     farms={this.state.farms}

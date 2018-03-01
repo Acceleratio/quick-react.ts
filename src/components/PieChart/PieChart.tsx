@@ -12,7 +12,7 @@ export class PieChart extends React.PureComponent<IPieChartProps, any> {
     public static defaultProps = {
         title: '',
         text: '',
-        colors: d3.schemeCategory20,
+        colors: d3.schemeCategory10,
         tipText: (data: IPieChartData) => data.label + ' : ' + data.value,
         showLegend: false
     };

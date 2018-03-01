@@ -18,7 +18,7 @@ export class LineChart extends React.PureComponent<ILineChartProps, any> {
         yAxisDomain: [0, 100],
         xAxisFormat: () => null,
         yAxisFormat: (d: number) => d,
-        colorPallette: d3.schemeCategory20,
+        colorPallette: d3.schemeCategory10,
         showLegend: false,
         tooltipText: (d: ILineChartData) => d.value
     };

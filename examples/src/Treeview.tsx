@@ -11,8 +11,8 @@ import { ITreeviewItem } from '../../src/components/Treeview/TreeviewItem.Props'
 import { autobind } from './../../src/utilities/autobind';
 
 export class Index extends React.Component<any, any> {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             treeviewElements: elements
         };

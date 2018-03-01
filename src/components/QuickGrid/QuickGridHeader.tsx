@@ -32,20 +32,20 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
         return columns.map((col) => { return getColumnMinWidth(col) || 20; });
     }
 
-    componentWillReceiveProps(nextProps) {
+    public componentWillReceiveProps(nextProps) {
         if (!shallowCompareArrayEqual(nextProps.columnWidths, this.props.columnWidths)) {
             this.setState((prevState) => { return { ...prevState, columnWidths: nextProps.columnWidths }; });
             this.columnMinWidths = this.getColumnMinWidths(nextProps.headerColumns);
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    public componentDidUpdate(prevProps, prevState) {
         this._headerGrid.recomputeGridSize();
     }
 
     setGridReference = (ref) => { this._headerGrid = ref; };
 
-    render() {
+    public render() {
         const headerClass = classNames('grid-header', this.props.className);
         const { allColumns, headerColumns, width, scrollLeft, tooltipsEnabled } = this.props;
         return (
@@ -132,7 +132,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
             const currentColumnWidth = oldState.columnWidths[columnIndex];
             let newColumnWidths = [...oldState.columnWidths];
             let newCurrentColumnWidth = currentColumnWidth + data.deltaX;
-            let newColumnsTotalWidth = newColumnWidths.reduce(function(acc, val) { return acc + val; });
+            let newColumnsTotalWidth = newColumnWidths.reduce(function (acc, val) { return acc + val; });
 
             // If grid would contain empty space, resize columns.
             if (gridWidth >= newColumnsTotalWidth) {
@@ -141,7 +141,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                 // Ignore changes if user is trying to reduce last column.
                 if (columnIndex === newColumnWidths.length - 1 && data.deltaX < 0) {
                     newCurrentColumnWidth = currentColumnWidth;
-                } else {                    
+                } else {
                     // Do not resize below minimum.
                     if (newCurrentColumnWidth <= this.columnMinWidths[columnIndex]) {
                         newCurrentColumnWidth = this.columnMinWidths[columnIndex];
@@ -166,7 +166,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                             extraWidth += parseFloat((this.columnMinWidths[index] - newWidth).toFixed(2));
                             newColumnWidths[index] = this.columnMinWidths[index];
                         } else {
-                            resizeableColumns.push({id : index, width: newWidth, min: this.columnMinWidths[index]});
+                            resizeableColumns.push({ id: index, width: newWidth, min: this.columnMinWidths[index] });
                             availableWidth += newWidth - this.columnMinWidths[index];
                             newColumnWidths[index] = newWidth;
                         }
@@ -175,7 +175,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
 
                     // Split leftover resizes that would resize columns below minimum to other columns.
                     if (extraWidth > 0 && availableWidth > extraWidth) {
-                        remainingColumnWidth = resizeableColumns.reduce(function(acc, val) { return acc + val.width; }, 0);
+                        remainingColumnWidth = resizeableColumns.reduce(function (acc, val) { return acc + val.width; }, 0);
                         reductionMultiplier = (remainingColumnWidth - extraWidth) / remainingColumnWidth;
 
                         resizeableColumns.sort((x, y) => {
@@ -198,12 +198,12 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                             newColumnWidths[element.id] = newWidth;
                         });
 
-                        newColumnsTotalWidth = newColumnWidths.reduce(function(acc, val) { return acc + val; });
+                        newColumnsTotalWidth = newColumnWidths.reduce(function (acc, val) { return acc + val; });
                         if (gridWidth !== newColumnsTotalWidth) {
                             newColumnWidths[newColumnWidths.length - 1] += gridWidth - newColumnsTotalWidth;
                         }
                     }
-                    newColumnsTotalWidth = newColumnWidths.reduce(function(acc, val) { return acc + val; });
+                    newColumnsTotalWidth = newColumnWidths.reduce(function (acc, val) { return acc + val; });
 
                     // To ensure columns always fill grid, fixes rounding issues.
                     if (data.deltaX < 0 && gridWidth !== newColumnsTotalWidth) {
@@ -212,14 +212,14 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                 }
             } else {
 
-                 // Do not resize below minimum.
+                // Do not resize below minimum.
                 if (newCurrentColumnWidth <= this.columnMinWidths[columnIndex]) {
                     newCurrentColumnWidth = this.columnMinWidths[columnIndex];
                 }
             }
 
             newColumnWidths[columnIndex] = newCurrentColumnWidth;
-            newColumnsTotalWidth = newColumnWidths.reduce(function(acc, val) { return acc + val; });
+            newColumnsTotalWidth = newColumnWidths.reduce(function (acc, val) { return acc + val; });
 
             // Special case when user is trying to reduce column size while being scrolled all the way to the right.
             // Expand last column so user can see dragging, but save expand value so it can be removed later since this is only visual change.
@@ -233,7 +233,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
     }
 
     onDragHeaderStop = (e, data, columnIndex) => {
-        
+
         // On stop remove visual expand on last column.
         let snapColumnWidth = this.state.columnWidths.map((x) => x);
 
@@ -242,7 +242,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
             this.visualWidthChange = 0;
 
             // In case visual expand caused grid to contain empty space.
-            let sumWidth = snapColumnWidth.reduce(function(acc, val) { return acc + val; });
+            let sumWidth = snapColumnWidth.reduce(function (acc, val) { return acc + val; });
             if (this.props.width > sumWidth) {
 
                 let columnCount = snapColumnWidth.length;
@@ -252,14 +252,14 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                 }
                 let remainingWidth = (this.props.width - sumWidth);
                 let percentage = remainingWidth / totalWidth;
-                
+
                 for (let index = columnIndex + 1; index < snapColumnWidth.length; index++) {
                     let newWidth = snapColumnWidth[index] + parseFloat((snapColumnWidth[index] * percentage).toFixed(2));
-                    snapColumnWidth[index] = newWidth;            
+                    snapColumnWidth[index] = newWidth;
                 }
             }
         }
-        
+
         this.setState((oldState) => {
             return { ...oldState, columnWidths: snapColumnWidth };
         });

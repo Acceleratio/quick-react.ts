@@ -12,8 +12,8 @@ import { IPieChartData } from '../../src/components/PieChart/PieChart.props';
 import { pieData, pieUpdatedData } from '../MockData/pieData';
 
 export class Index extends React.PureComponent<any, any> {
-   constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
     public render() {
 
@@ -26,16 +26,16 @@ export class Index extends React.PureComponent<any, any> {
 
         return (
             <div>
-                <div style={ divStyle }>
+                <div style={divStyle}>
                     <Label>Pie chart component</Label>
                     <PieChart
-                            id={'chart-1'}
-                            dimensions={{ width: '100%', height: 'calc(100% - 40px)' }}
-                            data={pieUpdatedData}
-                            colors={['#344086', '#8bd764', '#f3f986', '#ec1271', '#636363', 'red', 'green', 'purple', 'aquamarine', 'lightgrey']}
-                            tipText={(d: IPieChartData) => (d.label + ' : ' + d.value)}
-                            showLegend={true}
-                            displayingElements={4}/>
+                        id={'chart-1'}
+                        dimensions={{ width: '100%', height: 'calc(100% - 40px)' }}
+                        data={pieUpdatedData}
+                        colors={['#344086', '#8bd764', '#f3f986', '#ec1271', '#636363', 'red', 'green', 'purple', 'aquamarine', 'lightgrey']}
+                        tipText={(d: IPieChartData) => (d.label + ' : ' + d.value)}
+                        showLegend={true}
+                        displayingElements={4} />
                 </div>
             </div>
         );

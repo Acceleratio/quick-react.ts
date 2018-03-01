@@ -12,8 +12,8 @@ import { TextField } from './../../src/components/TextField/TextField';
 import { DialogFooterSection, DialogFooterSectionPosition } from './../../src/components/Dialog/DialogFooterSection';
 
 export class Index extends React.Component<any, any> {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { showDialog: false, showDialog2: false, showDialog3: false };
     }
 
