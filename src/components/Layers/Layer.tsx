@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { ILayerProps } from './Layer.Props';
 import { LayerHost } from './LayerHost';
 import { ProjectedLayer } from './ProjectedLayer';

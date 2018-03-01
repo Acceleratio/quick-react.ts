@@ -2,7 +2,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const loaders = require('./webpack/loaders');
+const rules = require('./webpack/rules');
 const plugins = require('./webpack/plugins');
 
 module.exports = {
@@ -68,7 +68,6 @@ module.exports = {
     devtool: 'cheap-module-eval-source-map',
     resolve: {
         extensions: [
-            '',
             '.webpack.js',
             '.web.js',
             '.tsx',
@@ -81,18 +80,18 @@ module.exports = {
     plugins: plugins,
 
     module: {
-        preLoaders: [loaders.tslint],
-        loaders: [
-            loaders.ts,
-            loaders.html,
-            loaders.css,
-            loaders.json,
-            loaders.svg,
-            loaders.svgIcon,
-            loaders.eot,
-            loaders.woff,
-            loaders.woff2,
-            loaders.ttf,
+        rules: [
+            rules.tslint,
+            rules.ts,
+            rules.html,
+            rules.css,
+            rules.svg,
+            rules.eot,
+            rules.woff,
+            rules.woff2,
+            rules.ttf,
+            rules.png,
+            rules.svgIcon
         ]
     },
 
