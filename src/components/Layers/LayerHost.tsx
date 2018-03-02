@@ -10,6 +10,8 @@ import * as classNames from 'classnames';
 import { ProjectedLayer } from './ProjectedLayer';
 import { ILayerProps } from './Layer.Props';
 import { ILayerHostProps } from './LayerHost.Props';
+import { Layer } from '.';
+import { CommonComponent } from '../Common';
 
 export interface ILayer {
   id: string;
@@ -20,106 +22,23 @@ export interface ILayer {
 
 const DEFAULT_HOST_ID = '__layerHost';
 
-export class LayerHost extends React.Component<ILayerHostProps, {}> {
-  public static contextTypes = {
-    layerHost: PropTypes.object
-  };
+export class LayerHost extends CommonComponent<React.HTMLProps<HTMLElement>, {}> {
 
-  private _layers: ILayer[];
-  private _layerRefs: {
-    [key: string]: ProjectedLayer
-  };
-
-  public static getDefault(layerElement: HTMLElement): LayerHost {
-    let doc = layerElement.ownerDocument;
-    let hostElement = doc.getElementById(DEFAULT_HOST_ID);
-
-    if (hostElement) {
-      return hostElement[DEFAULT_HOST_ID] as LayerHost;
-    } else {
-      hostElement = doc.createElement('div');
-      hostElement.id = DEFAULT_HOST_ID;
-      doc.body.appendChild(hostElement);
-
-      let defaultHost = ReactDOM.render(<LayerHost />, hostElement) as LayerHost;
-
-      hostElement[DEFAULT_HOST_ID] = defaultHost;
-
-      return defaultHost;
-    }
+  public shouldComponentUpdate() {
+    return false;
   }
 
-  constructor(props: ILayerHostProps) {
-    super(props);
-
-    this.state = {
-      layers: []
-    };
-
-    this._layers = [];
-    this._layerRefs = {};
+  public componentDidMount() {
+    Layer.notifyHostChanged(this.props.id);
   }
 
-  public getChildContext() {
-    return {
-      layerHost: this as LayerHost
-    };
+  public componentWillUnmount() {
+    Layer.notifyHostChanged(this.props.id);
   }
 
   public render() {
-    let divProps = getNativeAttributes(this.props, divAttributes);
-
     return (
-      <div {...divProps} className={classNames('layer-host', [this.props.className])}>
-        <Fabric>
-          {this.props.children}
-          <div className="overlay">
-            {this._layers.map(layer => (
-              <ProjectedLayer
-                key={layer.id}
-                layerId={layer.id}
-                parentElement={layer.parentElement}
-                defaultRemoteProps={layer.props}
-                ref={this._resolveLayer}
-              />
-            ))}
-          </div>
-        </Fabric>
-      </div>
+      <div {...this.props} className="ms-LayerHost" />
     );
   }
-
-  public addLayer(id: string, parentElement: HTMLElement, props: ILayerProps, onMounted: (proxyLayer: ProjectedLayer) => void) {
-    this._layers.push({
-      id,
-      parentElement,
-      props,
-      onMounted
-    });
-    this.forceUpdate();
-  }
-
-  public removeLayer(id: string) {
-    let index = findIndex(this._layers, layer => layer.id === id);
-
-    if (index >= 0) {
-      this._layers.splice(index, 1);
-      delete this._layerRefs[id];
-      this.forceUpdate();
-    }
-  }
-
-  @autobind
-  private _resolveLayer(projectedLayer: ProjectedLayer) {
-    if (projectedLayer) {
-      let layerId = projectedLayer.getId();
-      let index = findIndex(this._layers, layer => layer.id === layerId);
-
-      if (index >= 0 && this._layerRefs[layerId] !== projectedLayer) {
-        this._layerRefs[layerId] = projectedLayer;
-        this._layers[index].onMounted(projectedLayer);
-      }
-    }
-  }
-
 }

@@ -116,7 +116,7 @@ export class Dialog extends CommonComponent<IDialogProps, IDialogState> {
         }
 
         return (
-            <Layer onLayerMounted={onLayerMounted || onLayerDidMount} className={classNames(layerClassName, 'dropdown-projected-layer')}>
+            <Layer onLayerDidMount={onLayerMounted || onLayerDidMount} className={classNames(layerClassName, 'dropdown-projected-layer')}>
                 <Popup
                     role="dialog"
                     onDismiss={onDismiss}
