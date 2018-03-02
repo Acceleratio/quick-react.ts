@@ -15,15 +15,36 @@ export interface ITimePickerProps {
     onTimeChanged: (hour: number, minute: number) => void;
 }
 
-export class TimePicker extends React.Component<ITimePickerProps, any> {
-    componentWillMount() {
-        this.setState({
-            isPeriodPm: false,
+export interface ITimePickerState {
+    isPeriodPm: boolean;
+    hourHover: boolean;
+    minuteHover: boolean;
+    hourTimeFormat: (num: string) => string;
+    minuteTimeFormat: (num: string) => string;
+}
+
+export class TimePicker extends React.Component<ITimePickerProps, ITimePickerState> {
+    constructor(props: ITimePickerProps) {
+        super(props);
+
+        this.state = {
+            isPeriodPm: props.hour >= 12,
             hourHover: false,
             minuteHover: false,
             hourTimeFormat: this.formatUnfocused,
             minuteTimeFormat: this.formatUnfocused
-        });
+        };
+    }
+
+    public componentWillReceiveProps(nextProps: ITimePickerProps) {
+        let { hour, is24Hour } = nextProps;
+        if (!is24Hour) {
+            if (hour >= 12) {
+                this.setState({ isPeriodPm: true });
+            } else {
+                this.setState({ isPeriodPm: false });
+            }
+        }
     }
 
     public static defaultProps = {
@@ -175,16 +196,13 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
     changePeriod() {
         let { hour, minute } = this.props;
         let newHour: number;
-        let newPeriod: boolean;
         if (this.state.isPeriodPm) {
             newHour = hour - 12;
-            newPeriod = false;
         } else {
             newHour = hour + 12;
-            newPeriod = true;
         }
         this.setState({
-            isPeriodPm: newPeriod
+            isPeriodPm: !this.state.isPeriodPm
         });
         this.props.onTimeChanged(newHour, minute);
     }
@@ -199,7 +217,6 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
         if (!is24Hour) {
             if (hour >= 12) {
                 amPmDesignator = 'PM';
-                this.setState({ isPeriodPm: true });
                 if (hour > 12) {
                     hourDisp -= 12;
                 }
@@ -208,18 +225,20 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                     hourDisp = 12;
                 }
                 amPmDesignator = 'AM';
-                this.setState({ isPeriodPm: false });
             }
         }
+
         if (hourDisp < 10) {
             hourDisp = '0' + hourDisp;
         }
+
         let minuteDisp: any;
         if (minute < 10) {
             minuteDisp = '0' + minute;
         } else {
             minuteDisp = minute.toString();
         }
+
         let hourClasses = classNames('time-picker-hours',
             {
                 isSelected: this.state.hourHover
@@ -260,6 +279,7 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
             hourPicker = <span className={hourClasses}>{hourDisp}</span>;
             minutePicker = <span className={minuteClasses}>{minuteDisp}</span>;
         }
+
         return (
             <div className="time-picker">
                 <div className="time-picker-time-value">
@@ -279,7 +299,6 @@ export class TimePicker extends React.Component<ITimePickerProps, any> {
                     <div onMouseEnter={this.onMinuteSliderEnter} onMouseLeave={this.onMinuteSliderLeave}><Slider value={minute} min={0} max={59} showValue={false} onChange={this.onMinuteSliderChange} /></div>
                 </div>
             </div>
-
         );
     }
 }
