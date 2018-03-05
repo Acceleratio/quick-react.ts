@@ -311,6 +311,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 columnSummaries={this.props.columnSummaries}
                 columnHeadersVisible={this.props.columnHeadersVisible}
                 {...this._overscanProps}
+                ref={this._getQuickGridRef}
             />
         );
     }
