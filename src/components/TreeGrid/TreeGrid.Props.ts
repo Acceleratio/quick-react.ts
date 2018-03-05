@@ -15,6 +15,7 @@ export interface ITreeGridProps {
     columnHeadersVisible?: boolean;
     filterString?: string;
     selectedNodeId?: number;
+    isNodeSelectable?: boolean;
 }
 
 export interface ITreeGridState {    

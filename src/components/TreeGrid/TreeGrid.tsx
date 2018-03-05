@@ -13,6 +13,9 @@ import { SpinnerType } from '../Spinner/Spinner.Props';
 import { IFinalTreeNode } from '../../models/TreeData';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
+    public static defaultProps = {
+        isNodeSelectable: true
+    };
 
     private _quickGrid: any;
     private _finalGridRows: Array<IFinalTreeNode>;
@@ -45,9 +48,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this._maxExpandedLevel = result.maxExpandedLevel;
     }
 
-    public componentWillMount() {
-        if (this.state.selectedNodeId > 0) {
-            this._setSelectedNodeAndState(this.state.selectedNodeId);
+    componentWillMount() {
+        if (this.props.isNodeSelectable) {
+            if (this.state.selectedNodeId > 0) {
+                this._setSelectedNodeAndState(this.state.selectedNodeId);
+            }
         }
     }
 
@@ -87,7 +92,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this._quickGrid.updateColumnWidth(1, (old) => {
             return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[1]));
         });
-        if (this.props.selectedNodeId !== nextProps.selectedNodeId) {
+        if (this.props.selectedNodeId !== nextProps.selectedNodeId && this.props.isNodeSelectable) {
             this._setSelectedNodeAndState(nextProps.selectedNodeId);
         }
     }
@@ -197,14 +202,15 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         let onCellClick = (e) => {
             // https://github.com/facebook/react/issues/1691 funky bussinese because of multiple mount points in the hover actions            
             // so stopPropagation and preventDefault do not work there, manually checking if row actions were clicked
-            if (e.currentTarget !== e.target) {
-                const rowActionsContainer = e.currentTarget.getElementsByClassName('hoverable-items-container__btn')[0];
-                if (rowActionsContainer && rowActionsContainer.contains(e.target)) {
-                    return;
+            if (this.props.isNodeSelectable) {
+                if (e.currentTarget !== e.target) {
+                    const rowActionsContainer = e.currentTarget.getElementsByClassName('hoverable-items-container__btn')[0];
+                    if (rowActionsContainer && rowActionsContainer.contains(e.target)) {
+                        return;
+                    }
                 }
+                this._setSelectedNode(rowIndex, rowData);
             }
-
-            this._setSelectedNode(rowIndex, rowData);
         };
         onCellClick = rowData.isAsyncLoadingDummyNode ? undefined : onCellClick;
         if (rowData.isAsyncLoadingDummyNode && columnIndex === 1) {
@@ -310,6 +316,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 customRowSorter={this._getSortInfo}
                 columnSummaries={this.props.columnSummaries}
                 columnHeadersVisible={this.props.columnHeadersVisible}
+                isRowSelectable={this.props.isNodeSelectable}
                 {...this._overscanProps}
                 ref={this._getQuickGridRef}
             />

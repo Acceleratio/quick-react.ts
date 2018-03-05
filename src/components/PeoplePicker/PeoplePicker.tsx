@@ -118,7 +118,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
     @autobind
     private _focusInput(): void {
-        if (this.props.disabled) {
+        if (this.props.disabled || this._field === undefined || this._field === null) {
             return;
         }
         this._field.focus();
