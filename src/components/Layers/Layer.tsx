@@ -94,12 +94,7 @@ export class Layer extends CommonComponent<ILayerProps, {}> {
         () => {
           if (!this._hasMounted) {
             this._hasMounted = true;
-
-            // TODO: @deprecated cleanup required.
-            if (this.props.onLayerMounted) {
-              this.props.onLayerMounted();
-            }
-
+         
             this.props.onLayerDidMount();
           }
         });
