@@ -78,9 +78,7 @@ export class Layer extends CommonComponent<ILayerProps, {}> {
         let doc = getDocument(this._rootElement);
 
         this._layerElement = doc.createElement('div');
-        /*this._layerElement.className = css('ms-Layer', {
-          'ms-Layer--fixed': !this.props.hostId
-        });*/
+        this._layerElement.className = 'ms-Layer';
 
         host.appendChild(this._layerElement);
         setVirtualParent(this._layerElement, this._rootElement);
