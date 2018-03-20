@@ -1,5 +1,4 @@
 @import '../../styles/variables.scss';
-
 .pivot {
     box-sizing: border-box;
     margin: 0;
@@ -7,24 +6,22 @@
     box-shadow: none;
     white-space: nowrap;
     user-select: none;
-
     .pivot-link {
         display: inline-block;
         line-height: 25px;
         padding: 0 10px;
         position: relative;
         cursor: pointer;
-    
         &:hover {
-            .pivot-text, .pivot-icon, .pivot-count {
+            .pivot-text,
+            .pivot-icon,
+            .pivot-count {
                 color: $primary-color;
             }
         }
-    
         &:focus {
             outline: none;
         }
-    
         &::before {
             content: '';
             bottom: 0;
@@ -32,48 +29,43 @@
             left: 7px;
             right: 7px;
             position: absolute;
-            transition: background-color 267ms cubic-bezier(.1,.25,.75,.9);
+            transition: background-color 267ms cubic-bezier(.1, .25, .75, .9);
         }
-
         &::after {
             content: attr(title);
             display: block;
             overflow: hidden;
             visibility: hidden;
         }
-    
         .pivot-icon {
             margin: 0;
-
             &::before {
                 position: relative;
                 bottom: -3px;
                 font-size: 18px;
             }
         }
-
         .pivot-count {
             margin-left: 5px;
         }
-    
         &.is-selected {
-            .pivot-text, .pivot-icon, .pivot-count {
+            .pivot-text,
+            .pivot-icon,
+            .pivot-count {
                 color: $primary-color;
             }
-
             &::before {
                 background-color: $primary-color;
             }
         }
-
         &.is-disabled {
             cursor: default;
             pointer-events: none;
-
-            .pivot-text, .pivot-icon, .pivot-count {
+            .pivot-text,
+            .pivot-icon,
+            .pivot-count {
                 color: $secondary-disabled-color;
             }
-
             &.is-selected {
                 &:before {
                     background-color: $primary-disabled-color;
@@ -81,69 +73,156 @@
             }
         }
     }
-    
     &.pivot-tabs {
         .pivot-link {
             background-color: $primary-color;
             line-height: 40px;
             padding: 0 20px;
-
             .pivot-text {
                 color: $white-color;
             }
-
             &::before {
                 top: 0;
                 left: 0;
                 right: 0;
                 height: 4px;
             }
-    
             &:hover:not(.is-selected),
             &:focus:not(.is-selected) {
                 background-color: $primary-hover-color;
             }
-
             &.is-selected {
                 background-color: $primary-color-50;
                 color: $white-color;
-    
                 &::before {
                     background-color: $white-color;
                 }
-
                 .pivot-text {
                     font-weight: 600;
                 }
             }
-
             &.is-disabled {
                 cursor: default;
                 pointer-events: none;
                 background-color: $primary-disabled-color;
-
-                .pivot-text, .pivot-icon, .pivot-count {
+                .pivot-text,
+                .pivot-icon,
+                .pivot-count {
                     color: $white-color;
                 }
             }
         }
-
         &.pivot-tabs-gray {
             .pivot-link {
                 background-color: $secondary-color-45;
-
                 &:hover:not(.is-selected),
                 &:focus:not(.is-selected) {
                     background-color: $secondary-hover-color;
                 }
-
                 &.is-selected {
                     background-color: $secondary-color;
                     color: $white-color;
-        
                     &::before {
                         background-color: transparent;
                         transition: none;
+                    }
+                }
+            }
+        }
+    }
+    &.pivot-minimal-tabs {
+        border-bottom: $secondary-color-20 inset 1px;
+        .pivot-link {
+            background-color: transparent;
+            line-height: 19px;
+            margin: 0 5px 0 0;
+            padding: 5px 10px 7px 10px;
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            border: $secondary-color-20 solid 1px;
+            border-bottom: none;
+            .pivot-text,
+            .pivot-icon,
+            .pivot-count {
+                color: $secondary-color;
+            }
+            &:hover {
+                .pivot-text,
+                .pivot-icon,
+                .pivot-count {
+                    color: $primary-color;
+                    background-color: transparent;
+                }
+            }
+            &:hover:not(.is-selected),
+            &:focus:not(.is-selected) {
+                background-color: transparent;
+            }
+            &:focus {
+                outline: none;
+            }
+            &::before {
+                content: '';
+                top: -2px;
+                height: 5px;
+                left: 2px;
+                right: 2px;
+                position: absolute;
+                border-radius: 8px 8px 0 0;
+                transition: background-color 267ms cubic-bezier(0.1, 0.25, 0.75, 0.9);
+                transform: rotateX(66deg);
+            }
+            &::after {
+                content: attr(title);
+                display: inline;
+                overflow: hidden;
+                visibility: hidden;
+            }
+            .pivot-icon {
+                margin: 0;
+                &::before {
+                    position: relative;
+                    bottom: -3px;
+                    font-size: 18px;
+                }
+            }
+            .pivot-count {
+                margin-left: 5px;
+            }
+            &.is-selected {
+                .pivot-text,
+                .pivot-icon,
+                .pivot-count {
+                    color: $primary-color;
+                }
+                &::after {
+                    content: '';
+                    overflow: hidden;
+                    visibility: visible;
+                    position: absolute;
+                    background-color: white;
+                    height: 2px;
+                    left: 0;
+                    right: 0;
+                    bottom: -1px;
+                }
+                &::before {
+                    background-color: $primary-color;
+                }
+            }
+            &.is-disabled {
+                cursor: default;
+                pointer-events: none;
+                background-color: $disabled-field;
+                .pivot-text,
+                .pivot-icon,
+                .pivot-count {
+                    color: $secondary-color-45;
+                }
+                &.is-selected {
+                    &:before {
+                        background-color: $primary-disabled-color;
                     }
                 }
             }

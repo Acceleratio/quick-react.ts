@@ -75,6 +75,9 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
             [this.props.className],
             {
                 'pivot-tabs': this.props.linkFormat === PivotLinkFormat.tabs
+            },
+            {
+                'pivot-minimal-tabs': this.props.linkFormat === PivotLinkFormat.minimalTabs
             }
         );
 

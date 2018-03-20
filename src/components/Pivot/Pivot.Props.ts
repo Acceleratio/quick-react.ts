@@ -13,5 +13,6 @@ export interface IPivotProps extends React.Props<Pivot> {
 
 export enum PivotLinkFormat {
     links,
-    tabs
+    tabs,
+    minimalTabs
 }
