@@ -78,6 +78,9 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
             },
             {
                 'pivot-minimal-tabs': this.props.linkFormat === PivotLinkFormat.minimalTabs
+            },
+            {
+                'pivot-minimal-tabs no-border': this.props.linkFormat === PivotLinkFormat.minimalTabsNoBorders
             }
         );
 
@@ -134,6 +137,9 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
             'pivotItem',
             {
                 'pivot-minimal-tabs': this.props.linkFormat === PivotLinkFormat.minimalTabs
+            },
+            {
+                'pivot-minimal-tabs no-border': this.props.linkFormat === PivotLinkFormat.minimalTabsNoBorders
             }
         );
 

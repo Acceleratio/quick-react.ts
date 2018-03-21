@@ -210,6 +210,11 @@
                     background-color: $primary-color;
                 }
             }
+            &.is-selected:not(.no-border) {
+                &::after {
+                    z-index: 2;
+                }
+            }
             &.is-disabled {
                 cursor: default;
                 pointer-events: none;
@@ -230,7 +235,7 @@
 }
 
 .pivot-minimal-tabs{
-    &.pivotItem {
+    &.pivotItem:not(.no-border) {
         border: $secondary-color-20 solid 1px;
     }
 }

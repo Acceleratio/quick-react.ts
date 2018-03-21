@@ -66,6 +66,19 @@ export class Index extends React.Component<any, any> {
                 </Pivot>
 
                 <br />
+                <Pivot onLinkClick={(item, ev) => console.log(item)} linkFormat={PivotLinkFormat.minimalTabsNoBorders}>
+                    <PivotItem linkText={'My Files'}>
+                        <Label>Pivot #1</Label>
+                    </PivotItem>
+                    <PivotItem linkText={'Recent'} disabled={true}>
+                        <Label>Pivot #2</Label>
+                    </PivotItem>
+                    <PivotItem linkText={'Shared with me'}>
+                        <Label>Pivot #3</Label>
+                    </PivotItem>
+                </Pivot>
+
+                <br />
                 <Pivot onLinkClick={(item, ev) => console.log(item)}>
                     <PivotItem linkText={'My Files'} linkIcon={'icon-user'}>
                         <Label>Pivot #1</Label>
