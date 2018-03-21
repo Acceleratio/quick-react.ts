@@ -131,7 +131,6 @@
         }
     }
     &.pivot-minimal-tabs {
-        border-bottom: $secondary-color-20 inset 1px;
         .pivot-link {
             background-color: transparent;
             line-height: 19px;
@@ -227,5 +226,11 @@
                 }
             }
         }
+    }
+}
+
+.pivot-minimal-tabs{
+    &.pivotItem {
+        border: $secondary-color-20 solid 1px;
     }
 }
