@@ -91,17 +91,31 @@ export class TreeDataSource {
         return (<TreeDataSource>input).updateNode !== undefined;
     }
 
-    private isRootNodesArray(input: TreeNode | TreeDataSource| Array<any>): input is Array<any> {
+    private isRootNodesArray(input: TreeNode | TreeDataSource | Array<any>): input is Array<any> {
         return (<Array<any>>input).slice !== undefined;
     }
 
-    public updateNode<T>(nodeId: number, props: Partial<IFinalTreeNode & T>): TreeDataSource;    
+    public updateNode<T>(nodeId: number, props: Partial<IFinalTreeNode & T>): TreeDataSource;
     public updateNode(nodeId: number, props: Partial<IFinalTreeNode>): TreeDataSource {
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {
 
             // we do not want to use the spread operator, we want to reause the existing treenode            
             // existingNode = { ...existingNode, ...props };
+
+            // if the children will be replaced, we need to remove the old ids
+            if (props.children && existingNode.children && existingNode.children.length > 0) {
+                const removeChildrenFromLookup = (node) => {
+                    if (node && node.children) {
+                        for (let i = 0; i < node.children.length; i++) {
+                            delete this.nodesById[node.children[i].nodeId];
+                            removeChildrenFromLookup(node.children[i]);
+                        }
+                    }
+                };
+                removeChildrenFromLookup(existingNode);
+            }            
+
             Object.assign(existingNode, props);
 
             if (props.children) {
@@ -123,12 +137,12 @@ export class TreeDataSource {
     public getTreeStructure(): IFinalTreeNode {
         return this.treeStructure;
     }
-    public getNodeById<T>(nodeId: number): IFinalTreeNode & T;   
+    public getNodeById<T>(nodeId: number): IFinalTreeNode & T;
     public getNodeById(nodeId: number): IFinalTreeNode {
         return this.nodesById[nodeId];
     }
 
-    public findNode<T>(nodePredicate: (node: IFinalTreeNode & T) => boolean): IFinalTreeNode & T;   
+    public findNode<T>(nodePredicate: (node: IFinalTreeNode & T) => boolean): IFinalTreeNode & T;
     public findNode(nodePredicate: (node: IFinalTreeNode) => boolean): IFinalTreeNode {
         // tslint:disable-next-line:forin
         for (let key in this.nodesById) {
