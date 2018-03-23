@@ -17,4 +17,5 @@ export interface IPeoplePickerProps extends React.Props<PeoplePicker> {
     suggestionList: IPrincipal[];
     mapPrincipalToIcon?: (IPrincipal) => string;
     mapPrincipalToIconClass?: (IPrincipal) => string;
+    minNumberOfCharactersToStartSearch?: number;
 }

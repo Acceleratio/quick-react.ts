@@ -24,7 +24,8 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
     private _field;
     private _delayedSearch;
     public static defaultProps: Partial<IPeoplePickerProps> = {
-        noResultText: 'No Result'
+        noResultText: 'No Result',
+        minNumberOfCharactersToStartSearch: 2
     };
 
     constructor(props) {
@@ -58,7 +59,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
     @autobind
     private _onSearch(value: string) {
-        if (value.length >= 3) {
+        if (value.length >= this.props.minNumberOfCharactersToStartSearch) {
             this.setState({ suggestionsVisible: true });
             this.props.onSearch(value);
         } else {
