@@ -183,7 +183,7 @@ export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number 
         if (child.children && child.children.length > 0 && (child.isExpanded || child.descendantSatisfiesFilterCondition) && !child.isLazyChildrenLoadInProgress) {
             thisChildDepth = flatten(child.children, resultArray, level, idsInPath);
 
-        } else if (child.isLazyChildrenLoadInProgress) {
+        } else if (child.isExpanded && child.isLazyChildrenLoadInProgress) {
             resultArray.push({
                 nodeLevel: child.nodeLevel + 1,
                 nodeId: -child.nodeId,
