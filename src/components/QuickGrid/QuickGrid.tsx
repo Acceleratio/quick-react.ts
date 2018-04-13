@@ -79,7 +79,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             row = index;
         }
 
-        if (index !== undefined && index > rowCount) {
+        if (index !== undefined && index >= rowCount) {
             row = rowCount - 1;
         }
 
