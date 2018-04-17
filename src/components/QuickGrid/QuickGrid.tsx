@@ -157,6 +157,11 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     getColumnsToDisplay(columns: Array<GridColumn>, groupBy: Array<IGroupBy>, hasActionColumn: boolean) {
         const groupByColumnNames = groupBy.map(col => col.column);
         let displayColumns = columns.filter((column) => { return groupByColumnNames.indexOf(column.valueMember) === -1; });
+        displayColumns.map((column) => {
+            if (column.cellFormatter == null && column.dataType === DataTypeEnum.Boolean) {
+                column.cellFormatter = this.formatBoolCell;
+            }
+        });
         let emptyArray = new Array();
         if (hasActionColumn) {
             emptyArray.push({
@@ -476,8 +481,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const columnElement = () => {
             if (column.cellFormatter) {
                 return column.cellFormatter(cellData, rowData);
-            } else if (column.dataType === DataTypeEnum.Boolean) {
-                return this.formatBoolCell(column, cellData);
             } else {
                 return (
                     <div className="grid-component-cell-inner" >
@@ -505,9 +508,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         );
     }
 
-    formatBoolCell(column: GridColumn, cellData: any) {
+    formatBoolCell(cellData: any, rowData: any) {
+        const _ref: any = this;
         let element;
-        switch (column.boolFormatType) {
+        switch (_ref.boolFormatType) {
             case BoolFormatTypeEnum.CheckmarkOnly:
                 element = <div className="grid-component-cell-inner" >
                     <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : null}/>
