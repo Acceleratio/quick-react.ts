@@ -4,7 +4,7 @@ import * as React from 'react';
 import { IFinalTreeNode } from '../../models/TreeData';
 import { getTreeRowsSelector } from './TreeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
-import { getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid, DataTypeEnum, QuickGridInner } from '../QuickGrid';
+import { getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid, DataTypeEnum } from '../QuickGrid';
 import { Spinner } from '../Spinner/Spinner';
 import { SpinnerType } from '../Spinner/Spinner.Props';
 import { CellElement } from './CellElement';
