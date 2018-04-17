@@ -9,6 +9,7 @@ import { Spinner } from '../Spinner/Spinner';
 import { SpinnerType } from '../Spinner/Spinner.Props';
 import { CellElement } from './CellElement';
 import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
+import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
     public static defaultProps = {
@@ -79,7 +80,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         for (let i = 1; i < columns.length; i++) {
             let col: GridColumn = { ...columns[i] };
             if (col.cellFormatter == null && col.dataType === DataTypeEnum.Boolean) {
-                col.cellFormatter = this.formatBoolCell;
+                col.cellFormatter = boolFormatterFactory(col.boolFormatType);
             }
             expandedColumns.push(col);
         }

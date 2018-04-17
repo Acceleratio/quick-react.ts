@@ -42,7 +42,7 @@ export class TreeCompare extends React.PureComponent<ITreeCompareProps, ITreeCom
                 <TreeGrid
                     columns={this.state.compareColumns}
                     treeDataSource={this.state.dataSource}
-                    isNodeSelectable={false}
+                    isNodeSelectable={true}
                 />
             </div>
         );

@@ -27,6 +27,7 @@ import { GridFooter } from './QuickGridFooter';
 import { GridHeader } from './QuickGridHeader';
 import { QuickGridRowContextActionsHandler } from './QuickGridRowContextActionsHandler';
 import { IQuickGrid } from '.';
+import { boolFormatterFactory } from './CellFormatters';
 
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 
@@ -159,7 +160,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         let displayColumns = columns.filter((column) => { return groupByColumnNames.indexOf(column.valueMember) === -1; });
         displayColumns.map((column) => {
             if (column.cellFormatter == null && column.dataType === DataTypeEnum.Boolean) {
-                column.cellFormatter = this.formatBoolCell;
+                column.cellFormatter = boolFormatterFactory(column.boolFormatType);
             }
         });
         let emptyArray = new Array();
@@ -506,30 +507,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 {isLastColumn && this.renderRowContextActions(rowIndex, rowData, isSelectedRow)}
             </div>
         );
-    }
-
-    formatBoolCell(cellData: any, rowData: any) {
-        const _ref: any = this;
-        let element;
-        switch (_ref.boolFormatType) {
-            case BoolFormatTypeEnum.CheckmarkOnly:
-                element = <div className="grid-component-cell-inner" >
-                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : null}/>
-                </div>;
-                break;
-            case BoolFormatTypeEnum.CheckmarkAndCross:
-                element = <div className="grid-component-cell-inner" >
-                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : 'svg-icon-delete'}/>
-                </div>;
-                break;
-            case BoolFormatTypeEnum.TextOnly:
-            default:
-                element = <div className="grid-component-cell-inner" >
-                    {cellData ? 'True' : 'False'}
-                </div>;
-
-        }
-        return element;
     }
 
     renderRowContextActions = (rowIndex, rowData, isSelectedRow) => {
