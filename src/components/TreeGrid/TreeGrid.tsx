@@ -77,10 +77,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         };
         expandedColumns.push(replacementFirstColumn);
         for (let i = 1; i < columns.length; i++) {
-            if (columns[i].cellFormatter == null && columns[i].dataType === DataTypeEnum.Boolean) {
-                columns[i].cellFormatter = this.formatBoolCell;
+            let col: GridColumn = { ...columns[i] };
+            if (col.cellFormatter == null && col.dataType === DataTypeEnum.Boolean) {
+                col.cellFormatter = this.formatBoolCell;
             }
-            expandedColumns.push(columns[i]);
+            expandedColumns.push(col);
         }
         return expandedColumns;
     }
