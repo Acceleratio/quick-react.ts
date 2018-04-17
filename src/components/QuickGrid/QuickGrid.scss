@@ -172,6 +172,11 @@
             &.is-selected {
                 background-color: $selected-item-background;
             }
+            
+            .center-icon {
+                display: block;
+                margin: auto;
+            }
 
             .status-critical {
                 color: $error-status-server;

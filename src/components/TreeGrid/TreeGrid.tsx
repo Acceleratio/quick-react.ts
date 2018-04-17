@@ -4,7 +4,7 @@ import * as React from 'react';
 import { IFinalTreeNode } from '../../models/TreeData';
 import { getTreeRowsSelector } from './TreeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
-import { getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid } from '../QuickGrid';
+import { getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid, DataTypeEnum, QuickGridInner } from '../QuickGrid';
 import { Spinner } from '../Spinner/Spinner';
 import { SpinnerType } from '../Spinner/Spinner.Props';
 import { CellElement } from './CellElement';
@@ -226,8 +226,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                     Loading...
                     </span>
             </div>;
+
         } else if (column.cellFormatter) {
             columnElement = column.cellFormatter(cellData, rowData);
+        } else if (column.dataType === DataTypeEnum.Boolean) {
+            columnElement = this._quickGrid.formatBoolCell(column, cellData);
         } else {
             columnElement = [
                 columnIndex === 1 && rowData.iconName ? <span key="cellIcon" style={{ display: 'flex' }} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} className={rowData.iconClassName} /></span> : null,

@@ -4,6 +4,7 @@ import { ITooltipProps } from '../Tooltip/Tooltip.props';
 export interface IQuickGrid {
     scrollToRow(index: number): void;
     updateColumnWidth(columnIndex: number, getWidth: (oldWidth: number) => number): void;
+    formatBoolCell(column: GridColumn, cellData: any): any;
 }
 
 export enum SortDirection {
@@ -82,13 +83,30 @@ export interface GroupRow {
 export enum DataTypeEnum {
     Number,
     String,
-    Date
+    Date,
+    Boolean
+}
+
+export enum BoolFormatTypeEnum {
+    /**
+     * No icons, only text
+     */
+    TextOnly,
+    /**
+     * Checkmark for true, nothing for false
+     */
+    CheckmarkOnly,
+    /**
+     * Checkmark for true, cross for false
+     */
+    Both
 }
 
 export interface GridColumn {
     headerText: string;
     valueMember: string; // for sort & grouping
     dataType?: DataTypeEnum;
+    boolFormatType?: BoolFormatTypeEnum;
     isSortable?: boolean; // default true
     isGroupable?: boolean; // default true
     sortByValueGetter?: (cellData, sortDirection: SortDirection) => any;
@@ -145,4 +163,3 @@ export interface ActionItem {
     parameters?: any;
     tooltip?: ITooltipProps;
 }
-

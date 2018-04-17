@@ -1,4 +1,4 @@
-import { GridColumn, DataTypeEnum, SortDirection } from '../../src/components/QuickGrid/QuickGrid.Props';
+import { GridColumn, DataTypeEnum, SortDirection, BoolFormatTypeEnum } from '../../src/components/QuickGrid/QuickGrid.Props';
 import { TreeNode, TreeDataSource } from '../../src/models/TreeData';
 
 
@@ -18,6 +18,7 @@ export interface GridData extends TreeNode {
     Animal: string;
     Mixed: string | number;
     Numbers: number;
+    IsUpdated: boolean;
 }
 
 let totalItems = 0;
@@ -58,7 +59,8 @@ export const generateTreeNode = () => {
         Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
         Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
         Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
-        Numbers: Math.floor(Math.random() * 30)
+        Numbers: Math.floor(Math.random() * 30),
+        IsUpdated: Math.random() >= 0.5
 
     };
 };
@@ -125,6 +127,12 @@ export const gridColumns1: Array<GridColumn> = [
         valueMember: 'Numbers',
         headerText: 'Numbers',
         width: 100
+    }, {
+        valueMember: 'IsUpdated',
+        headerText: 'Is Updated',
+        width: 100,
+        dataType: DataTypeEnum.Boolean,
+        boolFormatType: BoolFormatTypeEnum.Both
     }
 ];
 
@@ -156,6 +164,12 @@ export const gridColumns2: Array<GridColumn> = [
         valueMember: 'Numbers',
         headerText: 'Numbers',
         width: 100
+    }, {
+        valueMember: 'IsUpdated',
+        headerText: 'Is Updated',
+        width: 100,
+        dataType: DataTypeEnum.Boolean,
+        boolFormatType: BoolFormatTypeEnum.Both
     }
 ];
 
@@ -181,7 +195,8 @@ export function getGridData(numberOfElements) {
                 Color:  RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)],
                 Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
                 Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
-                Numbers: Math.floor(Math.random() * 30)
+                Numbers: Math.floor(Math.random() * 30),
+                IsUpdated: Math.random() >= 0.5
             }
         );
     }

@@ -19,7 +19,9 @@ import {
     IQuickGridProps,
     IQuickGridState,
     QuickGridActionsBehaviourEnum,
-    SortDirection
+    SortDirection,
+    DataTypeEnum,
+    BoolFormatTypeEnum
 } from './QuickGrid.Props';
 import { GridFooter } from './QuickGridFooter';
 import { GridHeader } from './QuickGridHeader';
@@ -474,6 +476,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const columnElement = () => {
             if (column.cellFormatter) {
                 return column.cellFormatter(cellData, rowData);
+            } else if (column.dataType === DataTypeEnum.Boolean) {
+                return this.formatBoolCell(column, cellData);
             } else {
                 return (
                     <div className="grid-component-cell-inner" >
@@ -499,6 +503,29 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 {isLastColumn && this.renderRowContextActions(rowIndex, rowData, isSelectedRow)}
             </div>
         );
+    }
+
+    formatBoolCell(column: GridColumn, cellData: any) {
+        let element;
+        switch (column.boolFormatType) {
+            case BoolFormatTypeEnum.CheckmarkOnly:
+                element = <div className="grid-component-cell-inner" >
+                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : null}/>
+                </div>;
+                break;
+            case BoolFormatTypeEnum.Both:
+                element = <div className="grid-component-cell-inner" >
+                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : 'svg-icon-delete'}/>
+                </div>;
+                break;
+            case BoolFormatTypeEnum.TextOnly:
+            default:
+                element = <div className="grid-component-cell-inner" >
+                    {cellData ? 'True' : 'False'}
+                </div>;
+
+        }
+        return element;
     }
 
     renderRowContextActions = (rowIndex, rowData, isSelectedRow) => {
