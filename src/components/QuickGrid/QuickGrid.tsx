@@ -513,7 +513,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                     <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : null}/>
                 </div>;
                 break;
-            case BoolFormatTypeEnum.Both:
+            case BoolFormatTypeEnum.CheckmarkAndCross:
                 element = <div className="grid-component-cell-inner" >
                     <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : 'svg-icon-delete'}/>
                 </div>;

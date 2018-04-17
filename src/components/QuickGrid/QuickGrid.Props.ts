@@ -99,7 +99,7 @@ export enum BoolFormatTypeEnum {
     /**
      * Checkmark for true, cross for false
      */
-    Both
+    CheckmarkAndCross
 }
 
 export interface GridColumn {
