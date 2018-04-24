@@ -4,6 +4,7 @@ import { GridColumn, SortDirection, IGroupBy } from './QuickGrid.Props';
 import { shallowCompareArrayEqual } from '../../utilities/array';
 import { Grid } from 'react-virtualized';
 import './QuickGrid.scss';
+import { getObjectValue } from '../../utilities/getObjectValue';
 
 export interface IGridFooterProps {
     columnWidths: Array<number>;
@@ -43,7 +44,7 @@ export class GridFooter extends React.PureComponent<IGridFooterProps, IGridFoote
         const columns = this.props.columns;
         const column = columns[columnIndex];
         const dataKey = column.dataMember || column.valueMember;
-        const cellData = this.props.rowData[dataKey];
+        const cellData = getObjectValue(this.props.rowData, dataKey);
         const title = this.props.tooltipsEnabled ? cellData : null;
         
         const className = classNames(

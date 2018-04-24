@@ -28,6 +28,7 @@ import { GridHeader } from './QuickGridHeader';
 import { QuickGridRowContextActionsHandler } from './QuickGridRowContextActionsHandler';
 import { IQuickGrid } from '.';
 import { boolFormatterFactory } from './CellFormatters';
+import { getObjectValue } from '../../utilities/getObjectValue';
 
 const scrollbarSize = require('dom-helpers/util/scrollbarSize');
 
@@ -463,7 +464,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         const isLastColumn = !notLastIndex;
         const column = columns[columnIndex];
         const dataKey = column.dataMember || column.valueMember;
-        const cellData = rowData[dataKey];
+        const cellData = getObjectValue(rowData, dataKey);
         const rowClass = 'grid-row-' + rowIndex;
         const isSelectedRow = rowIndex === this.state.selectedRowIndex;
         const className = classNames(

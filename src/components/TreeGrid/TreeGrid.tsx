@@ -10,6 +10,7 @@ import { SpinnerType } from '../Spinner/Spinner.Props';
 import { CellElement } from './CellElement';
 import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
+import { getObjectValue } from '../../utilities/getObjectValue';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
     public static defaultProps = {
@@ -197,7 +198,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const notLastIndex = columnIndex < (columns.length - 1);
         const column = columns[columnIndex];
         const dataKey = column.dataMember || column.valueMember;
-        const cellData = rowData[dataKey];
+        const cellData = getObjectValue(rowData, dataKey);
         const rowClass = 'grid-row-' + rowIndex;
         const className = classNames(
             'grid-component-cell',
@@ -264,30 +265,6 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 element={columnElement}
             />
         );
-    }
-
-    private formatBoolCell(cellData: any, rowData: any) {
-        const _ref: any = this;
-        let element;
-        switch (_ref.boolFormatType) {
-            case BoolFormatTypeEnum.CheckmarkOnly:
-                element = <div className="grid-component-cell-inner" >
-                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : null}/>
-                </div>;
-                break;
-            case BoolFormatTypeEnum.CheckmarkAndCross:
-                element = <div className="grid-component-cell-inner" >
-                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : 'svg-icon-delete'}/>
-                </div>;
-                break;
-            case BoolFormatTypeEnum.TextOnly:
-            default:
-                element = <div className="grid-component-cell-inner" >
-                    {cellData ? 'True' : 'False'}
-                </div>;
-
-        }
-        return element;
     }
 
     private _onTreeExpandToggleClick = (ev, rowData: IFinalTreeNode) => {
