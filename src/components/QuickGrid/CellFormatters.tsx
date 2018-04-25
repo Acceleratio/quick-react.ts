@@ -7,13 +7,13 @@ export function boolFormatterFactory(type: BoolFormatTypeEnum): (cellData: any, 
         case BoolFormatTypeEnum.CheckmarkOnly:
             return (cellData: any, rowData: any) => {
                 return <div className="grid-component-cell-inner" >
-                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : null}/>
+                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-check' : null}/>
                 </div>;
             };
         case BoolFormatTypeEnum.CheckmarkAndCross:
             return (cellData: any, rowData: any) => {
                 return <div className="grid-component-cell-inner" >
-                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-checkmark' : 'svg-icon-delete'}/>
+                    <Icon className="center-icon" iconName={ cellData ? 'svg-icon-check' : 'svg-icon-close'}/>
                 </div>;
             };
         case BoolFormatTypeEnum.TextOnly:

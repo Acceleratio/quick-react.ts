@@ -132,7 +132,7 @@ export const gridColumns1: Array<GridColumn> = [
         headerText: 'Is Updated',
         width: 100,
         dataType: DataTypeEnum.Boolean,
-        boolFormatType: BoolFormatTypeEnum.CheckmarkAndCross
+        boolFormatType: BoolFormatTypeEnum.TextOnly
     }
 ];
 
@@ -169,7 +169,7 @@ export const gridColumns2: Array<GridColumn> = [
         headerText: 'Is Updated',
         width: 100,
         dataType: DataTypeEnum.Boolean,
-        boolFormatType: BoolFormatTypeEnum.CheckmarkAndCross
+        boolFormatType: BoolFormatTypeEnum.TextOnly
     }
 ];
 
