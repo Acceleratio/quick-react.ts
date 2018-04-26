@@ -50,7 +50,11 @@ $warning-status-server: $warning-color;
 $ok-status-server: $success-color;
 
 // messageBar
-$error-text-color: $error-color;
-$warning-text-color: $warning-color;
-$success-text-color: $success-color;
-$info-text-color: $secondary-color;
+$message-bar-error-border-color: $error-color;
+$message-bar-warning-border-color: $warning-color;
+$message-bar-success-border-color: $success-color;
+$message-bar-info-border-color: $secondary-color;
+$message-bar-error-background-color: rgba($message-bar-error-border-color, 0.06);
+$message-bar-warning-background-color: rgba($message-bar-warning-border-color, 0.06);
+$message-bar-success-background-color: rgba($message-bar-success-border-color, 0.06);
+$message-bar-info-background-color: rgba($message-bar-info-border-color, 0.06);

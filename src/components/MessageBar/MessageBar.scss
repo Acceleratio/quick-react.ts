@@ -100,33 +100,45 @@
     &.messageBar-warning {
         .messageBar-icon {
             &:before {
-                background-color: $warning-text-color;
+                background-color: $message-bar-warning-border-color;
             }
         }
+
+        border-color: $message-bar-warning-border-color;
+        background-color: $message-bar-warning-background-color;
     }
 
     &.messageBar-error {
         .messageBar-icon {
             &:before {
-                background-color: $error-text-color;
+                background-color: $message-bar-error-border-color;
             }
         }
+
+        border-color: $message-bar-error-border-color;
+        background-color: $message-bar-error-background-color;
     }
 
     &.messageBar-success {
         .messageBar-icon {
             &:before {
-                background-color: $success-text-color;
+                background-color: $message-bar-success-border-color;
             }
         }
+
+        border-color: $message-bar-success-border-color;
+        background-color: $message-bar-success-background-color;
     }
 
     &.messageBar-info {
         .messageBar-icon {
             &:before {
-                background-color: $info-text-color;
+                background-color: $message-bar-info-border-color;
             }
         }
+
+        border-color: $message-bar-info-border-color;
+        background-color: $message-bar-info-background-color;
     }
 }
 
