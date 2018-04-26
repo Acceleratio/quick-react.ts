@@ -3,7 +3,6 @@
 .messageBar {
     background-color: $white-color;
     border: 1px solid $secondary-color-20;
-    border-left: 0;
     border-radius: 0 8px 8px 0;
     color: $white-color;
     box-sizing: border-box;
@@ -29,6 +28,8 @@
         align-items: center;
         margin-left: -16px;
         position: absolute;
+        align-self: normal;
+        top: -1px;
 
         &::before {
             content: '';
@@ -151,7 +152,6 @@
         animation: message-bar-container-animation 0s;
         animation-fill-mode: forwards;
         animation-delay:1s;
-        border-left: 1px;
         border-radius: 8px;
       
         .messageBar-actionables {
