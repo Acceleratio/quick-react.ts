@@ -39,17 +39,19 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
         const messageBarClassName = classNames(
             'messageBar',
             'messageBar-singleline',
+            
             [this.props.className],
             {
                 'messageBar-info': this.props.messageBarType === MessageBarType.info,
                 'messageBar-error': this.props.messageBarType === MessageBarType.error,
                 'messageBar-success': this.props.messageBarType === MessageBarType.success,
-                'messageBar-warning': this.props.messageBarType === MessageBarType.warning
+                'messageBar-warning': this.props.messageBarType === MessageBarType.warning,
+                'expandable': !!this.props.expandOnHover
             }
         );
 
         let tooltip;
-        if (typeof this.props.children === 'string') {
+        if (typeof this.props.children === 'string' && !this.props.expandOnHover) {
             tooltip = this.props.children;
         }
         return (

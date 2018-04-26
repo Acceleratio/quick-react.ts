@@ -23,10 +23,12 @@ export class Index extends React.Component<any, any> {
                 <MessageBar 
                     messageBarType={MessageBarType.warning} 
                     hasDontShowAgain={true} 
+                    expandOnHover={true}
                     dontShowAgainChecked={this.state.dontShowAgainChecked}
                     dontShowAgainClicked={() => this.setState({ dontShowAgainChecked : !this.state.dontShowAgainChecked })}
-                    onDismiss={() => { console.log('test'); } }
-                >This is warning messageBar!</MessageBar>
+                    onDismiss={() => { console.log('test'); }
+                 }
+                >This is warning lajd fljasd flkj sdflkj sdlf jlfkj flkj dlakf jlkfj lkasj flk jflkjsd aflk jsdflkjsd lfkdj alfk asdflk sdlfk jsdlfk asdlkf jlsdk flsdk flsdkf jewl rweoriew roew uroeiw rewoi uewoi reoiw uewoi uewoi ewoer iworuoew roiwe oeiw roeiw ruwoe messageBar!</MessageBar>
 
                 {/* <MessageBar 
                     messageBarType={MessageBarType.success} 

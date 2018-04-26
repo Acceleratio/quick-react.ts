@@ -14,18 +14,21 @@
     margin: 0 20%;
     bottom: 10px;
     z-index: 10;
+    min-height: 32px;
 
     .messageBar-content {
         padding-right: 10px;
         display: flex;
         align-items: center;
         height: 100%;
+        position: relative;
     }
 
     .messageBar-icon {
         display: flex;
         align-items: center;
         margin-left: -16px;
+        position: absolute;
 
         &::before {
             content: '';
@@ -40,7 +43,7 @@
             position: absolute;
             font-size: 16px;
             margin-right: 0;
-            left: -8px;
+            left: 8px;
         }
     }
 
@@ -49,6 +52,7 @@
         flex-direction: row;
         width: 100%;
         margin-right: 20px;
+        margin-left: 20px;
         min-width: 0;
 
         .messageBar-text {
@@ -58,9 +62,11 @@
 
             .messageBar-innerText {
                 overflow-x: hidden;
+                overflow-y: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                cursor: default;
+                cursor: default;             
+                max-height: 32px;
             }
         }
 
@@ -140,8 +146,55 @@
         border-color: $message-bar-info-border-color;
         background-color: $message-bar-info-background-color;
     }
+
+    &.expandable:hover {
+        animation: message-bar-container-animation 0s;
+        animation-fill-mode: forwards;
+        animation-delay:1s;
+        border-left: 1px;
+        border-radius: 8px;
+      
+        .messageBar-actionables {
+           
+            .messageBar-text {
+           
+                .messageBar-innerText {
+                    animation: message-bar-text-animation 1s;
+                    animation-fill-mode: forwards;
+                    animation-delay:1s;
+                }
+            }
+        }
+    
+    }
 }
 
 .messageBar + .messageBar {
     margin-top: 10px;
+}
+
+@keyframes message-bar-container-animation {
+    from {
+        height: 32px;
+        white-space: initial;
+     
+    }
+    to {
+        height: auto;
+    }
+}
+
+@keyframes message-bar-text-animation {
+    from {
+        max-height: 32px;
+        white-space: initial;
+        padding-top: 6px;
+        padding-bottom: 5px;
+    }
+    to {
+        max-height: 200px;
+        white-space: initial;
+        padding-top: 6px;
+        padding-bottom: 5px;
+    }
 }
