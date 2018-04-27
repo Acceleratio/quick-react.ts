@@ -48,13 +48,13 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
     public static defaultProps = defaultTreeProps;
 
-    public constructor(props: IVirtualizedTreeViewProps) {
+    public constructor (props: IVirtualizedTreeViewProps) {
         super(props);
 
         this.state = {
             partiallyCheckedItemIds: [],
             searchText: props.searchQuery,
-            filteredItems: ItemOperator.filterItems( props.items, props.searchQuery )
+            filteredItems: ItemOperator.filterItems(props.items, props.searchQuery)
         };
 
         const lookups = this.props.lookupTableGetter(props.items);
@@ -107,10 +107,10 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 this.allItemIds :
                 this.props.filterSelection.selectedIDs;
         let scrollToIndex = 0;
-        if ( this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0 ) { 
-            scrollToIndex = this.state.filteredItems.findIndex( ( element ) => {
-                return element.id === checkedItemIds[ 0 ];
-            } );
+        if (this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0) {
+            scrollToIndex = this.state.filteredItems.findIndex((element) => {
+                return element.id === checkedItemIds[0];
+            });
         }
         const virtualizedTreeClassName = classNames(
             'virtualized-tree-filter-container',
@@ -121,26 +121,26 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         );
 
         return (
-            <div className={virtualizedTreeClassName} style={{ width: '100%', height: '100%' }}>
+            <div className={ virtualizedTreeClassName } style={ { width: '100%', height: '100%' } }>
                 {
-                    title && <label className="virtualized-tree-filter-title" title={title}>{title}</label>
+                    title && <label className="virtualized-tree-filter-title" title={ title }>{ title }</label>
                 }
                 {
-                    hasSearch && <Search labelText={this.state.searchText} onChange={this.searchItems} className="filter-search" />
+                    hasSearch && <Search labelText={ this.state.searchText } onChange={ this.searchItems } className="filter-search" />
                 }
                 {
                     !isSingleSelect && showSelectAll &&
                     <VirtualizedTreeViewCheckBox
                         text="Select All"
                         itemId="ALL"
-                        checked={allSelected}
-                        onChange={this.onSelectAllChange}
+                        checked={ allSelected }
+                        onChange={ this.onSelectAllChange }
                     />
                 }
                 <AutoSizer>
-                    {({ width, height }) => (
+                    { ({ width, height }) => (
                         <List
-                            height={ this.getListHeight( height ) }
+                            height={ this.getListHeight(height) }
                             width={ width }
                             overscanRowCount={ 10 }
                             ref={ this.setListReference }
@@ -149,21 +149,21 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                             rowCount={ this.state.filteredItems.length }
                             scrollToIndex={ scrollToIndex }
                         />
-                    )}
+                    ) }
                 </AutoSizer>
                 {
                     !isSingleSelect && showStatusBar &&
                     <label
-                        className={classNames('virtualized-tree-filter-footer-count', { 'virtualized-tree-filter-footer-with-button': this.props.showButtons })}>
-                        Selected: {checkedItemIds.length}/{this.allItemIds.length}
+                        className={ classNames('virtualized-tree-filter-footer-count', { 'virtualized-tree-filter-footer-with-button': this.props.showButtons }) }>
+                        Selected: { checkedItemIds.length }/{ this.allItemIds.length }
                     </label>
                 }
                 {
                     this.props.showButtons &&
-                    <div className={'tree-filter-actions'}>
-                        <div className={'tree-filter-actionsRight'}>
-                            <Button className="button-textual" onClick={this.props.onCancel}>Cancel</Button>
-                            <Button className="button-primary" onClick={this.props.onSave}>Save</Button>
+                    <div className={ 'tree-filter-actions' }>
+                        <div className={ 'tree-filter-actionsRight' }>
+                            <Button className="button-textual" onClick={ this.props.onCancel }>Cancel</Button>
+                            <Button className="button-primary" onClick={ this.props.onSave }>Save</Button>
                         </div>
                     </div>
                 }
@@ -173,8 +173,8 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
     private rowRenderer = ({ index, key, parent, style }) => {
         return (
-            <div key={key} style={style}>
-                {this.renderItem(this.state.filteredItems[index], index)}
+            <div key={ key } style={ style }>
+                { this.renderItem(this.state.filteredItems[index], index) }
             </div>
         );
     }
@@ -210,7 +210,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             if (this.props.isGroupSelectableOnSingleSelect === false && itemHasChildren(treeItem)) {
                 return;
             }
-            this.props.onValuesSelected( this.props.filterId, { type: FilterSelectionEnum.Selected, selectedIDs: [ treeItem.id ] } );
+            this.props.onValuesSelected(this.props.filterId, { type: FilterSelectionEnum.Selected, selectedIDs: [treeItem.id] });
         };
 
         // tslint:disable-next-line:variable-name
@@ -222,24 +222,24 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
             let { id, hoverOverBtn } = treeItem;
 
-            if ( this.props.isSingleSelect ) {
+            if (this.props.isSingleSelect) {
                 const singleSelectClassNames = classNames(
                     'virtualized-tree-single-select-item',
                     {
                         'selected': itemChecked
                     }
                 );
-                const SingleSelectItem = ( { } ) =>
+                const SingleSelectItem = ({ }) =>
                     <span
-                        className={ singleSelectClassNames}
-                        onClick={onSingleSelectItemClick}
+                        className={ singleSelectClassNames }
+                        onClick={ onSingleSelectItemClick }
                     >
-                        {treeItem.iconName &&
-                            <span title={treeItem.iconTooltipContent}>
-                                <Icon iconName={treeItem.iconName} className={iconClassName} />
+                        { treeItem.iconName &&
+                            <span title={ treeItem.iconTooltipContent }>
+                                <Icon iconName={ treeItem.iconName } className={ iconClassName } />
                             </span>
                         }
-                        <span title={treeItem.value}>{treeItem.value}</span>
+                        <span title={ treeItem.value }>{ treeItem.value }</span>
                     </span>;
                 const SingleSelectItemWithButtons = addHoverableButtons({ item: treeItem, hoverOverBtn })(SingleSelectItem);
 
@@ -253,13 +253,13 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 const ItemWithButtons = addHoverableButtons({ item: treeItem, hoverOverBtn })(VirtualizedTreeViewCheckBox);
                 return (
                     <ItemWithButtons
-                        itemId={treeItem.id}
-                        text={treeItem.value}
-                        checked={checked}
-                        onChange={onItemCheckedChange}
-                        iconName={treeItem.iconName}
-                        iconClassName={iconClassName}
-                        iconTooltipContent={treeItem.iconTooltipContent}
+                        itemId={ treeItem.id }
+                        text={ treeItem.value }
+                        checked={ checked }
+                        onChange={ onItemCheckedChange }
+                        iconName={ treeItem.iconName }
+                        iconClassName={ iconClassName }
+                        iconTooltipContent={ treeItem.iconTooltipContent }
                     />
                 );
             }
@@ -267,12 +267,12 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
         if (treeItem.expanded) {
             return (
-                <div key={itemKey} >
-                    <div className="item-container expandible-item" style={{ height: this.props.rowHeight }} >
-                        <Icon className="virtualized-tree-expand-icon" iconName={'icon-arrow_down_right'} onClick={onExpandClick} />
+                <div key={ itemKey } >
+                    <div className="item-container expandible-item" style={ { height: this.props.rowHeight } } >
+                        <Icon className="virtualized-tree-expand-icon" iconName={ 'icon-arrow_down_right' } onClick={ onExpandClick } />
                         <ItemCheckboxElement />
                     </div>
-                    {itemHasChildren(treeItem) &&
+                    { itemHasChildren(treeItem) &&
                         <ul>
                             <li>
                                 {
@@ -297,15 +297,15 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             );
         } else if (itemHasChildren(treeItem) || treeItem.hasChildren) { // expandable
             return (
-                <div className="item-container expandible-item" key={itemKey} style={{ height: this.props.rowHeight }} >
-                    <Icon className="virtualized-tree-expand-icon" iconName={'icon-arrow_right'} onClick={onExpandClick} />
+                <div className="item-container expandible-item" key={ itemKey } style={ { height: this.props.rowHeight } } >
+                    <Icon className="virtualized-tree-expand-icon" iconName={ 'icon-arrow_right' } onClick={ onExpandClick } />
                     <ItemCheckboxElement />
                 </div>
             );
         } else { // leaf
             const marginLeft = this.props.itemsAreFlatList ? 0 : 18;
             return (
-                <div className="item-container" key={itemKey} style={{ height: this.props.rowHeight, marginLeft: marginLeft }}>
+                <div className="item-container" key={ itemKey } style={ { height: this.props.rowHeight, marginLeft: marginLeft } }>
                     <ItemCheckboxElement />
                 </div>
             );
@@ -319,12 +319,12 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         };
         return (
             <div
-                key={loadingTreeNodeKey + '_Loading'}
+                key={ loadingTreeNodeKey + '_Loading' }
                 className="item-container loading-container"
-                style={style}
+                style={ style }
             >
                 <Spinner className="tree-view-async-loading-spinner"
-                    type={SpinnerType.small}
+                    type={ SpinnerType.small }
                 />
                 <span className="tree-view-async-loading-label">
                     Loading...

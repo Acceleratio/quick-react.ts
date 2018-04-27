@@ -1,7 +1,6 @@
 import { DirectionalHint } from '../../utilities/DirectionalHint';
 import { ILookupTable, TreeLookups } from './TreeItemOperators';
 import { IHoverOverBtn } from '../Treeview';
-import { SpinnerType } from '../Spinner/Spinner.Props';
 
 export enum FilterSelectionEnum {
     All,
