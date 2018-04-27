@@ -19,6 +19,9 @@ import { VirtualizedTreeView } from './VirtualizedTreeView';
 import { IVirtualizedTreeViewProps } from './VirtualizedTreeView.Props';
 import { Tooltip } from '../Tooltip/Tooltip';
 
+import { Spinner } from '../Spinner/Spinner';
+import { SpinnerType } from '../Spinner/Spinner.Props';
+
 import { autobind } from '../../utilities/autobind';
 
 import './TreeFilter.scss';
@@ -43,6 +46,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
 
         this.state = {
             isOpen: false,
+            isReady: props.isReady,
             isDefaultSelected: this.checkIfDefaultSelection(props.filterSelection.type, props.filterSelection.selectedIDs),
             selectionText: selectionStrings.selectionText,
             query: '',
@@ -111,7 +115,8 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
                 selectionText: selectionStrings.selectionText,
                 titleText: selectionStrings.titleText,
                 isDefaultSelected: this.checkIfDefaultSelection(nextProps.filterSelection.type, nextProps.filterSelection.selectedIDs),
-                selection: nextProps.filterSelection
+                selection: nextProps.filterSelection,
+                isReady: nextProps.isReady
             }));
     }
 
@@ -166,8 +171,12 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
 
     @autobind
     private onValuesSelected(filterId: string, filterSelection: IFilterSelection) {
-        const isDefault = this.checkIfDefaultSelection(filterSelection.type, filterSelection.selectedIDs);
-        this.setState({ ...this.state, isDefaultSelected: isDefault, selection: filterSelection });
+        const isDefault = this.checkIfDefaultSelection( filterSelection.type, filterSelection.selectedIDs );
+        let state = { ...this.state, isDefaultSelected: isDefault, selection: filterSelection };
+        if ( this.props.isSingleSelect ) { 
+            state = { ...state, isOpen: false };
+        }
+        this.setState(state);
         if (this.props.onValuesSelected !== undefined) {
             this.props.onValuesSelected(filterId, filterSelection);
         } else {
@@ -245,7 +254,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
     private _getLookups = () => this.lookups;
 
     public render() {
-        const { isOpen, isDefaultSelected } = this.state;
+        const { isOpen, isReady, isDefaultSelected } = this.state;
         const hasItems = this.props.items != null && this.props.items.length !== 0;
         const treeFilterProps = {
             ...this.props,
@@ -305,17 +314,21 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
                             <Icon className="validation-error-icon" iconName="icon-warning2" />
                         }
                         {
-                            hasItems && isOpen &&
+                            hasItems && isOpen && this.state.isReady &&
                             <Icon className="dropdown-icon" iconName="icon-Arrow_up" />
                         }
                         {
-                            hasItems && !isOpen &&
+                            hasItems && !isOpen && this.state.isReady &&
                             <Icon className="dropdown-icon" iconName="icon-arrow_down" />
                         }
+                        { 
+                            !this.state.isReady && !this.props.disabled && 
+                            <Spinner type={ SpinnerType.small }/>     
+                        } 
                     </div>
                 </Tooltip>
                 {
-                    this.state.isOpen &&
+                    this.state.isOpen && this.state.isReady &&
                     <Callout
                         ref={this.setCalloutRef}
                         isBeakVisible={false}
@@ -337,10 +350,12 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
                             onResize={this.onCalloutResize}
                             enable={this.props.enabledResizeHandles}
                         >
-                            <div style={{ height: '100%', width: '100%' }}>
+                            <div style={ { height: '100%', width: '100%'} }>
+                            {
                                 <VirtualizedTreeView
-                                    {...treeFilterProps}
+                                    { ...treeFilterProps }
                                 />
+                            }
                             </div>
                         </Resizable>
                     </Callout>

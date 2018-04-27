@@ -87,6 +87,18 @@
                 }
 
                 .virtualized-tree-single-select-item {
+                    &:hover{
+                        background-color: $primary-background-hover-color
+                    }
+
+                    &.selected {
+                        background-color: $white-color;
+                        
+                        >span {
+                            color: $primary-color;
+                        }
+                    }
+                    
                     display: inline-block;
                     white-space: nowrap;
                     overflow: hidden;

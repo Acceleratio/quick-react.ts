@@ -54,7 +54,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         this.state = {
             partiallyCheckedItemIds: [],
             searchText: props.searchQuery,
-            filteredItems: ItemOperator.filterItems(props.items, props.searchQuery)
+            filteredItems: ItemOperator.filterItems( props.items, props.searchQuery )
         };
 
         const lookups = this.props.lookupTableGetter(props.items);
@@ -106,7 +106,12 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             this.props.filterSelection.type === FilterSelectionEnum.All ?
                 this.allItemIds :
                 this.props.filterSelection.selectedIDs;
-
+        let scrollToIndex = 0;
+        if ( this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0 ) { 
+            scrollToIndex = this.state.filteredItems.findIndex( ( element ) => {
+                return element.id === checkedItemIds[ 0 ];
+            } );
+        }
         const virtualizedTreeClassName = classNames(
             'virtualized-tree-filter-container',
             {
@@ -135,13 +140,14 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 <AutoSizer>
                     {({ width, height }) => (
                         <List
-                            height={this.getListHeight(height)}
-                            width={width}
-                            overscanRowCount={10}
-                            ref={this.setListReference}
-                            rowHeight={this.rowHeight}
-                            rowRenderer={this.rowRenderer}
-                            rowCount={this.state.filteredItems.length}
+                            height={ this.getListHeight( height ) }
+                            width={ width }
+                            overscanRowCount={ 10 }
+                            ref={ this.setListReference }
+                            rowHeight={ this.rowHeight }
+                            rowRenderer={ this.rowRenderer }
+                            rowCount={ this.state.filteredItems.length }
+                            scrollToIndex={ scrollToIndex }
                         />
                     )}
                 </AutoSizer>
@@ -204,7 +210,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             if (this.props.isGroupSelectableOnSingleSelect === false && itemHasChildren(treeItem)) {
                 return;
             }
-            this.props.onValuesSelected(this.props.filterId, { type: FilterSelectionEnum.Selected, selectedIDs: [treeItem.id] });
+            this.props.onValuesSelected( this.props.filterId, { type: FilterSelectionEnum.Selected, selectedIDs: [ treeItem.id ] } );
         };
 
         // tslint:disable-next-line:variable-name
@@ -216,10 +222,16 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
             let { id, hoverOverBtn } = treeItem;
 
-            if (this.props.isSingleSelect) {
-                const SingleSelectItem = ({ }) =>
+            if ( this.props.isSingleSelect ) {
+                const singleSelectClassNames = classNames(
+                    'virtualized-tree-single-select-item',
+                    {
+                        'selected': itemChecked
+                    }
+                );
+                const SingleSelectItem = ( { } ) =>
                     <span
-                        className="virtualized-tree-single-select-item"
+                        className={ singleSelectClassNames}
                         onClick={onSingleSelectItemClick}
                     >
                         {treeItem.iconName &&
