@@ -186,6 +186,18 @@ export class Index extends React.Component<any, any> {
                     validationErrorMessage={'Dropdown error tooltip!'}
                 />
 
+                <hr />
+                <Dropdown
+                    dropdownType={ DropdownType.selectionDropdown }
+                    label="Selection dropdown with arrow and border - loading"
+                    onClick={ (option, index) => console.log(option, index) }
+                    options={ dropdownOptions }
+                    showArrowIcon={ true }
+                    hasTitleBorder={ true }
+                    icon="icon-add"
+                    isLoading={ true }
+                />
+
             </div>
 
         );

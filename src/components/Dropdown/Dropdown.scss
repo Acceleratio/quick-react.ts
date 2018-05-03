@@ -61,7 +61,8 @@
         }
     }
     
-    .iconArrowWithBorder {
+    .iconArrowWithBorder,
+    .spinner {
         position: absolute;
         cursor: pointer;
         font-size: 10px;
@@ -69,7 +70,9 @@
         top: 0;
         right: 5px;
     }
-
+    .spinner {
+        top: 7px;
+    }
     .iconArrow {
         font-size: 10px;
         margin: 0 5px;
