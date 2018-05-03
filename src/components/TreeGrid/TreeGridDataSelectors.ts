@@ -1,6 +1,8 @@
 import { ITreeGridState, ITreeGridProps } from './TreeGrid.Props';
 import { SortDirection, GridColumn } from '../QuickGrid/QuickGrid.Props';
 import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
+import * as _ from 'lodash';
+
 const createSelector = require('reselect').createSelector;
 
 
@@ -59,13 +61,27 @@ const transformData = (tree: TreeDataSource,
 
     // 0 level, the node that contains the root nodes must be expanded for sort to kick in
     root.isExpanded = true;
-    sortData(root, sortColumn, sortDirection, sortRequestId);
+    sortData(root, sortColumn, sortDirection, sortRequestId, getSortFunction(sortColumn, columns, sortDirection));
     let flattenedData: Array<IFinalTreeNode> = [];
     let maxExpandedLevel = flatten(root.children, flattenedData, 0, idsInPathToSelected);
     return { data: flattenedData, maxExpandedLevel };
 };
 
-const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number): void => {
+const getSortFunction = (sortColumnName: string, columns: Array<GridColumn>, sortDirection: SortDirection) => {
+    const sortColumn = _.find(columns, column => column.valueMember === sortColumnName);
+    const sortFunction = getSortFunctionForColumn(sortColumn, sortDirection);
+    return sortFunction;
+};
+
+const getSortFunctionForColumn = (sortColumn: GridColumn, sortDirection: SortDirection) => {
+    if (sortColumn && sortColumn.sortByValueGetter) {
+        let sortValueGetter = sortColumn.sortByValueGetter;
+        return (row) => sortValueGetter(row, sortDirection);
+    }
+    return null;
+};
+
+const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number, customSortFunction: (row: any) => any): void => {
 
     if (!treeNode.children || treeNode.children.length === 0) {
         return;
@@ -76,18 +92,18 @@ const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: S
     }
 
     for (let child of treeNode.children) {
-        sortData(child, sortColumn, sortDirection, rootSortRequestId);
+        sortData(child, sortColumn, sortDirection, rootSortRequestId, customSortFunction);
     }
 
     // if the last sort configuration differs from the current, we need to resort the children
     // otherwise, performance gains
     if ((<IFinalTreeNode>treeNode).sortRequestId !== rootSortRequestId) {
-        sort(treeNode.children, sortDirection, sortColumn);
+        sort(treeNode.children, sortDirection, sortColumn, customSortFunction);
         (<IFinalTreeNode>treeNode).sortRequestId = rootSortRequestId;
     }
 };
 
-const sort = (input, sortDirection, sortColumn) => {
+const sort = (input, sortDirection, sortColumn, customSortFunction) => {
     if (sortColumn === undefined || sortDirection === undefined) {
         return input;
     }
@@ -95,8 +111,15 @@ const sort = (input, sortDirection, sortColumn) => {
     const sortFunction = (a, b) => {
 
         let sortColumnFinal = sortColumn;
-        let valueA = a[sortColumnFinal];
-        let valueB = b[sortColumnFinal];
+        let valueA;
+        let valueB;
+        if (customSortFunction) {
+            valueA = customSortFunction(a);
+            valueB = customSortFunction(b);
+        } else {
+            valueA = a[sortColumnFinal];
+            valueB = b[sortColumnFinal];
+        }
         if (valueA < valueB) {
             return -1 * sortModifier;
         }
