@@ -37,6 +37,9 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
     @autobind
     private _onMouseOver(): void {
         this.setState({ showTooltip: true });
+        if (this.props.onMouseOver && this.props.principal) {
+            this.props.onMouseOver(this.props.principal.identifier);
+        }
     }
 
     @autobind

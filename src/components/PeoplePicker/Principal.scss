@@ -7,6 +7,10 @@
     cursor: default;
     display: inline-flex;
     align-items: center;
+
+    &:focus {
+        outline: none;
+    }
 }
 .principal-container-selected
 {
@@ -37,10 +41,6 @@
     @extend %principal-container;
     &:hover, &.hovered {
         background-color: $primary-background-hover-color;
-    }
-
-    &:focus {
-        outline: none;
     }
 }
 

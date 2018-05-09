@@ -105,6 +105,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                         iconName={icon}
                         iconClassName={iconClass}
                         onWillUnmount={this._onPrincipalSuggestionWillUnmount}
+                        onMouseOver={this._onPrincipalSuggestionMouseOver}
                     />;
                 })}
                 {!this.props.loadingSuggestionList && (this.props.suggestionList.length === 0 || allSelected) && <div className="no-result">
@@ -266,7 +267,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
         const currentPrincipal = this.state.focusedPrincipalIdentifier;
         let focusedPrincipalIndex = this._orderedSuggestionPrincipals.findIndex(x => x === currentPrincipal);
 
-        if (e.which === KeyCodes.up && focusedPrincipalIndex >= 0) {
+        if (e.which === KeyCodes.up && focusedPrincipalIndex > 0) {
             const focusedPrincipal = this._orderedSuggestionPrincipals[focusedPrincipalIndex - 1];
             if (this._principalRefs[focusedPrincipal]) {
                 this._principalRefs[focusedPrincipal].focus();
@@ -296,6 +297,22 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             }
             return;
         }
+    }
+
+    @autobind
+    private _onPrincipalSuggestionMouseOver(principalId: string) {
+        // if mouse over already selected principal do nothing
+        if (this.state.focusedPrincipalIdentifier === principalId) {
+            return;
+        }
+        
+        // else focus the new principal
+        if (this._principalRefs[principalId]) {
+            this._principalRefs[principalId].focus();
+        }
+        this.setState({
+            focusedPrincipalIdentifier: principalId
+        });
     }
 
     @autobind
