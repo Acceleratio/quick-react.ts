@@ -65,10 +65,10 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
     @autobind
     private _onSearch(value: string) {
         if (value.length >= this.props.minNumberOfCharactersToStartSearch) {
-            this.setState({ suggestionsVisible: true });
+            this.setState({ suggestionsVisible: true, focusedPrincipalIdentifier: null });
             this.props.onSearch(value);
         } else {
-            this.setState({ suggestionsVisible: false });
+            this.setState({ suggestionsVisible: false, focusedPrincipalIdentifier: null });
         }
     }
 
@@ -112,7 +112,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
 
     @autobind
     private _onSuggestionClick(principal: IPrincipal) {
-        this.setState({ suggestionsVisible: false, value: '' });
+        this.setState({ suggestionsVisible: false, value: '', focusedPrincipalIdentifier: null });
 
         if (this.state.selectedPrincipalList !== null) {
             if (!this.state.selectedPrincipalList.find(x => x.identifier === principal.identifier)) {
@@ -259,6 +259,14 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             this.setState({
                 focusedPrincipalIdentifier: this._orderedSuggestionListPrincipals[focusedPrincipalIndex + 1]
             });
+            return;
+        }
+
+        if (e.which === KeyCodes.enter && focusedPrincipalIndex > -1) {
+            const principal = this.props.suggestionList && this.props.suggestionList.find(x => x.identifier === currentPrincipal);
+            if (principal) {
+                this._onSuggestionClick(principal);
+            }
             return;
         }
     }
