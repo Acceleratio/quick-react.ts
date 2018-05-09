@@ -38,6 +38,10 @@
     &:hover, &.hovered {
         background-color: $primary-background-hover-color;
     }
+
+    &:focus {
+        outline: none;
+    }
 }
 
 .principal-user-icon {

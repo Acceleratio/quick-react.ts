@@ -10,6 +10,7 @@ export interface IPrincipalProps extends React.Props<Principal> {
     isFocused?: boolean;
     onSelect?(principal: IPrincipal): void;
     onDelete?(principal: IPrincipal): void;
+    onWillUnmount?(principalId: string): void;
 }
 
 export interface IPrincipal {

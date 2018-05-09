@@ -13,6 +13,7 @@ export interface IPrincipalState {
 }
 
 export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalState> {
+    private _field;
     constructor(props) {
         super(props);
 
@@ -85,6 +86,25 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
         return null;
     }
 
+    @autobind
+    private _ref(value: HTMLElement) {
+        this._field = value;
+    }
+
+    public componentWillUnmount() {
+        if (this.props.onWillUnmount && this.props.principal) {
+            this.props.onWillUnmount(this.props.principal.identifier);
+        }
+    }
+
+    @autobind
+    public focus(): void {
+        if (this._field === undefined || this._field === null) {
+            return;
+        }
+        this._field.focus();
+    }
+
     public render() {
         const tooltip = this._getTooltipContent();
 
@@ -94,7 +114,10 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
         return (
             <span className={className} onClick={this._onClickPrincipal}
                 onMouseOver={this._onMouseOver}
-                onMouseOut={this._onMouseOut} >
+                onMouseOut={this._onMouseOut} 
+                ref={this._ref}
+                tabIndex={-1}
+                >
                 {this.props.iconName &&
                     <Icon iconName={this.props.iconName} className={this.props.iconClassName} ></Icon>
                 }
