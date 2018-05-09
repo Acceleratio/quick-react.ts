@@ -7,6 +7,7 @@ export interface IPrincipalProps extends React.Props<Principal> {
     isDisabled?: boolean;
     iconName?: string;
     iconClassName?: string;
+    isFocused?: boolean;
     onSelect?(principal: IPrincipal): void;
     onDelete?(principal: IPrincipal): void;
 }

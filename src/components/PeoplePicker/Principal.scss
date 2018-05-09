@@ -35,7 +35,7 @@
 .principal-container-suggested
 {
     @extend %principal-container;
-    &:hover {
+    &:hover, &.hovered {
         background-color: $primary-background-hover-color;
     }
 }

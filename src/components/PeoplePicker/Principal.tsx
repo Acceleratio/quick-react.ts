@@ -88,7 +88,8 @@ export class Principal extends React.PureComponent<IPrincipalProps, IPrincipalSt
     public render() {
         const tooltip = this._getTooltipContent();
 
-        const className = this.props.isSelected ? 'principal-container-selected' : 'principal-container-suggested';
+        const className = classNames(this.props.isSelected ? 'principal-container-selected' : 'principal-container-suggested', 
+        {'hovered': this.props.isFocused});
 
         return (
             <span className={className} onClick={this._onClickPrincipal}

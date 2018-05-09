@@ -12,9 +12,11 @@ import { Tooltip } from '../Tooltip/Tooltip';
 import { DirectionalHint } from '../../utilities/DirectionalHint';
 import { Icon } from '../Icon/Icon';
 import * as _ from 'lodash';
+import { KeyCodes } from '../..';
 
 export interface IPeoplePickerState {
     isFocused?: boolean;
+    focusedPrincipalIdentifier: string;
     selectedPrincipalList?: IPrincipal[];
     suggestionsVisible?: boolean;
     value?: any;
@@ -23,6 +25,8 @@ export interface IPeoplePickerState {
 export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeoplePickerState> {
     private _field;
     private _delayedSearch;
+    private _orderedSuggestionListPrincipals: string[] = [];
+
     public static defaultProps: Partial<IPeoplePickerProps> = {
         noResultText: 'No Result',
         minNumberOfCharactersToStartSearch: 2
@@ -35,7 +39,8 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
             isFocused: false,
             selectedPrincipalList: [],
             suggestionsVisible: false,
-            value: props.value || props.defaultValue || ''
+            value: props.value || props.defaultValue || '',
+            focusedPrincipalIdentifier: null
         };
 
         if (this.props.selectedPrincipalList) {
@@ -70,6 +75,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
     @autobind
     private _renderSuggestions(): JSX.Element {
         let allSelected: boolean = true;
+        this._orderedSuggestionListPrincipals = [];
         return (
             <div className="people-picker-suggestions">
                 {this.props.loadingSuggestionList && <div className="suggestion-loading">
@@ -83,10 +89,15 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                     const iconClass = this.props.mapPrincipalToIconClass ? this.props.mapPrincipalToIconClass(principal) : undefined;
 
                     allSelected = allSelected && alreadySelected;
+                    if (!alreadySelected) {
+                        this._orderedSuggestionListPrincipals.push(principal.identifier);
+                    }
+
                     return !alreadySelected && <Principal
                         key={principal.identifier}
                         principal={principal}
                         isSelected={false}
+                        isFocused={this.state.focusedPrincipalIdentifier === principal.identifier}
                         onSelect={this._onSuggestionClick}
                         iconName={icon}
                         iconClassName={iconClass}
@@ -233,6 +244,26 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
     }
 
     @autobind
+    private _onSuggestionListKeyDown(e: React.KeyboardEvent<any>) {
+        const currentPrincipal = this.state.focusedPrincipalIdentifier;
+        let focusedPrincipalIndex = this._orderedSuggestionListPrincipals.findIndex(x => x === currentPrincipal);
+
+        if (e.which === KeyCodes.up && focusedPrincipalIndex >= 0) {
+            this.setState({
+                focusedPrincipalIdentifier: this._orderedSuggestionListPrincipals[focusedPrincipalIndex - 1]
+            });
+            return;
+        }
+
+        if (e.which === KeyCodes.down && focusedPrincipalIndex < (this._orderedSuggestionListPrincipals.length - 1)) {
+            this.setState({
+                focusedPrincipalIdentifier: this._orderedSuggestionListPrincipals[focusedPrincipalIndex + 1]
+            });
+            return;
+        }
+    }
+
+    @autobind
     private _onSuggestionDelete(selectedPrincipal: IPrincipal) {
         const newPrincipalList = this.state.selectedPrincipalList.filter((principal, index) => {
             if (principal.identifier !== selectedPrincipal.identifier) {
@@ -284,7 +315,7 @@ export class PeoplePicker extends React.PureComponent<IPeoplePickerProps, IPeopl
                     className="tooltip-error"
                     showTooltip={this.state.isFocused && !isValid}
                     directionalHint={DirectionalHint.topLeftEdge}>
-                    <div>
+                    <div onKeyDown={this.state.suggestionsVisible ? this._onSuggestionListKeyDown : null} tabIndex={-1}>
                         {this.state.selectedPrincipalList === null && this._renderEmptyField()}
                         {this.state.selectedPrincipalList !== null && this.state.selectedPrincipalList.length > 0 && this._renderSelectedPrincipal()}
                         {this.state.selectedPrincipalList !== null && this.state.selectedPrincipalList.length === 0 && this._renderEmptyField()}
