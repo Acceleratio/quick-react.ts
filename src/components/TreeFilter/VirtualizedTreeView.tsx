@@ -54,7 +54,8 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         this.state = {
             partiallyCheckedItemIds: [],
             searchText: props.searchQuery,
-            filteredItems: ItemOperator.filterItems(props.items, props.searchQuery)
+            filteredItems: ItemOperator.filterItems(props.items, props.searchQuery),
+            scrollToIndex: undefined
         };
 
         const lookups = this.props.lookupTableGetter(props.items);
@@ -66,6 +67,29 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         this.searchItems = _.debounce(this.searchItems, 100);
     }
 
+    public componentWillMount() {
+        let scrollToIndex = undefined;
+        const checkedItemIds = this.props.filterSelection.type === FilterSelectionEnum.All ? this.allItemIds : this.props.filterSelection.selectedIDs;
+
+        if (this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0) {
+            scrollToIndex = this.state.filteredItems.findIndex((element) => {
+                return element.id === checkedItemIds[0];
+            });
+            if (scrollToIndex === -1) {
+                // find the top level id of the nested checked item
+                let parent = this.parentLookup[checkedItemIds[0]];   
+                while (parent !== undefined) {
+                    if (typeof parent.id === 'number') {
+                        scrollToIndex = parent.id;
+                        break;
+                    }
+                    parent = this.parentLookup[parent.id];
+                }          
+            }
+            this.setState({ scrollToIndex });
+        }
+    }
+
     public componentWillReceiveProps(nextProps: IVirtualizedTreeViewProps) {
         if (nextProps.items !== this.props.items) {
             const filteredItems = ItemOperator.filterItems(nextProps.items, this.state.searchText);
@@ -73,7 +97,8 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 prevState => ({
                     ...prevState,
                     filteredItems: filteredItems,
-                    searchText: nextProps.searchQuery
+                    searchText: nextProps.searchQuery,
+                    scrollToIndex: undefined
                 })
             );
         }
@@ -106,12 +131,6 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             this.props.filterSelection.type === FilterSelectionEnum.All ?
                 this.allItemIds :
                 this.props.filterSelection.selectedIDs;
-        let scrollToIndex = 0;
-        if (this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0) {
-            scrollToIndex = this.state.filteredItems.findIndex((element) => {
-                return element.id === checkedItemIds[0];
-            });
-        }
         const virtualizedTreeClassName = classNames(
             'virtualized-tree-filter-container',
             {
@@ -147,7 +166,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                             rowHeight={ this.rowHeight }
                             rowRenderer={ this.rowRenderer }
                             rowCount={ this.state.filteredItems.length }
-                            scrollToIndex={ scrollToIndex }
+                            scrollToIndex={ this.state.scrollToIndex }
                         />
                     ) }
                 </AutoSizer>
