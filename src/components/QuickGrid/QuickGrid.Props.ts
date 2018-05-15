@@ -127,11 +127,7 @@ export function getColumnMinWidth(col: GridColumn): number {
     } else {
         retVal = col.minWidth;
     }
-    if (retVal) {
-        return retVal;
-    }
-
-    return defaultMinColumnWidth;
+    return retVal || defaultMinColumnWidth;
 }
 
 export const lowercasedColumnPrefix = 'lowercase_';
