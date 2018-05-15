@@ -104,7 +104,6 @@ export const gridColumns1: Array<GridColumn> = [
         valueMember: 'Name',
         headerText: 'Name',
         width: 100,
-        minWidth: 100,
         headerTooltip: 'This is names column.'
     }, 
     {
