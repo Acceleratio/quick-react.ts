@@ -21,9 +21,9 @@ const getTreePathsToSelected = (node: IFinalTreeNode) => {
         // we come to root, go back...
         return {};
     } else {
-        const dict = getTreePathsToSelected(node.parent);
+        const dict = getTreePathsToSelected(node.parentNode);
         const currentIdDict = {};
-        currentIdDict[node.nodeId.toString()] = null;
+        currentIdDict[node.$meta.nodeId.toString()] = null;
         return { ...dict, ...currentIdDict };
     }
 };
@@ -51,7 +51,7 @@ const transformData = (tree: TreeDataSource,
     if (currentlySelectedNodeId !== newSelectedNodeId) {
         // get ids of all nodes in the path from root to currently selected node
         const currentNode = tree.getNodeById(newSelectedNodeId);
-        idsInPathToSelected = getTreePathsToSelected(currentNode.parent);
+        idsInPathToSelected = getTreePathsToSelected(currentNode.parentNode);
     }
 
     if (filterString !== undefined && filterString !== null && root.filterString !== filterString) {
@@ -97,9 +97,9 @@ const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: S
 
     // if the last sort configuration differs from the current, we need to resort the children
     // otherwise, performance gains
-    if ((<IFinalTreeNode>treeNode).sortRequestId !== rootSortRequestId) {
+    if ((<IFinalTreeNode>treeNode).$meta.sortRequestId !== rootSortRequestId) {
         sort(treeNode.children, sortDirection, sortColumn, valueGetterForSort);
-        (<IFinalTreeNode>treeNode).sortRequestId = rootSortRequestId;
+        (<IFinalTreeNode>treeNode).$meta.sortRequestId = rootSortRequestId;
     }
 };
 
@@ -181,46 +181,49 @@ function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boole
         }
 
         if (arg) {
-            node.satisfiesFilterCondition = doesSatisfyCondition(node);
-            node.descendantSatisfiesFilterCondition = anyDescendantSatisfies;
+            node.$meta.satisfiesFilterCondition = doesSatisfyCondition(node);
+            node.$meta.descendantSatisfiesFilterCondition = anyDescendantSatisfies;
         } else {
-            node.satisfiesFilterCondition = undefined;
-            node.descendantSatisfiesFilterCondition = undefined;
+            node.$meta.satisfiesFilterCondition = undefined;
+            node.$meta.descendantSatisfiesFilterCondition = undefined;
         }
 
-        return node.satisfiesFilterCondition || node.descendantSatisfiesFilterCondition;
+        return node.$meta.satisfiesFilterCondition || node.$meta.descendantSatisfiesFilterCondition;
     };
 
     processNode(root);
 }
 
-export function flatten(tree, resultArray: Array<IFinalTreeNode>, level: number = 0, idsInPath): number {
+export function flatten(tree: Array<IFinalTreeNode>, resultArray: Array<IFinalTreeNode>, level: number = 0, idsInPath): number {
     level++;
     let maxChildLevel = level;
     for (let child of tree) {
 
-        if (child.satisfiesFilterCondition === false && child.descendantSatisfiesFilterCondition === false) {
+        if (child.$meta.satisfiesFilterCondition === false && child.$meta.descendantSatisfiesFilterCondition === false) {
             continue;
         }
-        let thisChildDepth = child.nodeLevel;
+        let thisChildDepth = child.$meta.nodeLevel;
         resultArray.push(child);
 
-        if (idsInPath !== undefined && idsInPath.hasOwnProperty(child.nodeId)) {
+        if (idsInPath !== undefined && idsInPath.hasOwnProperty(child.$meta.nodeId)) {
             child.isExpanded = true;
         }
 
-        if (child.children && child.children.length > 0 && (child.isExpanded || child.descendantSatisfiesFilterCondition) && !child.isLazyChildrenLoadInProgress) {
+        if (child.children && child.children.length > 0 && (child.isExpanded || child.$meta.descendantSatisfiesFilterCondition) && !child.$meta.isLazyChildrenLoadInProgress) {
             thisChildDepth = flatten(child.children, resultArray, level, idsInPath);
 
-        } else if (child.isExpanded && child.isLazyChildrenLoadInProgress) {
+        } else if (child.isExpanded && child.$meta.isLazyChildrenLoadInProgress) {
             resultArray.push({
-                nodeLevel: child.nodeLevel + 1,
-                nodeId: -child.nodeId,
-                parentId: child.id,
-                parent: child,
+                $meta: {
+                    nodeLevel: child.$meta.nodeLevel + 1,
+                    nodeId: -child.$meta.nodeId,
+                    parentNodeId: child.$meta.nodeId,
+                    sortRequestId: child.$meta.sortRequestId,
+                    isAsyncLoadingDummyNode: true
+                },
                 children: [],
-                isAsyncLoadingDummyNode: true,
-                sortRequestId: child.sortRequestId
+                parentNode: child
+
             });
             thisChildDepth++;
         }

@@ -5,25 +5,27 @@ export interface TreeNode { // extend this interface on a data structure to be u
     iconName?: string;
     iconTooltipContent?: string;
     iconClassName?: string;
-    id?: string;
     className?: string;
 }
 
 export interface IFinalTreeNode extends TreeNode {
-    nodeId?: number;
-    parentId?: number; // nodeId of the parent node
-    nodeLevel: number;
-    sortRequestId: number;
-    isLazyChildrenLoadInProgress?: boolean;
-    isAsyncLoadingDummyNode?: boolean;
-    children: Array<IFinalTreeNode>;
-    parent: IFinalTreeNode;
-    satisfiesFilterCondition?: boolean;
-    descendantSatisfiesFilterCondition?: boolean;
+    $meta: {
+        nodeId?: number | string;
+        parentNodeId?: number | string; // nodeId of the parent node
+        nodeLevel: number;
+        sortRequestId?: number;
+        isLazyChildrenLoadInProgress?: boolean;
+        isAsyncLoadingDummyNode?: boolean;
+        satisfiesFilterCondition?: boolean;
+        descendantSatisfiesFilterCondition?: boolean;
+    };
+    children?: Array<IFinalTreeNode>;
+    parentNode: IFinalTreeNode;
 }
 
 export interface ILookupTable {
     [id: number]: IFinalTreeNode;
+    [id: string]: IFinalTreeNode;
 }
 
 /**
@@ -46,17 +48,20 @@ export class TreeDataSource {
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
     private treeStructure: IFinalTreeNode;
+    private idMember:  string | ((arg: TreeNode) => string | number);
+    
     public isEmpty: boolean;
     /**
      * 
      * @param root warning: will be mutated and returned as ITreeDataSource
      */
-    constructor(input: TreeNode | TreeDataSource | Array<any>) {
+    constructor(input: TreeNode | TreeDataSource | Array<any>, idMember?: string | ((node: any) => string | number)) {
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
             this.treeStructure = input.treeStructure;
             this.changeIteration = input.changeIteration + 1;
+            this.idMember = input.idMember || idMember;
         } else {
             let rootNode: TreeNode;
             if (this.isRootNodesArray(input)) {
@@ -65,26 +70,46 @@ export class TreeDataSource {
                 rootNode = input;
             }
             this.nodesById = {};
-            this.extendNodes(input, rootNode.children, 0);
+            this.idMember = idMember;
             this.treeStructure = <IFinalTreeNode>rootNode;
+            if (!this.treeStructure.$meta) {
+                this.treeStructure.$meta = {
+                    nodeLevel: -1
+                };
+            }
+            this.extendNodes(input, rootNode.children, 0);
             this.isEmpty = this.treeStructure.children.length === 0;
+            
         }
     }
 
     private extendNodes(parent, children: Array<TreeNode>, level: number) {
         for (let node of children) {
             let extendedNode = <IFinalTreeNode>node;
-            extendedNode.nodeId = this.getNextId();
-            extendedNode.parent = parent;
-            if (extendedNode.parent) {
-                extendedNode.parentId = extendedNode.parent.nodeId;
-            }
-            extendedNode.nodeLevel = level;
-            this.nodesById[extendedNode.nodeId] = extendedNode;
+            extendedNode.$meta = {
+                nodeId: this.getNodeId(extendedNode),
+                parentNodeId: parent ? parent.$meta.nodeId : undefined,
+                nodeLevel: level
+            };
+            extendedNode.parentNode = parent;
+            this.nodesById[extendedNode.$meta.nodeId] = extendedNode;
             if (node.children && node.children.length > 0) {
                 this.extendNodes(node, node.children, level + 1);
             }
         }
+    }
+
+    private getNodeId(node: any) {
+        if (node.$meta && node.$meta.nodeId) {
+            return node.$meta.nodeId;
+        }
+        if (!this.idMember) {
+            return this.getNextSurogateId();
+        }
+        if (this.idMember instanceof Function) {
+            return this.idMember(node);
+        }
+        return node[this.idMember];
     }
 
     private isDataSource(input: TreeNode | TreeDataSource | Array<any>): input is TreeDataSource {
@@ -95,8 +120,8 @@ export class TreeDataSource {
         return (<Array<any>>input).slice !== undefined;
     }
 
-    public updateNode<T>(nodeId: number, props: Partial<IFinalTreeNode & T>): TreeDataSource;
-    public updateNode(nodeId: number, props: Partial<IFinalTreeNode>): TreeDataSource {
+    public updateNode<T>(nodeId: number | string, props: Partial<IFinalTreeNode & T>): TreeDataSource;
+    public updateNode(nodeId: number | string, props: Partial<IFinalTreeNode>): TreeDataSource {
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {
 
@@ -119,10 +144,10 @@ export class TreeDataSource {
             Object.assign(existingNode, props);
 
             if (props.children) {
-                existingNode.isLazyChildrenLoadInProgress = false;
+                existingNode.$meta.isLazyChildrenLoadInProgress = false;
                 existingNode.hasChildren = props.children && props.children.length > 0;
                 existingNode.isExpanded = existingNode.isExpanded && existingNode.hasChildren;
-                this.extendNodes(existingNode, existingNode.children, existingNode.nodeLevel + 1);
+                this.extendNodes(existingNode, existingNode.children, existingNode.$meta.nodeLevel + 1);
             }
             this.isEmpty = this.treeStructure.children.length === 0;
             return new TreeDataSource(this);
@@ -130,7 +155,7 @@ export class TreeDataSource {
         return this;
     }
 
-    private getNextId(): number {
+    private getNextSurogateId(): number {
         return ++this.idCounter;
     }
 
@@ -138,8 +163,8 @@ export class TreeDataSource {
         return this.treeStructure;
     }
 
-    public getNodeById<T>(nodeId: number): IFinalTreeNode & T;
-    public getNodeById(nodeId: number): IFinalTreeNode {
+    public getNodeById<T>(nodeId: number | string): IFinalTreeNode & T;
+    public getNodeById(nodeId: number | string): IFinalTreeNode {
         return this.nodesById[nodeId];
     }
 
