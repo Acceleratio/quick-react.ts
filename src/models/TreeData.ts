@@ -53,7 +53,9 @@ export class TreeDataSource {
     public isEmpty: boolean;
     /**
      * 
-     * @param root warning: will be mutated and returned as ITreeDataSource
+     * @param input warning: will be mutated and returned as ITreeDataSource
+     * @param idMember the field that contains the id of the node, or a function that returns a unique id for a node.
+     * If no parameter is supplied ids will be generated automatically
      */
     constructor(input: TreeNode | TreeDataSource | Array<any>, idMember?: string | ((node: any) => string | number)) {
         if (this.isDataSource(input)) {
