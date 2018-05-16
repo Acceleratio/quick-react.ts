@@ -66,7 +66,7 @@ export class Index extends React.Component<any, any> {
 
     onSelectedNodeChanged = (selectedNode: IFinalTreeNode) => {
         this.setState({
-            selectedNode: selectedNode.nodeId
+            selectedNode: selectedNode.$meta.nodeId
         });
     }
 
@@ -119,7 +119,7 @@ export class Index extends React.Component<any, any> {
                 newChildNode.isExpanded = false;
                 children.push(newChildNode);
             }
-            let newData = this.state.data.updateNode(node.nodeId, { children });
+            let newData = this.state.data.updateNode(node.$meta.nodeId, { children });
             this.setState(prev => ({ data: newData }));
         }, 2000);
     }
