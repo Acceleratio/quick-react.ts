@@ -8,7 +8,8 @@ export interface TreeNode { // extend this interface on a data structure to be u
     className?: string;
 }
 
-export interface IFinalTreeNode extends TreeNode {
+export type IExtendedTreeNode<T = any > = TreeNode & T & {
+    
     $meta: {
         nodeId?: number | string;
         parentNodeId?: number | string; // nodeId of the parent node
@@ -19,13 +20,14 @@ export interface IFinalTreeNode extends TreeNode {
         satisfiesFilterCondition?: boolean;
         descendantSatisfiesFilterCondition?: boolean;
     };
-    children?: Array<IFinalTreeNode>;
-    parentNode: IFinalTreeNode;
-}
+    
+    children?: Array<IExtendedTreeNode<T>>;
+    parentNode: IExtendedTreeNode<T>;
+};
 
 export interface ILookupTable {
-    [id: number]: IFinalTreeNode;
-    [id: string]: IFinalTreeNode;
+    [id: number]: IExtendedTreeNode;
+    [id: string]: IExtendedTreeNode;
 }
 
 /**
@@ -39,7 +41,7 @@ export interface ILookupTable {
  * this allows us to view the TreeDataSource as immutable when performing actions in our reducers
  * ie. we add a new child to the tree, react will register the change and the TreeGrid component will update because of the prop change
  */
-export class TreeDataSource {
+export class TreeDataSource<T = any> {
     public nodesById: ILookupTable;
     private idCounter: number = 0;
     // this would constitute a really dirty hack
@@ -47,7 +49,7 @@ export class TreeDataSource {
     // To force react to event consider updating a component(event if it is not pure) we need to pass an object that has some change
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
-    private treeStructure: IFinalTreeNode;
+    private treeStructure: IExtendedTreeNode;
     private idMember:  string | ((arg: TreeNode) => string | number);
     
     public isEmpty: boolean;
@@ -58,6 +60,7 @@ export class TreeDataSource {
      * If no parameter is supplied ids will be generated automatically
      */
     constructor(input: TreeNode | TreeDataSource | Array<any>, idMember?: string | ((node: any) => string | number)) {
+        
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
@@ -73,7 +76,7 @@ export class TreeDataSource {
             }
             this.nodesById = {};
             this.idMember = idMember;
-            this.treeStructure = <IFinalTreeNode>rootNode;
+            this.treeStructure = <IExtendedTreeNode>rootNode;
             if (!this.treeStructure.$meta) {
                 this.treeStructure.$meta = {
                     nodeLevel: -1
@@ -87,7 +90,7 @@ export class TreeDataSource {
 
     private extendNodes(parent, children: Array<TreeNode>, level: number) {
         for (let node of children) {
-            let extendedNode = <IFinalTreeNode>node;
+            let extendedNode = <IExtendedTreeNode>node;
             extendedNode.$meta = {
                 nodeId: this.getNodeId(extendedNode),
                 parentNodeId: parent ? parent.$meta.nodeId : undefined,
@@ -122,8 +125,7 @@ export class TreeDataSource {
         return (<Array<any>>input).slice !== undefined;
     }
 
-    public updateNode<T>(nodeId: number | string, props: Partial<IFinalTreeNode & T>): TreeDataSource;
-    public updateNode(nodeId: number | string, props: Partial<IFinalTreeNode>): TreeDataSource {
+    public updateNode<NodeType = T>(nodeId: number | string, props: Partial<IExtendedTreeNode<NodeType>>): TreeDataSource<T> {
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {
 
@@ -161,17 +163,15 @@ export class TreeDataSource {
         return ++this.idCounter;
     }
 
-    public getTreeStructure(): IFinalTreeNode {
+    public getTreeStructure(): IExtendedTreeNode {
         return this.treeStructure;
     }
 
-    public getNodeById<T>(nodeId: number | string): IFinalTreeNode & T;
-    public getNodeById(nodeId: number | string): IFinalTreeNode {
-        return this.nodesById[nodeId];
+    public getNodeById<NodeType = T>(nodeId: number | string): IExtendedTreeNode<NodeType> {
+        return this.nodesById[nodeId] as IExtendedTreeNode<NodeType>;
     }
 
-    public findNode<T>(nodePredicate: (node: IFinalTreeNode & T) => boolean): IFinalTreeNode & T;
-    public findNode(nodePredicate: (node: IFinalTreeNode) => boolean): IFinalTreeNode {
+    public findNode<NodeType = T>(nodePredicate: (node: IExtendedTreeNode<NodeType>) => boolean): IExtendedTreeNode<NodeType> {
         // tslint:disable-next-line:forin
         for (let key in this.nodesById) {
             let candidate = this.nodesById[key];
