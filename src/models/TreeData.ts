@@ -8,8 +8,8 @@ export interface TreeNode { // extend this interface on a data structure to be u
     className?: string;
 }
 
-export type IFinalTreeNode<T = any > = TreeNode & T & {
-    
+export type IFinalTreeNode<T = any> = TreeNode & T & {
+
     $meta: {
         nodeId?: number | string;
         parentNodeId?: number | string; // nodeId of the parent node
@@ -20,7 +20,7 @@ export type IFinalTreeNode<T = any > = TreeNode & T & {
         satisfiesFilterCondition?: boolean;
         descendantSatisfiesFilterCondition?: boolean;
     };
-    
+
     children?: Array<IFinalTreeNode<T>>;
     parentNode: IFinalTreeNode<T>;
 };
@@ -50,8 +50,8 @@ export class TreeDataSource<T = any> {
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
     private treeStructure: IFinalTreeNode;
-    private idMember:  string | ((arg: TreeNode) => string | number);
-    
+    private idMember: string | ((arg: TreeNode) => string | number);
+
     public isEmpty: boolean;
     /**
      * 
@@ -60,7 +60,7 @@ export class TreeDataSource<T = any> {
      * If no parameter is supplied ids will be generated automatically
      */
     constructor(input: TreeNode | TreeDataSource | Array<any>, idMember?: string | ((node: any) => string | number)) {
-        
+
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
@@ -84,7 +84,7 @@ export class TreeDataSource<T = any> {
             }
             this.extendNodes(input, rootNode.children, 0);
             this.isEmpty = this.treeStructure.children.length === 0;
-            
+
         }
     }
 
