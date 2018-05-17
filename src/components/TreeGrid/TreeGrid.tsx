@@ -10,7 +10,7 @@ import { CellElement } from './CellElement';
 import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
 import { getObjectValue } from '../../utilities/getObjectValue';
-import { IExtendedTreeNode } from '../..';
+import { IFinalTreeNode } from '../..';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
     public static defaultProps = {
@@ -18,7 +18,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     };
 
     private _quickGrid: IQuickGrid;
-    private _finalGridRows: Array<IExtendedTreeNode>;
+    private _finalGridRows: Array<IFinalTreeNode>;
     private _maxExpandedLevel: number;
     private _overscanProps = {
         // we are setting the overscanColumn property in hope of rendering the expand collapse column
@@ -154,7 +154,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             </div>);
     }
 
-    private _renderExpandCollapseButton(key, rowIndex: number, rowData: IExtendedTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
+    private _renderExpandCollapseButton(key, rowIndex: number, rowData: IFinalTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
         const showNodeAsExpanded = rowData.isExpanded || rowData.$meta.descendantSatisfiesFilterCondition;
         let actionsTooltip = showNodeAsExpanded ? 'Collapse' : 'Expand';
         let iconName = showNodeAsExpanded ? 'svg-icon-arrowCollapse' : 'svg-icon-arrowExpand';
@@ -266,7 +266,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         );
     }
 
-    private _onTreeExpandToggleClick = (ev, rowData: IExtendedTreeNode) => {
+    private _onTreeExpandToggleClick = (ev, rowData: IFinalTreeNode) => {
         // with this call we are telling underlying grid not to scroll on selected position on render update
         this._quickGrid.scrollToRow(undefined);
         // we are breaking immutability here and potential redux stores, but we need the performance
@@ -291,7 +291,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this.setState(oldState => ({ sortColumn: newSortColumn, sortDirection: newSortDirection, sortRequestId: oldState.sortRequestId + 1 }));
     }
 
-    private _setSelectedNode = (rowIndex: number, nodeData: IExtendedTreeNode) => {
+    private _setSelectedNode = (rowIndex: number, nodeData: IFinalTreeNode) => {
         if (this.state.selectedNodeId === nodeData.$meta.nodeId) {
             return;
         }

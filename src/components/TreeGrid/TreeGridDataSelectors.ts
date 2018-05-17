@@ -1,6 +1,6 @@
 import { ITreeGridState, ITreeGridProps } from './TreeGrid.Props';
 import { SortDirection, GridColumn } from '../QuickGrid/QuickGrid.Props';
-import { TreeNode, TreeDataSource, IExtendedTreeNode } from '../../models/TreeData';
+import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
 import * as _ from 'lodash';
 
 const createSelector = require('reselect').createSelector;
@@ -16,7 +16,7 @@ const getFilterString = (state: ITreeGridState, props: ITreeGridProps) => props.
 const getNewSelectedNodeId = (state: ITreeGridState, newProps: ITreeGridProps, oldProps: ITreeGridProps) => newProps.selectedNodeId;
 const getCurrentlySelectedNodeId = (state: ITreeGridState, newProps: ITreeGridProps, oldProps: ITreeGridProps) => oldProps.selectedNodeId;
 
-const getTreePathsToSelected = (node: IExtendedTreeNode) => {
+const getTreePathsToSelected = (node: IFinalTreeNode) => {
     if (!node.hasOwnProperty('nodeId')) {
         // we come to root, go back...
         return {};
@@ -37,7 +37,7 @@ const transformData = (tree: TreeDataSource,
     currentlySelectedNodeId,
     newSelectedNodeId
 ) => {
-    let root = tree.getTreeStructure() as IExtendedTreeNode & { filterString: string };
+    let root = tree.getTreeStructure() as IFinalTreeNode & { filterString: string };
     if (root.children.length === 0) {
         return [];
     }
@@ -62,7 +62,7 @@ const transformData = (tree: TreeDataSource,
     // 0 level, the node that contains the root nodes must be expanded for sort to kick in
     root.isExpanded = true;
     sortData(root, sortColumn, sortDirection, sortRequestId, getColumnValueGetter(sortColumn, columns, sortDirection));
-    let flattenedData: Array<IExtendedTreeNode> = [];
+    let flattenedData: Array<IFinalTreeNode> = [];
     let maxExpandedLevel = flatten(root.children, flattenedData, 0, idsInPathToSelected);
     return { data: flattenedData, maxExpandedLevel };
 };
@@ -81,7 +81,7 @@ const getValueGetterFunc = (sortColumn: GridColumn, sortDirection: SortDirection
     return null;
 };
 
-const sortData = (treeNode: IExtendedTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number, valueGetterForSort: (row: any) => any): void => {
+const sortData = (treeNode: IFinalTreeNode, sortColumn: string, sortDirection: SortDirection, rootSortRequestId: number, valueGetterForSort: (row: any) => any): void => {
 
     if (!treeNode.children || treeNode.children.length === 0) {
         return;
@@ -97,9 +97,9 @@ const sortData = (treeNode: IExtendedTreeNode, sortColumn: string, sortDirection
 
     // if the last sort configuration differs from the current, we need to resort the children
     // otherwise, performance gains
-    if ((<IExtendedTreeNode>treeNode).$meta.sortRequestId !== rootSortRequestId) {
+    if ((<IFinalTreeNode>treeNode).$meta.sortRequestId !== rootSortRequestId) {
         sort(treeNode.children, sortDirection, sortColumn, valueGetterForSort);
-        (<IExtendedTreeNode>treeNode).$meta.sortRequestId = rootSortRequestId;
+        (<IFinalTreeNode>treeNode).$meta.sortRequestId = rootSortRequestId;
     }
 };
 
@@ -140,15 +140,15 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
     input.sort(sortFunction);
 };
 
-function filterNodes(root: IExtendedTreeNode, filterText: string, columns: Array<string>);
-function filterNodes(root: IExtendedTreeNode, nodeFilterFunc: (node: IExtendedTreeNode) => boolean);
-function filterNodes(root: IExtendedTreeNode, arg: ((node: IExtendedTreeNode) => boolean) | string, columns?: Array<string>) {
-    let doesSatisfyCondition: (node: IExtendedTreeNode) => boolean;
+function filterNodes(root: IFinalTreeNode, filterText: string, columns: Array<string>);
+function filterNodes(root: IFinalTreeNode, nodeFilterFunc: (node: IFinalTreeNode) => boolean);
+function filterNodes(root: IFinalTreeNode, arg: ((node: IFinalTreeNode) => boolean) | string, columns?: Array<string>) {
+    let doesSatisfyCondition: (node: IFinalTreeNode) => boolean;
     if (arg instanceof Function) {
         doesSatisfyCondition = arg;
     } else {
         let filterText = arg.toLowerCase().trim();
-        doesSatisfyCondition = (node: IExtendedTreeNode): boolean => {
+        doesSatisfyCondition = (node: IFinalTreeNode): boolean => {
             if (!filterText) {
                 return true;
             }
@@ -170,7 +170,7 @@ function filterNodes(root: IExtendedTreeNode, arg: ((node: IExtendedTreeNode) =>
         };
     }
 
-    let processNode = (node: IExtendedTreeNode): boolean => {
+    let processNode = (node: IFinalTreeNode): boolean => {
 
 
         let anyDescendantSatisfies = false;
@@ -194,7 +194,7 @@ function filterNodes(root: IExtendedTreeNode, arg: ((node: IExtendedTreeNode) =>
     processNode(root);
 }
 
-export function flatten(tree: Array<IExtendedTreeNode>, resultArray: Array<IExtendedTreeNode>, level: number = 0, idsInPath): number {
+export function flatten(tree: Array<IFinalTreeNode>, resultArray: Array<IFinalTreeNode>, level: number = 0, idsInPath): number {
     level++;
     let maxChildLevel = level;
     for (let child of tree) {
