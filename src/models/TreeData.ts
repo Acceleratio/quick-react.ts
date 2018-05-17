@@ -8,7 +8,8 @@ export interface TreeNode { // extend this interface on a data structure to be u
     className?: string;
 }
 
-export interface IFinalTreeNode extends TreeNode {
+export type IFinalTreeNode<T = any> = TreeNode & T & {
+
     $meta: {
         nodeId?: number | string;
         parentNodeId?: number | string; // nodeId of the parent node
@@ -19,9 +20,10 @@ export interface IFinalTreeNode extends TreeNode {
         satisfiesFilterCondition?: boolean;
         descendantSatisfiesFilterCondition?: boolean;
     };
-    children?: Array<IFinalTreeNode>;
-    parentNode: IFinalTreeNode;
-}
+
+    children?: Array<IFinalTreeNode<T>>;
+    parentNode: IFinalTreeNode<T>;
+};
 
 export interface ILookupTable {
     [id: number]: IFinalTreeNode;
@@ -39,7 +41,7 @@ export interface ILookupTable {
  * this allows us to view the TreeDataSource as immutable when performing actions in our reducers
  * ie. we add a new child to the tree, react will register the change and the TreeGrid component will update because of the prop change
  */
-export class TreeDataSource {
+export class TreeDataSource<T = any> {
     public nodesById: ILookupTable;
     private idCounter: number = 0;
     // this would constitute a really dirty hack
@@ -48,8 +50,8 @@ export class TreeDataSource {
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
     private treeStructure: IFinalTreeNode;
-    private idMember:  string | ((arg: TreeNode) => string | number);
-    
+    private idMember: string | ((arg: TreeNode) => string | number);
+
     public isEmpty: boolean;
     /**
      * 
@@ -58,6 +60,7 @@ export class TreeDataSource {
      * If no parameter is supplied ids will be generated automatically
      */
     constructor(input: TreeNode | TreeDataSource | Array<any>, idMember?: string | ((node: any) => string | number)) {
+
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
@@ -81,7 +84,7 @@ export class TreeDataSource {
             }
             this.extendNodes(input, rootNode.children, 0);
             this.isEmpty = this.treeStructure.children.length === 0;
-            
+
         }
     }
 
@@ -122,8 +125,7 @@ export class TreeDataSource {
         return (<Array<any>>input).slice !== undefined;
     }
 
-    public updateNode<T>(nodeId: number | string, props: Partial<IFinalTreeNode & T>): TreeDataSource;
-    public updateNode(nodeId: number | string, props: Partial<IFinalTreeNode>): TreeDataSource {
+    public updateNode<NodeType = T>(nodeId: number | string, props: Partial<IFinalTreeNode<NodeType>>): TreeDataSource<T> {
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {
 
@@ -165,13 +167,11 @@ export class TreeDataSource {
         return this.treeStructure;
     }
 
-    public getNodeById<T>(nodeId: number | string): IFinalTreeNode & T;
-    public getNodeById(nodeId: number | string): IFinalTreeNode {
-        return this.nodesById[nodeId];
+    public getNodeById<NodeType = T>(nodeId: number | string): IFinalTreeNode<NodeType> {
+        return this.nodesById[nodeId] as IFinalTreeNode<NodeType>;
     }
 
-    public findNode<T>(nodePredicate: (node: IFinalTreeNode & T) => boolean): IFinalTreeNode & T;
-    public findNode(nodePredicate: (node: IFinalTreeNode) => boolean): IFinalTreeNode {
+    public findNode<NodeType = T>(nodePredicate: (node: IFinalTreeNode<NodeType>) => boolean): IFinalTreeNode<NodeType> {
         // tslint:disable-next-line:forin
         for (let key in this.nodesById) {
             let candidate = this.nodesById[key];

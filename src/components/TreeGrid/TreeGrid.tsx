@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { IFinalTreeNode } from '../../models/TreeData';
 import { getTreeRowsSelector } from './TreeGridDataSelectors';
 import { Icon } from '../Icon/Icon';
 import { getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid, DataTypeEnum, BoolFormatTypeEnum } from '../QuickGrid';
@@ -11,6 +10,7 @@ import { CellElement } from './CellElement';
 import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
 import { getObjectValue } from '../../utilities/getObjectValue';
+import { IFinalTreeNode } from '../..';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
     public static defaultProps = {
