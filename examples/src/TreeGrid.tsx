@@ -13,7 +13,7 @@ import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
 import './../../src/components/Icon/symbol-defs.svg';
 import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum, Search, TreeDataSource, Label, TreeviewItem } from '../../src/index';
-import { IFinalTreeNode, TreeNode } from '../../src/models/TreeData';
+import { AugmentedTreeNode, TreeNode } from '../../src/models/TreeData';
 import * as _ from 'lodash';
 
 const columnSummaries = {
@@ -64,7 +64,7 @@ export class Index extends React.Component<any, any> {
         });
     }
 
-    onSelectedNodeChanged = (selectedNode: IFinalTreeNode<GridData>) => {       
+    onSelectedNodeChanged = (selectedNode: AugmentedTreeNode<GridData>) => {       
         this.setState({
             selectedNode: selectedNode.$meta.nodeId
         });
@@ -111,7 +111,7 @@ export class Index extends React.Component<any, any> {
         );
     }
 
-    onLoadChildNodes = (node: IFinalTreeNode<GridData>) => {   
+    onLoadChildNodes = (node: AugmentedTreeNode<GridData>) => {   
         setTimeout(() => {
             let children = [];
             for (let i = 0; i < 6; i++) {

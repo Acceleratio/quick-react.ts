@@ -10,7 +10,7 @@ import { CellElement } from './CellElement';
 import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
 import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
 import { getObjectValue } from '../../utilities/getObjectValue';
-import { IFinalTreeNode } from '../..';
+import { AugmentedTreeNode } from '../..';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
     public static defaultProps = {
@@ -18,7 +18,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
     };
 
     private _quickGrid: IQuickGrid;
-    private _finalGridRows: Array<IFinalTreeNode>;
+    private _finalGridRows: Array<AugmentedTreeNode>;
     private _maxExpandedLevel: number;
     private _overscanProps = {
         // we are setting the overscanColumn property in hope of rendering the expand collapse column
@@ -154,7 +154,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             </div>);
     }
 
-    private _renderExpandCollapseButton(key, rowIndex: number, rowData: IFinalTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
+    private _renderExpandCollapseButton(key, rowIndex: number, rowData: AugmentedTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
         const showNodeAsExpanded = rowData.isExpanded || rowData.$meta.descendantSatisfiesFilterCondition;
         let actionsTooltip = showNodeAsExpanded ? 'Collapse' : 'Expand';
         let iconName = showNodeAsExpanded ? 'svg-icon-arrowCollapse' : 'svg-icon-arrowExpand';
@@ -192,7 +192,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         );
     }
 
-    private _renderBodyCell(columnIndex: number, key, rowIndex: number, rowData, style, onMouseEnter, rowActionsRender, isSelectedRow: boolean) {
+    private _renderBodyCell(columnIndex: number, key, rowIndex: number, rowData: AugmentedTreeNode, style, onMouseEnter, rowActionsRender, isSelectedRow: boolean) {
+        
         const columns = this.state.columnsToDisplay;
         const notLastIndex = columnIndex < (columns.length - 1);
         const column = columns[columnIndex];
@@ -221,8 +222,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 this._setSelectedNode(rowIndex, rowData);
             }
         };
-        onCellClick = rowData.isAsyncLoadingDummyNode ? undefined : onCellClick;
-        if (rowData.isAsyncLoadingDummyNode && columnIndex === 1) {
+        onCellClick = rowData.$meta.isAsyncLoadingDummyNode ? undefined : onCellClick;
+        if (rowData.$meta.isAsyncLoadingDummyNode && columnIndex === 1) {
             columnElement = <div className="loading-container">
                 <Spinner className="async-loading-spinner"
                     type={SpinnerType.small}
@@ -241,7 +242,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                     {cellData}
                 </div>
             ];
-            if (!notLastIndex && !rowData.isAsyncLoadingDummyNode) {
+            if (!notLastIndex && !rowData.$meta.isAsyncLoadingDummyNode) {
                 columnElement.push(rowActionsRender(rowIndex, rowData, isSelectedRow));
             }
         }
@@ -266,7 +267,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         );
     }
 
-    private _onTreeExpandToggleClick = (ev, rowData: IFinalTreeNode) => {
+    private _onTreeExpandToggleClick = (ev, rowData: AugmentedTreeNode) => {
         // with this call we are telling underlying grid not to scroll on selected position on render update
         this._quickGrid.scrollToRow(undefined);
         // we are breaking immutability here and potential redux stores, but we need the performance
@@ -291,7 +292,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this.setState(oldState => ({ sortColumn: newSortColumn, sortDirection: newSortDirection, sortRequestId: oldState.sortRequestId + 1 }));
     }
 
-    private _setSelectedNode = (rowIndex: number, nodeData: IFinalTreeNode) => {
+    private _setSelectedNode = (rowIndex: number, nodeData: AugmentedTreeNode) => {
         if (this.state.selectedNodeId === nodeData.$meta.nodeId) {
             return;
         }
