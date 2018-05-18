@@ -100,7 +100,7 @@ export class TreeDataSource<T = {}> {
 
     private extendSingleNode(node: TreeNode, parent: AugmentedTreeNode<T>) {
         let extendedNode = <AugmentedTreeNode>node;
-        let level = parent ? parent.$meta.nodeLevel + 1 : 0;
+        let level = parent && parent.$meta ? parent.$meta.nodeLevel + 1 : 0;
         extendedNode.$meta = {
             nodeId: this.getNodeId(extendedNode),
             parentNodeId: parent && parent.$meta ? parent.$meta.nodeId : undefined,
@@ -166,7 +166,12 @@ export class TreeDataSource<T = {}> {
                 removeChildrenFromLookup(existingNode);
             }
 
+            let originalMeta = existingNode.$meta;
+            let newMeta = (<any>props).$meta;
             Object.assign(existingNode, props);
+            if (originalMeta && newMeta) {
+                existingNode.$meta = Object.assign(originalMeta, newMeta);
+            }
 
             if (props.children) {
                 existingNode.$meta.isLazyChildrenLoadInProgress = false;
