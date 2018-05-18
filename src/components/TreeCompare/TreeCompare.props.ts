@@ -1,5 +1,5 @@
 import { GridColumn } from '../QuickGrid';
-import { TreeDataSource, IFinalTreeNode, TreeNode } from '../..';
+import { TreeDataSource, AugmentedTreeNode, TreeNode } from '../..';
 
 export interface ICompareResultCell {
     compareResult: number; // represents enum

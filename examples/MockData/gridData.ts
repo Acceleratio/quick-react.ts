@@ -137,8 +137,8 @@ export const gridColumns1: Array<GridColumn> = [
 
 
 
-export function getTreeGridData(size: number): TreeDataSource {
-    const treeData = new TreeDataSource(generateTreeData(size));
+export function getTreeGridData(size: number) {
+    const treeData = new TreeDataSource<GridData>(generateTreeData(size));
     return treeData;
 }
 

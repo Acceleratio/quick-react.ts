@@ -8,9 +8,10 @@ export interface TreeNode { // extend this interface on a data structure to be u
     className?: string;
 }
 
-export interface IFinalTreeNode extends TreeNode {
+export type AugmentedTreeNode<T = {}> = TreeNode & T & {
+
     $meta: {
-        nodeId?: number | string;
+        nodeId?: any; // number | string;
         parentNodeId?: number | string; // nodeId of the parent node
         nodeLevel: number;
         sortRequestId?: number;
@@ -19,13 +20,18 @@ export interface IFinalTreeNode extends TreeNode {
         satisfiesFilterCondition?: boolean;
         descendantSatisfiesFilterCondition?: boolean;
     };
-    children?: Array<IFinalTreeNode>;
-    parentNode: IFinalTreeNode;
+
+    children?: Array<AugmentedTreeNode<T>>;
+    parentNode: AugmentedTreeNode<T>;
+};
+
+export interface ITreeStructureRoot<T> {
+    children?: Array<AugmentedTreeNode<T>>;
 }
 
 export interface ILookupTable {
-    [id: number]: IFinalTreeNode;
-    [id: string]: IFinalTreeNode;
+    [id: number]: AugmentedTreeNode;
+    [id: string]: AugmentedTreeNode;
 }
 
 /**
@@ -39,7 +45,7 @@ export interface ILookupTable {
  * this allows us to view the TreeDataSource as immutable when performing actions in our reducers
  * ie. we add a new child to the tree, react will register the change and the TreeGrid component will update because of the prop change
  */
-export class TreeDataSource {
+export class TreeDataSource<T = {}> {
     public nodesById: ILookupTable;
     private idCounter: number = 0;
     // this would constitute a really dirty hack
@@ -47,9 +53,9 @@ export class TreeDataSource {
     // To force react to event consider updating a component(event if it is not pure) we need to pass an object that has some change
     // Since we are copying everything from the previous iteration we need at least one field that actually changes    
     private changeIteration: number = 0;
-    private treeStructure: IFinalTreeNode;
-    private idMember:  string | ((arg: TreeNode) => string | number);
-    
+    private treeStructure: AugmentedTreeNode<T>;
+    private idMember: string | ((arg: TreeNode) => string | number);
+    private renumberIds: boolean;
     public isEmpty: boolean;
     /**
      * 
@@ -58,12 +64,14 @@ export class TreeDataSource {
      * If no parameter is supplied ids will be generated automatically
      */
     constructor(input: TreeNode | TreeDataSource | Array<any>, idMember?: string | ((node: any) => string | number)) {
+
         if (this.isDataSource(input)) {
             this.nodesById = input.nodesById;
             this.idCounter = input.idCounter;
-            this.treeStructure = input.treeStructure;
+            this.treeStructure = <AugmentedTreeNode<T>>input.treeStructure;
             this.changeIteration = input.changeIteration + 1;
             this.idMember = input.idMember || idMember;
+            
         } else {
             let rootNode: TreeNode;
             if (this.isRootNodesArray(input)) {
@@ -73,36 +81,44 @@ export class TreeDataSource {
             }
             this.nodesById = {};
             this.idMember = idMember;
-            this.treeStructure = <IFinalTreeNode>rootNode;
+            this.treeStructure = <AugmentedTreeNode<T>>rootNode;
             if (!this.treeStructure.$meta) {
                 this.treeStructure.$meta = {
                     nodeLevel: -1
                 };
             }
-            this.extendNodes(input, rootNode.children, 0);
+
+            this.renumberIds = true;
+            this.extendNodes(input, rootNode.children);
+            this.renumberIds = false;
             this.isEmpty = this.treeStructure.children.length === 0;
-            
+
         }
     }
 
-    private extendNodes(parent, children: Array<TreeNode>, level: number) {
+    private extendNodes(parent, children: Array<TreeNode>) {
         for (let node of children) {
-            let extendedNode = <IFinalTreeNode>node;
-            extendedNode.$meta = {
-                nodeId: this.getNodeId(extendedNode),
-                parentNodeId: parent ? parent.$meta.nodeId : undefined,
-                nodeLevel: level
-            };
-            extendedNode.parentNode = parent;
-            this.nodesById[extendedNode.$meta.nodeId] = extendedNode;
-            if (node.children && node.children.length > 0) {
-                this.extendNodes(node, node.children, level + 1);
-            }
+            this.extendSingleNode(node, parent);
+        }
+    }
+
+    private extendSingleNode(node: TreeNode, parent: AugmentedTreeNode<T>) {
+        let extendedNode = <AugmentedTreeNode>node;
+        let level = parent && parent.$meta ? parent.$meta.nodeLevel + 1 : 0;
+        extendedNode.$meta = {
+            nodeId: this.getNodeId(extendedNode),
+            parentNodeId: parent && parent.$meta ? parent.$meta.nodeId : undefined,
+            nodeLevel: level
+        };
+        extendedNode.parentNode = parent;
+        this.nodesById[extendedNode.$meta.nodeId] = extendedNode;
+        if (node.children && node.children.length > 0) {
+            this.extendNodes(node, node.children);
         }
     }
 
     private getNodeId(node: any) {
-        if (node.$meta && node.$meta.nodeId) {
+        if (node.$meta && node.$meta.nodeId && !this.renumberIds) {
             return node.$meta.nodeId;
         }
         if (!this.idMember) {
@@ -122,8 +138,19 @@ export class TreeDataSource {
         return (<Array<any>>input).slice !== undefined;
     }
 
-    public updateNode<T>(nodeId: number | string, props: Partial<IFinalTreeNode & T>): TreeDataSource;
-    public updateNode(nodeId: number | string, props: Partial<IFinalTreeNode>): TreeDataSource {
+    public appendNode(node: T, parentNodeId?: number | string): TreeDataSource<T> {
+        const parentNode = this.getNodeById(parentNodeId);
+        this.extendSingleNode(node, parentNode);
+        if (parentNode) {
+            parentNode.children.push(node);
+        } else {
+            this.treeStructure.children.push(node);
+        }
+
+        return new TreeDataSource<T>(this);
+    }
+
+    public updateNode<NodeType = T>(nodeId: number | string, props: Partial<AugmentedTreeNode<NodeType>> | Partial<NodeType> & { children?: any }): TreeDataSource<T> {
         let existingNode = this.nodesById[nodeId];
         if (existingNode) {
 
@@ -143,13 +170,18 @@ export class TreeDataSource {
                 removeChildrenFromLookup(existingNode);
             }
 
+            let originalMeta = existingNode.$meta;
+            let newMeta = (<any>props).$meta;
             Object.assign(existingNode, props);
+            if (originalMeta && newMeta) {
+                existingNode.$meta = Object.assign(originalMeta, newMeta);
+            }
 
             if (props.children) {
                 existingNode.$meta.isLazyChildrenLoadInProgress = false;
                 existingNode.hasChildren = props.children && props.children.length > 0;
                 existingNode.isExpanded = existingNode.isExpanded && existingNode.hasChildren;
-                this.extendNodes(existingNode, existingNode.children, existingNode.$meta.nodeLevel + 1);
+                this.extendNodes(existingNode, existingNode.children);
             }
             this.isEmpty = this.treeStructure.children.length === 0;
             return new TreeDataSource(this);
@@ -161,20 +193,18 @@ export class TreeDataSource {
         return ++this.idCounter;
     }
 
-    public getTreeStructure(): IFinalTreeNode {
-        return this.treeStructure;
+    public getTreeStructure(): ITreeStructureRoot<T> {
+        return <ITreeStructureRoot<T>>this.treeStructure;
     }
 
-    public getNodeById<T>(nodeId: number | string): IFinalTreeNode & T;
-    public getNodeById(nodeId: number | string): IFinalTreeNode {
-        return this.nodesById[nodeId];
+    public getNodeById<NodeType = T>(nodeId: number | string): AugmentedTreeNode<NodeType> {
+        return this.nodesById[nodeId] as AugmentedTreeNode<NodeType>;
     }
 
-    public findNode<T>(nodePredicate: (node: IFinalTreeNode & T) => boolean): IFinalTreeNode & T;
-    public findNode(nodePredicate: (node: IFinalTreeNode) => boolean): IFinalTreeNode {
+    public findNode<NodeType = T>(nodePredicate: (node: AugmentedTreeNode<NodeType>) => boolean): AugmentedTreeNode<NodeType> {
         // tslint:disable-next-line:forin
         for (let key in this.nodesById) {
-            let candidate = this.nodesById[key];
+            let candidate = <AugmentedTreeNode<NodeType>>this.nodesById[key];
             if (nodePredicate(candidate)) {
                 return candidate;
             }
