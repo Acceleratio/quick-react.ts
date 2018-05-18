@@ -1,13 +1,13 @@
 import { GridColumn, SortDirection, QuickGridActions } from '../QuickGrid/QuickGrid.Props';
-import { TreeNode, TreeDataSource, IFinalTreeNode } from '../../models/TreeData';
+import { TreeNode, TreeDataSource, AugmentedTreeNode } from '../../models/TreeData';
 
 export interface ITreeGridProps {
     treeDataSource: TreeDataSource;
     columns: Array<GridColumn>;
     className?: string;
     onRowDoubleClicked?: (row: any) => void;    
-    onSelectedNodeChanged?: (selectedNode: IFinalTreeNode) => void;
-    onLazyLoadChildNodes?: (node: IFinalTreeNode) => void;
+    onSelectedNodeChanged?: (selectedNode: AugmentedTreeNode) => void;
+    onLazyLoadChildNodes?: (node: AugmentedTreeNode) => void;
     gridActions?: QuickGridActions;
     sortColumn?: string;
     sortDirection?: SortDirection;
@@ -24,5 +24,5 @@ export interface ITreeGridState {
     sortDirection?: SortDirection;
     sortRequestId: number;
     structureRequestChangeId: number;
-    selectedNodeId?: number;
+    selectedNodeId?: number | string;
 }

@@ -7,13 +7,13 @@ import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { TreeGrid, ITreeGridProps } from '../../src/components/TreeGrid';
 import { SortDirection, GridColumn } from '../../src/components/QuickGrid';
-import { gridColumns1, getTreeGridData, generateTreeNode, nodeActions } from '../MockData/gridData';
+import { gridColumns1, getTreeGridData, generateTreeNode, nodeActions, GridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
 import './../../src/components/Icon/symbol-defs.svg';
-import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum, Search, TreeDataSource, Label } from '../../src/index';
-import { IFinalTreeNode, TreeNode } from '../../src/models/TreeData';
+import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum, Search, TreeDataSource, Label, TreeviewItem } from '../../src/index';
+import { AugmentedTreeNode, TreeNode } from '../../src/models/TreeData';
 import * as _ from 'lodash';
 
 const columnSummaries = {
@@ -64,9 +64,9 @@ export class Index extends React.Component<any, any> {
         });
     }
 
-    onSelectedNodeChanged = (selectedNode: IFinalTreeNode) => {
+    onSelectedNodeChanged = (selectedNode: AugmentedTreeNode<GridData>) => {       
         this.setState({
-            selectedNode: selectedNode.nodeId
+            selectedNode: selectedNode.$meta.nodeId
         });
     }
 
@@ -111,7 +111,7 @@ export class Index extends React.Component<any, any> {
         );
     }
 
-    onLoadChildNodes = (node: IFinalTreeNode) => {
+    onLoadChildNodes = (node: AugmentedTreeNode<GridData>) => {   
         setTimeout(() => {
             let children = [];
             for (let i = 0; i < 6; i++) {
@@ -119,7 +119,7 @@ export class Index extends React.Component<any, any> {
                 newChildNode.isExpanded = false;
                 children.push(newChildNode);
             }
-            let newData = this.state.data.updateNode(node.nodeId, { children });
+            let newData = this.state.data.updateNode(node.$meta.nodeId, { children });
             this.setState(prev => ({ data: newData }));
         }, 2000);
     }
