@@ -55,7 +55,7 @@ export class TreeDataSource<T = {}> {
     private changeIteration: number = 0;
     private treeStructure: AugmentedTreeNode<T>;
     private idMember: string | ((arg: TreeNode) => string | number);
-
+    private renumberIds: boolean;
     public isEmpty: boolean;
     /**
      * 
@@ -71,6 +71,7 @@ export class TreeDataSource<T = {}> {
             this.treeStructure = <AugmentedTreeNode<T>>input.treeStructure;
             this.changeIteration = input.changeIteration + 1;
             this.idMember = input.idMember || idMember;
+            
         } else {
             let rootNode: TreeNode;
             if (this.isRootNodesArray(input)) {
@@ -86,7 +87,10 @@ export class TreeDataSource<T = {}> {
                     nodeLevel: -1
                 };
             }
+
+            this.renumberIds = true;
             this.extendNodes(input, rootNode.children);
+            this.renumberIds = false;
             this.isEmpty = this.treeStructure.children.length === 0;
 
         }
@@ -114,7 +118,7 @@ export class TreeDataSource<T = {}> {
     }
 
     private getNodeId(node: any) {
-        if (node.$meta && node.$meta.nodeId) {
+        if (node.$meta && node.$meta.nodeId && !this.renumberIds) {
             return node.$meta.nodeId;
         }
         if (!this.idMember) {
