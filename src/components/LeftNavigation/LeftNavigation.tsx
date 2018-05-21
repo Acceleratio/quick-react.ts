@@ -9,8 +9,7 @@ import { elementContains } from '../../utilities/elementContains';
 import { getWindow } from '../../utilities/getDocument';
 import { autobind } from '../../utilities/autobind';
 import './LeftNavigation.scss';
-
-const nullFunc = () => { };
+import { nullFunc } from '../../utilities/common';
 
 export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
     private _targetWindow: Window;
@@ -76,7 +75,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
         this.props.onClick(ev, item);
     }
 
-    private getSelectedId(options: Array<ILeftNavigationOption>) : string {
+    private getSelectedId(options: Array<ILeftNavigationOption>): string {
         const selectedOptions = options.filter(option => { return option.selected ? option.id : null; });
 
         if (selectedOptions.length > 0) {

@@ -1,3 +1,5 @@
+import { nullFunc } from '../../utilities/common';
+
 export interface ICellElementProps {
     id: any;
     style?: any;
@@ -11,5 +13,13 @@ export interface ICellElementProps {
     onClick?: any;
     onClickParameter?: {};
     onRowDoubleClicked?: any;
-    element?: any;
+    element?: JSX.Element | Array<JSX.Element>;
 }
+
+export const defaultProps = {
+    onMouseEnter: nullFunc,
+    onMouseLeave: nullFunc,
+    onClick: nullFunc,
+    onRowDoubleClicked: nullFunc,
+    isSelectable: false
+};

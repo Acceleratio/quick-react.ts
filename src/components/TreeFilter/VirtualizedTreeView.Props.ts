@@ -1,7 +1,6 @@
 import { FilterSelectionEnum, TreeItem, IFilterSelection } from './TreeFilter.Props';
 import { ItemOperator, ILookupTable, TreeLookups } from './TreeItemOperators';
-
-const nullFunc = () => { };
+import { nullFunc } from '../../utilities/common';
 
 export interface IVirtualizedTreeViewProps {
     title?: string;

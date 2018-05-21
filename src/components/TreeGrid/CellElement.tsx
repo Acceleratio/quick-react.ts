@@ -1,49 +1,45 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { ICellElementProps } from './CellElement.Props';
-import { autobind } from '../../utilities/autobind';
 
+import { autobind } from '../../utilities/autobind';
+import { Checkbox } from '../Checkbox/Checkbox';
+import { ICellElementProps, defaultProps } from './CellElement.Props';
 
 export class CellElement extends React.PureComponent<ICellElementProps, {}> {
+    public static defaultProps = defaultProps;
 
     @autobind
-    private _onMouseEnter() { 
-        if (this.props.onMouseEnter) {
-            this.props.onMouseEnter(this.props.rowIndex);
-        }
+    private _onMouseEnter() {
+        this.props.onMouseEnter(this.props.rowIndex);
     }
+
     @autobind
-    private _onMouseLeave() { 
-        if (this.props.onMouseLeave) {
-            this.props.onMouseLeave(this.props.rowIndex); 
-        }
+    private _onMouseLeave() {
+        this.props.onMouseLeave(this.props.rowIndex);
     }
+
     @autobind
-    private _onClick(ev) { 
-        if (this.props.onClick) {
-            this.props.onClick(ev, this.props.onClickParameter); 
-        }
+    private _onClick(ev) {
+        this.props.onClick(ev, this.props.onClickParameter);
     }
+
     @autobind
     private _onDoubleClick() {
-        if (this.props.onRowDoubleClicked) {
-            this.props.onRowDoubleClicked(this.props.rowData);
-        }
+        this.props.onRowDoubleClicked(this.props.rowData);
     }
 
-    render() {
-        return(
+    public render() {
+        return (
             <div
-            key={this.props.id}
-            style={this.props.style}
-            className={this.props.className}
-            title={this.props.title}
-            onMouseEnter={this._onMouseEnter}
-            onMouseLeave={this._onMouseLeave}
-            onClick={this._onClick}
-            onDoubleClick={this._onDoubleClick}
+                key={this.props.id}
+                style={this.props.style}
+                className={this.props.className}
+                title={this.props.title}
+                onMouseEnter={this._onMouseEnter}
+                onMouseLeave={this._onMouseLeave}
+                onClick={this._onClick}
+                onDoubleClick={this._onDoubleClick}
             >
-            {this.props.element}
+                {this.props.element}
             </div>
         );
     }

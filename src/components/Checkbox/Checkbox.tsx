@@ -15,10 +15,6 @@ export interface ICheckboxState {
 }
 
 export class Checkbox extends CommonComponent<ICheckboxProps, ICheckboxState> {
-
-    public static defaultProps: ICheckboxProps = {
-    };
-
     private id: string;
     private _checkBox: HTMLInputElement;
 
@@ -64,11 +60,11 @@ export class Checkbox extends CommonComponent<ICheckboxProps, ICheckboxState> {
             }
         );
         return (
-            <div className={className}>
+            <div className={className} style={this.props.style}>
                 <input
-                    { ...inputProps }
-                    { ...(checked !== undefined && { checked }) }
-                    { ...(defaultChecked !== undefined && { defaultChecked }) }
+                    {...inputProps}
+                    {...(checked !== undefined && { checked })}
+                    {...(defaultChecked !== undefined && { defaultChecked })}
                     disabled={disabled}
                     ref={this._resolveRef('_checkBox')}
                     className={'checkbox-input'}
