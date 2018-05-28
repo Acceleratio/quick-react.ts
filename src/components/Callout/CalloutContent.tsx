@@ -195,7 +195,7 @@ export class CalloutContent extends CommonComponent<ICalloutProps, ICalloutState
 
         if (this.state.positions && this.state.positions.beak) {
             const beakPosition = this.state.positions.beak;
-            return beak.left !== beakPosition.left || beak.top !== beakPosition.top;
+            return beak.left.toFixed(2) !== beakPosition.left.toFixed(2) || beak.top.toFixed(2) !== beakPosition.top.toFixed(2);
         }
 
         return false;

@@ -24,6 +24,8 @@ $checkbox-transition-timing: cubic-bezier(.4, 0, .23, 1);
         cursor: pointer;
         margin-top: 5px;
         line-height: $checkbox-size;
+        min-width: $checkbox-size;
+        min-height: $checkbox-size;
         user-select: none;
         position: relative;
 
@@ -33,6 +35,7 @@ $checkbox-transition-timing: cubic-bezier(.4, 0, .23, 1);
             border-radius: 4px;
             width: $checkbox-size;
             height: $checkbox-size;
+            display: inline-block;
             position: absolute;
             box-sizing: border-box;
             transition-property: background, border, border-color;

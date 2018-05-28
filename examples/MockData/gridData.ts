@@ -23,7 +23,7 @@ export interface GridData extends TreeNode {
 
 let totalItems = 0;
 
-const randomLower = (str : string) => Math.random() > 0.5 ? str : str.toLowerCase();
+const randomLower = (str: string) => Math.random() > 0.5 ? str : str.toLowerCase();
 
 export const nodeActions = [
     {
@@ -49,14 +49,14 @@ export const nodeActions = [
 ];
 
 export const generateTreeNode = () => {
-    totalItems++;  
-    return {                        
-        isExpanded: true,            
+    totalItems++;
+    return {
+        isExpanded: true,
         children: [],
         iconName: 'svg-icon-world',
-        hasChildren: true,       
+        hasChildren: true,
         Name: RANDOM_Names[Math.floor(Math.random() * RANDOM_Names.length)],
-        Color:  randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
+        Color: randomLower(RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]),
         Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
         Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
         Numbers: Math.floor(Math.random() * 30),
@@ -64,14 +64,14 @@ export const generateTreeNode = () => {
 
     };
 };
-const generateTreeData = (size: number): TreeNode => {
+export const generateTreeData = (size: number): TreeNode => {
     let treeSize: Array<number>;
     if (size === 0) {
         treeSize = [5, 5, 5, 2];
     } else {
-        treeSize = [10, 1000, 5, 10];
+        treeSize = [10, 100, 100];
     }
-    let result: Array<TreeNode> = [];   
+    let result: Array<TreeNode> = [];
 
 
 
@@ -83,10 +83,10 @@ const generateTreeData = (size: number): TreeNode => {
                 let treeEntry2 = generateTreeNode();
                 for (let l = 0; l < treeSize[3]; l++) {
                     let treeEntry3 = generateTreeNode();
-                     treeEntry3.isExpanded = false;
+                    treeEntry3.isExpanded = false;
                     treeEntry2.children.push(treeEntry3);
                 }
-                 treeEntry2.isExpanded = false;
+                treeEntry2.isExpanded = false;
                 treeEntry1.children.push(treeEntry2);
             }
             treeEntry.children.push(treeEntry1);
@@ -105,23 +105,23 @@ export const gridColumns1: Array<GridColumn> = [
         headerText: 'Name',
         width: 100,
         headerTooltip: 'This is names column.'
-    }, 
+    },
     {
         dataType: DataTypeEnum.String,
         valueMember: 'Color',
         headerText: 'Color',
         width: 100
-    }, 
+    },
     {
         valueMember: 'Animal',
         headerText: 'Animal - with very long header name',
         width: 100
-    }, 
+    },
     {
         valueMember: 'Mixed',
         headerText: 'Numbers and strings',
         width: 100
-    }, 
+    },
     {
         valueMember: 'Numbers',
         headerText: 'Numbers',
@@ -191,7 +191,7 @@ export function getGridData(numberOfElements) {
         data.push(
             {
                 RandomWords: RANDOM_WORDS[Math.floor(Math.random() * RANDOM_WORDS.length)],
-                Color:  RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)],
+                Color: RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)],
                 Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
                 Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
                 Numbers: Math.floor(Math.random() * 30),
@@ -208,7 +208,7 @@ export function getSmallGridData(numberOfElements) {
         data.push(
             {
                 Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
-                Color:  RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]
+                Color: RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)]
             }
         );
     }

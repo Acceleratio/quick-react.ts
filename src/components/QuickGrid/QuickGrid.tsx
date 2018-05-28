@@ -313,6 +313,18 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             }
         };
 
+        if (this.props.customCellRenderer) {
+            return this.props.customCellRenderer({
+                columnIndex,
+                key,
+                rowIndex,
+                style,
+                onMouseEnter: this.onMouseEnterCell,
+                onMouseClick: onClick,
+                rowActionsRender: this.renderRowContextActions,
+                isSelectedRow: rowIndex === this.state.selectedRowIndex
+            });
+        }
 
         let defaultRender = (overridenStyle) => {
             if (rowData.type === 'GroupRow') { // todo Different member - > true
@@ -327,19 +339,6 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 return this.renderBodyCell(columnIndex, key, rowIndex, rowData, overridenStyle, onClick);
             }
         };
-
-        if (this.props.customCellRenderer) {
-            return this.props.customCellRenderer({
-                columnIndex,
-                key,
-                rowIndex,
-                style,
-                onMouseEnter: this.onMouseEnterCell,
-                onMouseClick: onClick,
-                rowActionsRender: this.renderRowContextActions,
-                isSelectedRow: rowIndex === this.state.selectedRowIndex
-            });
-        }
 
         return defaultRender(style);
     }
@@ -568,7 +567,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
         if (empty > 0) {
             newColumnWidths[newColumnWidths.length - 1] = newColumnWidths[newColumnWidths.length - 1] + empty;
         }
-        
+
         return newColumnWidths;
     }
 
