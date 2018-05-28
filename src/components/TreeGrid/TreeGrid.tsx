@@ -1,20 +1,24 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { getTreeRowsSelector } from './TreeGridDataSelectors';
+import { CheckStatus } from '../..';
+import { getObjectValue } from '../../utilities/getObjectValue';
 import { Icon } from '../Icon/Icon';
-import { getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid, DataTypeEnum, BoolFormatTypeEnum } from '../QuickGrid';
+import { DataTypeEnum, getColumnMinWidth, GridColumn, ICustomCellRendererArgs, IQuickGrid, QuickGrid } from '../QuickGrid';
+import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
 import { Spinner } from '../Spinner/Spinner';
 import { SpinnerType } from '../Spinner/Spinner.Props';
+import { VirtualizedTreeViewCheckBox } from '../TreeFilter/VirtualizedTreeViewCheckBox';
 import { CellElement } from './CellElement';
 import { ITreeGridProps, ITreeGridState } from './TreeGrid.Props';
-import { boolFormatterFactory } from '../QuickGrid/CellFormatters';
-import { getObjectValue } from '../../utilities/getObjectValue';
 import { AugmentedTreeNode } from '../..';
+import { getTreeRowsSelector } from './TreeGridDataSelectors';
+import { nullFunc } from '../../utilities/common';
 
 export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState> {
     public static defaultProps = {
-        isNodeSelectable: true
+        isNodeSelectable: true,
+        isMultiSelectable: false,
+        onSelectedNodeChanged: nullFunc
     };
 
     private _quickGrid: IQuickGrid;
@@ -33,8 +37,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     };
 
-    constructor(props: ITreeGridProps) {
+    public constructor(props: ITreeGridProps) {
         super(props);
+
         this.state = {
             columnsToDisplay: this._getTreeColumnsToDisplay(props.columns),
             sortColumn: props.sortColumn,
@@ -53,7 +58,10 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this._quickGrid.scrollToRow(rowIndex);
     }
 
-    componentWillMount() {
+    public componentWillMount() {
+        this.props.treeDataSource.subscribe(this);
+        this.props.treeDataSource.registerDataListener(this.props.onSelectedNodeChanged);
+
         if (this.props.isNodeSelectable) {
             if (this.state.selectedNodeId > 0) {
                 this._setSelectedNodeAndState(this.state.selectedNodeId);
@@ -61,12 +69,18 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
+    public componentWillUnmount() {
+        this.props.treeDataSource.unsubscribe(this);
+        this.props.treeDataSource.removeDataListener(this.props.onSelectedNodeChanged);
+    }
+
     private _getTreeColumnsToDisplay(columns: Array<GridColumn>) {
         let expandedColumns = new Array();
+        const fixedColumnWidth = this.props.isMultiSelectable ? 50 : 16;
         expandedColumns.push({
             isSortable: false,
-            width: 16,
-            minWidth: 16,
+            width: fixedColumnWidth,
+            minWidth: fixedColumnWidth,
             fixedWidth: true
         });
         const replacementFirstColumn: GridColumn = {
@@ -106,15 +120,21 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
     }
 
-    treeCellRenderer = (args: ICustomCellRendererArgs) => {
+    private treeCellRenderer = (args: ICustomCellRendererArgs) => {
         let { columnIndex, key, rowIndex, style, onMouseEnter, rowActionsRender, onMouseClick } = args;
         const rowData = this._finalGridRows[rowIndex];
-        let isSelectedRow = this.state.selectedNodeId && this.state.selectedNodeId === rowData.$meta.nodeId;
-        const indentSize = 20;
+        let isSelectedRow;
+
+        if (this.props.isMultiSelectable) {
+            isSelectedRow = this.props.treeDataSource.SelectedNodes[rowData.$meta.nodeId];
+        } else {
+            isSelectedRow = this.state.selectedNodeId && this.state.selectedNodeId === rowData.$meta.nodeId;
+        }
+
+        const indentSize = this.props.isMultiSelectable ? 30 : 20;
         let indent = 0;
         let level = rowData.$meta.nodeLevel;
         if ((columnIndex === 0 || columnIndex === 1)) {
-
             indent = level * indentSize;
         }
         let shouldIndent: boolean = false;
@@ -151,7 +171,22 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         return (
             <div key={key} style={style}>
                 {rowData}
-            </div>);
+            </div>
+        );
+    }
+
+    private getCheckStatus = (data: AugmentedTreeNode): CheckStatus => {
+        if (this.props.treeDataSource.PartiallySelectedNodes[data.$meta.nodeId]) {
+            return CheckStatus.ChildChecked;
+        }
+
+        const selectedNodes = this.props.treeDataSource.SelectedNodes;
+        if (!selectedNodes.hasOwnProperty(data.$meta.nodeId)) {
+            return CheckStatus.NotChecked;
+        }
+        if (this.props.treeDataSource.SelectedNodes[data.$meta.nodeId]) {
+            return CheckStatus.Checked;
+        }
     }
 
     private _renderExpandCollapseButton(key, rowIndex: number, rowData: AugmentedTreeNode, style, onMouseEnter, isSelectedRow: boolean) {
@@ -160,12 +195,50 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         let iconName = showNodeAsExpanded ? 'svg-icon-arrowCollapse' : 'svg-icon-arrowExpand';
         let icon = null;
 
+        const nodeId = rowData.$meta.nodeId;
+
         if ((!rowData.children || rowData.children.length <= 0) && !rowData.hasChildren) {
             icon = null;
             actionsTooltip = null;
         } else {
-            icon = <Icon iconName={iconName} className="expand-collapse-action-icon" />;
+            icon = (
+                <Icon
+                    iconName={iconName}
+                    style={{ display: 'inline-block' }}
+                    className="expand-collapse-action-icon"
+                    onClick={(ev) => { ev.stopPropagation(); this._onTreeExpandToggleClick(ev, rowData); }}
+                    title={actionsTooltip}
+                />
+            );
         }
+
+        const onChange = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.props.treeDataSource.SelectedNodes[nodeId]) {
+                this.props.treeDataSource.removeSelected(rowData);
+            } else {
+                this.props.treeDataSource.setSelected(rowData);
+            }
+        };
+
+        let checkBox: JSX.Element = null;
+        if (this.props.isMultiSelectable) {
+            const checked = this.props.treeDataSource.SelectedNodes.hasOwnProperty(nodeId);
+            checkBox = (
+                <VirtualizedTreeViewCheckBox
+                    checked={this.getCheckStatus(rowData)}
+                    onChange={onChange}
+                    itemId={nodeId.toString()}
+                    text=""
+                    style={{ paddingTop: 0, paddingLeft: 10 }}
+                />
+            );
+        }
+
+        const elements: Array<JSX.Element> = [checkBox, icon];
+
         const rowClass = 'grid-row-' + rowIndex;
         const title = actionsTooltip;
         const className = classNames(
@@ -174,20 +247,19 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             rowClass,
             { 'is-selected': isSelectedRow }
         );
+
         return (
             <CellElement
                 key={key}
                 id={key}
                 style={style}
                 className={className}
-                title={title}
                 onMouseEnter={onMouseEnter}
-                onClick={icon ? this._onTreeExpandToggleClick : null}
                 onClickParameter={rowData}
                 rowClass={rowClass}
                 rowData={rowData}
                 rowIndex={rowIndex}
-                element={icon}
+                element={elements}
             />
         );
     }
@@ -222,17 +294,15 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 this._setSelectedNode(rowIndex, rowData);
             }
         };
+
         onCellClick = rowData.$meta.isAsyncLoadingDummyNode ? undefined : onCellClick;
         if (rowData.$meta.isAsyncLoadingDummyNode && columnIndex === 1) {
-            columnElement = <div className="loading-container">
-                <Spinner className="async-loading-spinner"
-                    type={SpinnerType.small}
-                />
-                <span className="async-loading-label">
-                    Loading...
-                    </span>
-            </div>;
-
+            columnElement = (
+                <div className="loading-container">
+                    <Spinner className="async-loading-spinner" type={SpinnerType.small} />
+                    <span className="async-loading-label">Loading...</span>
+                </div>
+            );
         } else if (column.cellFormatter) {
             columnElement = column.cellFormatter(cellData, rowData);
         } else {
@@ -298,7 +368,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         }
         this.setState({ selectedNodeId: nodeData.$meta.nodeId });
         if (this.props.onSelectedNodeChanged) {
-            this.props.onSelectedNodeChanged(this._finalGridRows[rowIndex]);
+            this.props.onSelectedNodeChanged([this._finalGridRows[rowIndex]]);
         }
     }
 
@@ -310,7 +380,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
         if (this.props.onSelectedNodeChanged) {
             const selectedNode = this._finalGridRows.find((element) => { return element.$meta.nodeId === nodeId; });
-            this.props.onSelectedNodeChanged(selectedNode);
+            this.props.onSelectedNodeChanged([selectedNode]);
         }
         const selectedRowIndex = this._finalGridRows.findIndex((element) => element.$meta.nodeId === nodeId);
 

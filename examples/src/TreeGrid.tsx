@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import 'babel-polyfill';
 import 'ts-helpers';
 import * as React from 'react';
@@ -12,7 +13,7 @@ import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resi
 import '../../src/components/Label/Label.scss';
 import { updateTree, rebuildTree } from '../../src/utilities/rebuildTree';
 import './../../src/components/Icon/symbol-defs.svg';
-import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum, Search, TreeDataSource, Label, TreeviewItem } from '../../src/index';
+import { autobind, QuickGridActions, QuickGridActionsBehaviourEnum, Search, TreeDataSource, Label, Checkbox } from '../../src/index';
 import { AugmentedTreeNode, TreeNode } from '../../src/models/TreeData';
 import * as _ from 'lodash';
 
@@ -23,13 +24,21 @@ const columnSummaries = {
 };
 
 export class Index extends React.Component<any, any> {
-    state = {
-        data: getTreeGridData(0),
-        columns: gridColumns1,
-        selectedData: 1,
-        searchText: '',
-        selectedNode: 1
-    };
+    constructor(props: any) {
+        super(props);
+
+        const treeDataSource = getTreeGridData(0);
+
+        this.state = {
+            data: treeDataSource,
+            columns: gridColumns1,
+            selectedData: 1,
+            searchText: '',
+            selectedNode: 1,
+            isSelectAll: false,
+            enableRecursive: true
+        };
+    }
 
     gridActions: QuickGridActions = {
         actionItems: [],
@@ -42,6 +51,14 @@ export class Index extends React.Component<any, any> {
             return nodeActions;
         }
     };
+
+    selectedDataListener = (selected: Array<AugmentedTreeNode>) => {
+        console.log('selected nodes: ', selected);
+    }
+
+    selectedIdsListener = (selected: Array<string>) => {
+        console.log('selected ids: ', selected);
+    }
 
     rowActionClicked(commandName: string, parameters, rowData) {
         alert(commandName + ' clicked.');
@@ -64,10 +81,37 @@ export class Index extends React.Component<any, any> {
         });
     }
 
-    onSelectedNodeChanged = (selectedNode: AugmentedTreeNode<GridData>) => {       
-        this.setState({
-            selectedNode: selectedNode.$meta.nodeId
-        });
+    onSelectedNodeChanged = (selectedNodes: Array<AugmentedTreeNode<GridData>>) => {
+        console.log('selected node: ', selectedNodes);
+    }
+
+    changeSelectAll = () => {
+        if (!this.state.isSelectAll) {
+            this.state.data.selectAll();
+        } else {
+            this.state.data.deselectAll();
+        }
+        this.setState({ isSelectAll: !this.state.isSelectAll });
+    }
+
+    setSelectedItems = () => {
+        this.state.data.setSelectedIds([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    }
+
+    changeRecursiveSelection = () => {
+        this.setState({ enableRecursive: !this.state.enableRecursive });
+        this.state.data.setSelectedIds([]);
+        this.state.data.setRecursiveSelection(!this.state.enableRecursive);
+    }
+
+    _listener = (items: Array<number | string>) => {
+        console.log('changed: ', items);
+    }
+
+    getChildrenRecursive = () => {
+        const data = getTreeGridData(1) as TreeDataSource;
+        data.registerSelectedIdsListener(this._listener);
+        data.selectAll();
     }
 
     prev: any;
@@ -75,6 +119,7 @@ export class Index extends React.Component<any, any> {
         this.prev = this.state.data;
         return (
             <div>
+                <Button onClick={this.getChildrenRecursive}>Click me!</Button>
                 <div style={{ 'width': '150px' }}>
                     <Dropdown
                         hasTitleBorder={true}
@@ -93,6 +138,9 @@ export class Index extends React.Component<any, any> {
                 <Label>Select item:</Label>
                 <input type="number" onChange={this.scrollTo} />
                 <div style={{ width: 250, paddingTop: 10 }}><Search value={this.state.searchText} labelText="Search nodes..." onChange={this.searchQueryChanged} /></div>
+                <Checkbox label="Select all" checked={this.state.isSelectAll} onChange={this.changeSelectAll} />
+                <Checkbox label="Enable recursive selection" checked={this.state.enableRecursive} onChange={this.changeRecursiveSelection} />
+                <Button onClick={this.setSelectedItems}>Set selected items</Button>
                 <Resizable width={1000} height={700} >
                     <div className="viewport-height" style={{ height: '100%' }} >
                         <TreeGrid
@@ -104,6 +152,7 @@ export class Index extends React.Component<any, any> {
                             columnSummaries={columnSummaries}
                             filterString={this.state.searchText}
                             onSelectedNodeChanged={this.onSelectedNodeChanged}
+                            isMultiSelectable={true}
                         />
                     </div>
                 </Resizable>
