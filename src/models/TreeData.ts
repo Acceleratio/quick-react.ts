@@ -89,7 +89,7 @@ export class TreeDataSource<T = {}> {
             }
 
             this.renumberIds = true;
-            this.extendNodes(input, rootNode.children);
+            this.extendNodes(rootNode, rootNode.children);
             this.renumberIds = false;
             this.isEmpty = this.treeStructure.children.length === 0;
 
@@ -107,10 +107,10 @@ export class TreeDataSource<T = {}> {
         let level = parent && parent.$meta ? parent.$meta.nodeLevel + 1 : 0;
         extendedNode.$meta = {
             nodeId: this.getNodeId(extendedNode),
-            parentNodeId: parent && parent.$meta ? parent.$meta.nodeId : undefined,
+            parentNodeId: parent && parent.$meta && parent.$meta.nodeLevel !== -1 ? parent.$meta.nodeId : undefined,
             nodeLevel: level
         };
-        extendedNode.parentNode = parent;
+        extendedNode.parentNode = parent && parent.$meta && parent.$meta.nodeLevel !== -1 ? parent : undefined;
         this.nodesById[extendedNode.$meta.nodeId] = extendedNode;
         if (node.children && node.children.length > 0) {
             this.extendNodes(node, node.children);

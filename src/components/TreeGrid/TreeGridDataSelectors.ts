@@ -17,7 +17,7 @@ const getNewSelectedNodeId = (state: ITreeGridState, newProps: ITreeGridProps, o
 const getCurrentlySelectedNodeId = (state: ITreeGridState, newProps: ITreeGridProps, oldProps: ITreeGridProps) => oldProps.selectedNodeId;
 
 const getTreePathsToSelected = (node: AugmentedTreeNode) => {
-    if (!node.hasOwnProperty('nodeId')) {
+    if (!node || node.$meta.nodeLevel === -1) {
         // we come to root, go back...
         return {};
     } else {
