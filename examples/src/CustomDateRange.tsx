@@ -7,7 +7,7 @@ import * as ReactDOM from 'react-dom';
 
 import { CustomDateRange } from './../../src/components/CustomDateRange/CustomDateRange';
 import { Button } from '../../src/components/Button/Button';
-import { autobind } from '../../src/index';
+import { autobind, IDateValidation } from '../../src/index';
 import * as moment from 'moment';
 
 function _getTodayFilterDate(): any {
@@ -42,7 +42,14 @@ export class Index extends React.Component<any, any> {
             startDate: _getTodayFilterDate().startDate,
             endDate: _getTodayFilterDate().endDate,
             invalidDateRangeSelected: false,
-            invalidErrorMessage: ''
+            invalidErrorMessage: 'The time period between Start and End date must not be more than 30 days.'
+        };
+    }
+    private validationFunc = (selectedStartDate: Date, selectedEndDate: Date): IDateValidation => {
+        const isValid = !(moment(selectedStartDate) <= moment(selectedEndDate).subtract(30, 'day'));
+        return {
+            isValidated: !isValid,
+            validationErrorMessage: !isValid ? '' : 'The time period between Start and End date must not be more than 30 days.'
         };
     }
 
@@ -59,7 +66,8 @@ export class Index extends React.Component<any, any> {
                     onClose={this.toggleDialog}
                     onDateSelectionChanged={this.onDateSelectionChanged}
                     invalidDateRangeSelected={this.state.invalidDateRangeSelected}
-                    invalidErrorMessage={this.state.invalidErrorMessage}>
+                    validationFunctions={[this.validationFunc]}
+                >
                 </CustomDateRange>
             </div>
         );

@@ -11,16 +11,8 @@
         }
     }
 
-    .custom-date-range-error {
-        float: left;
+    .custom-date-range-error, .icon-warning2 {
         color: $error-color;
-        font-size: 12px;
-        padding-top: 5px;
-
-        .icon {
-            color: $error-color;
-            position: relative;
-            top: 1px;
-        }
+        cursor: default;
     }
 }

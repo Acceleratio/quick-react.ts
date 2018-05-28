@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { ICustomDateRangeProps, ICustomDateRangeState } from './CustomDateRange.Props';
+import { ICustomDateRangeProps, ICustomDateRangeState, IDateValidation, DateValidator } from './CustomDateRange.Props';
 import { Dialog } from '../Dialog/Dialog';
 import { DateTimePicker } from '../DateTimePicker/DateTimePicker';
 import { DialogFooter } from '../Dialog/DialogFooter';
@@ -11,15 +11,37 @@ import * as moment from 'moment';
 import './CustomDateRange.scss';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { DirectionalHint } from '../../utilities/DirectionalHint';
+import { DialogFooterSection, DialogFooterSectionPosition } from '../..';
+import { nullFunc } from '../../utilities/common';
+
+const baseDateValidationMessage = 'Start date cannot be after end date!';
+
+const baseDateValidation: DateValidator = (selectedStartDate: Date, selectedEndDate: Date) => {
+    const startDate = moment(selectedStartDate);
+    const endDate = moment(selectedEndDate);
+    const isValidated = !startDate.isAfter(endDate);
+
+    return {
+        isValidated: isValidated,
+        validationErrorMessage: baseDateValidationMessage
+    } as IDateValidation;
+};
+
+const defaultDateRangeValidation = { isValidated: true, validationErrorMessage: '' };
 
 export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, ICustomDateRangeState> {
+    public static defaultProps = {
+        onDateSelectionChanged: nullFunc,
+        validationFunctions: []
+    };
+
     constructor(props: ICustomDateRangeProps) {
         super(props);
 
         this.state = {
             startDate: props.startDate,
             endDate: props.endDate,
-            validDateRangeSelected: true
+            dateRangeValidation: defaultDateRangeValidation
         };
     }
 
@@ -41,14 +63,14 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
         this.setState({
             startDate: this.props.startDate,
             endDate: this.props.endDate,
-            validDateRangeSelected: true
+            dateRangeValidation: defaultDateRangeValidation
         });
     }
 
     @autobind
     private _saveCustomDateRangeDialog() {
-        this._validateDate(moment(this.state.startDate), moment(this.state.endDate));
-        if (this.state.validDateRangeSelected) {
+        const validation = this.validate(this.state.startDate, this.state.endDate);
+        if (validation.isValidated) {
             if (this.props.onSave !== undefined) {
                 this.props.onSave(this.state.startDate, this.state.endDate);
             }
@@ -61,11 +83,9 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
         this.setState({
             startDate: date
         });
-        const isValid = this._validateDate(moment(date), moment(this.state.endDate));
-        if (isValid) {
-            if (this.props.onDateSelectionChanged !== undefined) {
-                this.props.onDateSelectionChanged(date, this.state.endDate);
-            }
+        const validation = this.validate(date, this.state.endDate);
+        if (validation.isValidated) {
+            this.props.onDateSelectionChanged(date, this.state.endDate);
         }
     }
 
@@ -74,21 +94,33 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
         this.setState({
             endDate: date
         });
-        const isValid = this._validateDate(moment(this.state.startDate), moment(date));
-        if (isValid) {
-            if (this.props.onDateSelectionChanged !== undefined) {
-                this.props.onDateSelectionChanged(this.state.startDate, date);
-            }
+        const validation = this.validate(this.state.startDate, date);
+        if (validation.isValidated) {
+            this.props.onDateSelectionChanged(this.state.startDate, date);
         }
     }
 
-    @autobind
-    private _validateDate(startDate: moment.Moment, endDate: moment.Moment) {
-        this.setState({
-            validDateRangeSelected: !startDate.isAfter(endDate)
-        });
+    private validate = (selectedStartDate: Date, selectedEndDate: Date): IDateValidation => {
+        const validationFuncs = [...this.props.validationFunctions].concat(baseDateValidation);
+        const validations = validationFuncs.map(v => v(selectedStartDate, selectedEndDate));
 
-        return !startDate.isAfter(endDate);
+        const hasErrors = validations.every(v => v.isValidated);
+        const validationErrorMessage = validations.filter(v => !v.isValidated).map(v => v.validationErrorMessage).reduce((s, e) => {
+            if (s === '') {
+                return e + '\n';
+            } else {
+                return s + '\n' + e;
+            }
+        }, '');
+
+        const validationObj: IDateValidation = {
+            isValidated: hasErrors,
+            validationErrorMessage: validationErrorMessage
+        };
+
+        this.setState({ dateRangeValidation: validationObj });
+
+        return validationObj;
     }
 
     private dateToString(d: Date): string {
@@ -99,8 +131,7 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
         let {
             className,
             isDialogOpen,
-            invalidDateRangeSelected,
-            invalidErrorMessage
+            invalidDateRangeSelected
         } = this.props;
 
         const valid = (current) => {
@@ -146,23 +177,20 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
                 </div>
 
                 <DialogFooter>
-                    {!this.state.validDateRangeSelected &&
-                        <div className="custom-date-range-error">
-                            <Icon iconName="icon-warning2" />
-                            Start date cannot be after end date!
-                        </div>
-                    }
-                    {this.state.validDateRangeSelected && invalidDateRangeSelected &&
-                        <Tooltip
-                            content={invalidErrorMessage}
-                            className={'tooltip-error'}
-                            directionalHint={DirectionalHint.rightCenter}
-                            containerClass={'custom-date-range-error'}>
-                            <Icon iconName="icon-warning2" />
-                        </Tooltip>
+                    {!this.state.dateRangeValidation.isValidated &&
+                        <DialogFooterSection position={DialogFooterSectionPosition.Left}>
+                            <Tooltip
+                                content={this.state.dateRangeValidation.validationErrorMessage}
+                                className={'tooltip-error'}
+                                directionalHint={DirectionalHint.rightCenter}
+                                containerClass={'custom-date-range-error'}
+                            >
+                                <Icon iconName="icon-warning2" /><span className="custom-date-range-error">Validation errors</span>
+                            </Tooltip>
+                        </DialogFooterSection>
                     }
                     <Button className="button-textual" onClick={this._closeCustomDateRangeDialog}>Cancel</Button>
-                    <Button onClick={this._saveCustomDateRangeDialog} disabled={!this.state.validDateRangeSelected || invalidDateRangeSelected}>Save</Button>
+                    <Button onClick={this._saveCustomDateRangeDialog} disabled={!this.state.dateRangeValidation.isValidated}>Save</Button>
                 </DialogFooter>
             </Dialog>
         );
