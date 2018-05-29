@@ -17,7 +17,7 @@ export type AugmentedTreeNode<T = {}> = TreeNode & T & {
 
     $meta: {
         nodeId?: any; // number | string;
-        parentNodeId?: number | string; // nodeId of the parent node
+        parentNodeId?: any; // nodeId of the parent node
         nodeLevel: number;
         sortRequestId?: number;
         isLazyChildrenLoadInProgress?: boolean;
