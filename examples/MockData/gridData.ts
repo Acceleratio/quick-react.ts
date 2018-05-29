@@ -12,7 +12,7 @@ const RANDOM_CarBrand = ['Audi', 'BMW', 'Mercedes', 'Opel', 'VW', 'Lada', 'Ford'
 const RANDOM_Mix = ['1', 2, '3', 4, 'A', 'B', 'C', '10'];
 const RANDOM_ActionIcons = ['svg-icon-add', 'svg-icon-camera', 'svg-icon-edit', 'svg-icon-open', 'svg-icon-settings', 'svg-icon-user', 'svg-icon-reset'];
 
-export interface GridData extends TreeNode {
+export interface GridData {
     Name: string;
     Color: string;
     Animal: string;
@@ -137,7 +137,7 @@ export const gridColumns1: Array<GridColumn> = [
 
 
 
-export function getTreeGridData(size: number) {
+export function getTreeGridData(size: number): TreeDataSource<GridData> {
     const treeData = new TreeDataSource<GridData>(generateTreeData(size));
     return treeData;
 }
