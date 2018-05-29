@@ -1,3 +1,5 @@
+import { IDateValidationState } from './CustomDateRange';
+
 export interface IDateValidation {
     isValidated: boolean;
     validationErrorMessage: string;
@@ -20,5 +22,5 @@ export interface ICustomDateRangeProps {
 export interface ICustomDateRangeState {
     startDate?: Date;
     endDate?: Date;
-    dateRangeValidation: IDateValidation;
+    dateRangeValidation: IDateValidationState;
 }

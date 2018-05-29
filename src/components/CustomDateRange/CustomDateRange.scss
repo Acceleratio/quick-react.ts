@@ -11,6 +11,10 @@
         }
     }
 
+    .custom-date-range-error {
+        display: flex;
+    }
+
     .custom-date-range-error, .icon-warning2 {
         color: $error-color;
         cursor: default;

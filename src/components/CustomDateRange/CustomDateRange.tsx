@@ -27,7 +27,15 @@ const baseDateValidation: DateValidator = (selectedStartDate: Date, selectedEndD
     } as IDateValidation;
 };
 
-const defaultDateRangeValidation = { isValidated: true, validationErrorMessage: '' };
+const defaultDateRangeValidation: IDateValidationState = {
+    isValidated: true,
+    validationErrorMessage: '',
+    firstErrorMessage: ''
+};
+
+export interface IDateValidationState extends IDateValidation {
+    firstErrorMessage: string;
+}
 
 export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, ICustomDateRangeState> {
     public static defaultProps = {
@@ -100,22 +108,26 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
         }
     }
 
-    private validate = (selectedStartDate: Date, selectedEndDate: Date): IDateValidation => {
+    private validate = (selectedStartDate: Date, selectedEndDate: Date): IDateValidationState => {
         const validationFuncs = [...this.props.validationFunctions].concat(baseDateValidation);
         const validations = validationFuncs.map(v => v(selectedStartDate, selectedEndDate));
-
         const hasErrors = validations.every(v => v.isValidated);
-        const validationErrorMessage = validations.filter(v => !v.isValidated).map(v => v.validationErrorMessage).reduce((s, e) => {
-            if (s === '') {
-                return e + '\n';
-            } else {
-                return s + '\n' + e;
-            }
-        }, '');
 
-        const validationObj: IDateValidation = {
+        const errorValidation = validations.filter(v => !v.isValidated);
+
+        let firstErrorMessage = '';
+        if (errorValidation.length > 0) {
+            const firstValidation = errorValidation.shift();
+            firstErrorMessage = firstValidation.validationErrorMessage;
+        }
+
+        const validationErrorMessage = errorValidation.map(v => v.validationErrorMessage)
+            .reduce((s, e) => s === '' ? e + '\n' : s + '\n' + e, '');
+
+        const validationObj: IDateValidationState = {
             isValidated: hasErrors,
-            validationErrorMessage: validationErrorMessage
+            validationErrorMessage: validationErrorMessage,
+            firstErrorMessage: firstErrorMessage
         };
 
         this.setState({ dateRangeValidation: validationObj });
@@ -176,17 +188,28 @@ export class CustomDateRange extends React.PureComponent<ICustomDateRangeProps, 
                     />
                 </div>
 
-                <DialogFooter>
+                <DialogFooter hasFixedWidth={true}>
                     {!this.state.dateRangeValidation.isValidated &&
-                        <DialogFooterSection position={DialogFooterSectionPosition.Left}>
-                            <Tooltip
-                                content={this.state.dateRangeValidation.validationErrorMessage}
-                                className={'tooltip-error'}
-                                directionalHint={DirectionalHint.rightCenter}
-                                containerClass={'custom-date-range-error'}
-                            >
-                                <Icon iconName="icon-warning2" /><span className="custom-date-range-error">Validation errors</span>
-                            </Tooltip>
+                        <DialogFooterSection position={DialogFooterSectionPosition.Left} className="dialog-validation-container">
+                            {this.state.dateRangeValidation.validationErrorMessage !== '' &&
+                                <Tooltip
+                                    content={this.state.dateRangeValidation.validationErrorMessage}
+                                    className={'tooltip-error'}
+                                    directionalHint={DirectionalHint.rightCenter}
+                                    containerClass={'custom-date-range-error'}
+                                >
+                                    <Icon iconName="icon-warning2" />
+                                    <span className="custom-date-range-error">
+                                        {this.state.dateRangeValidation.firstErrorMessage} (hover for more info)
+                                    </span>
+                                </Tooltip>
+                            }
+                            {this.state.dateRangeValidation.validationErrorMessage === '' &&
+                                <>
+                                    <Icon iconName="icon-warning2" />
+                                    <span className="custom-date-range-error">{this.state.dateRangeValidation.firstErrorMessage}</span>
+                                </>
+                            }
                         </DialogFooterSection>
                     }
                     <Button className="button-textual" onClick={this._closeCustomDateRangeDialog}>Cancel</Button>
