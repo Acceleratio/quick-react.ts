@@ -395,7 +395,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 gridActions={this.props.gridActions}
                 sortDirection={this.state.sortDirection}
                 sortColumn={this.state.sortColumn}
-                tooltipsEnabled={false}
+                tooltipsEnabled={true}
                 customCellRenderer={this.treeCellRenderer}
                 hasCustomRowSelector={true}
                 hasStaticColumns={true}
