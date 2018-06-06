@@ -197,10 +197,10 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
 
             // if the children will be replaced, we need to remove the old ids
             if (props.children && existingNode.children && existingNode.children.length > 0) {
-                const removeChildrenFromLookup = (node) => {
+                const removeChildrenFromLookup = (node: AugmentedTreeNode) => {
                     if (node && node.children) {
                         for (let i = 0; i < node.children.length; i++) {
-                            delete this.nodesById[node.children[i].nodeId];
+                            delete this.nodesById[node.children[i].$meta.nodeId];
                             removeChildrenFromLookup(node.children[i]);
                         }
                     }
