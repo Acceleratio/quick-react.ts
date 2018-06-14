@@ -56,7 +56,7 @@ export type DataListener = (selectedIds: Array<AugmentedTreeNode>) => void;
  * this allows us to view the TreeDataSource as immutable when performing actions in our reducers
  * ie. we add a new child to the tree, react will register the change and the TreeGrid component will update because of the prop change
  */
-export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
+export class TreeDataSource<T = {}> implements IObservable<React.Component> {
     private idCounter: number = 0;
 
     // this would constitute a really dirty hack
@@ -96,7 +96,7 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
             this.idCounter = input.idCounter;
             this.treeStructure = <AugmentedTreeNode<T>>input.treeStructure;
             this.changeIteration = input.changeIteration + 1;
-            this.idMember = input.idMember || idMember;   
+            this.idMember = input.idMember || idMember;
             this.selectedIds = input.selectedIds;
             this.partiallySelectedIds = input.partiallySelectedIds;
             this.enableRecursiveSelection = input.enableRecursiveSelection;
@@ -197,10 +197,10 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
 
             // if the children will be replaced, we need to remove the old ids
             if (props.children && existingNode.children && existingNode.children.length > 0) {
-                const removeChildrenFromLookup = (node) => {
+                const removeChildrenFromLookup = (node: AugmentedTreeNode) => {
                     if (node && node.children) {
                         for (let i = 0; i < node.children.length; i++) {
-                            delete this.nodesById[node.children[i].nodeId];
+                            delete this.nodesById[node.children[i].$meta.nodeId];
                             removeChildrenFromLookup(node.children[i]);
                         }
                     }
@@ -254,7 +254,7 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
         }
         return undefined;
     }
-    
+
 
     private subscribers: Array<React.Component> = [];
     private dataListeners: Array<DataListener> = [];
@@ -262,7 +262,7 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
 
     public enableRecursiveSelection: boolean;
 
-     // items used for row selection
+    // items used for row selection
     private selectedIds: IDictionary<boolean>;
     private partiallySelectedIds: IDictionary<boolean>;
 
@@ -408,6 +408,7 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
 
         if (diff.length === allChildrenKeys.length) {
             this.partiallySelectedIds = removeLookupEntry(nodeId, this.partiallySelectedIds);
+            this.selectedIds = removeLookupEntry(nodeId, this.selectedIds);
             if (this.checkObject(node.parentNode) && this.getNodeId(node.parentNode) !== undefined) {
                 this.checkIfAllChildrenAreSelected(node.parentNode, nodeId, allChildren);
             }
@@ -477,13 +478,16 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
      */
     private recursiveChildSelection = (
         selectedIds: IDictionary<boolean>,
-        node: TreeNode,
+        node: AugmentedTreeNode,
         appendParentNode: boolean = true,
         skipItems: IDictionary<boolean> = {}
     ): void => {
         if (appendParentNode) {
             const nodeId = this.getNodeId(node);
             selectedIds[nodeId] = true;
+            if (this.partiallySelectedIds.hasOwnProperty(nodeId)) {
+                this.partiallySelectedIds = removeLookupEntry(nodeId, this.partiallySelectedIds);
+            }
         }
 
         if (!this.itemHasChildren(node)) {
@@ -491,12 +495,17 @@ export class TreeDataSource<T = {}>  implements IObservable<React.Component> {
         }
 
         for (let child of node.children) {
+            let augmentedChild = child as AugmentedTreeNode;
             const childId = this.getNodeId(child);
             if (skipItems[childId]) {
                 continue;
             }
             selectedIds[childId] = true;
-            this.recursiveChildSelection(selectedIds, child, false, skipItems);
+            if (this.partiallySelectedIds.hasOwnProperty(childId)) {
+                this.partiallySelectedIds = removeLookupEntry(childId, this.partiallySelectedIds);
+            }
+            this.recursiveChildSelection(selectedIds, child as AugmentedTreeNode, false, skipItems);
         }
     }
+
 }

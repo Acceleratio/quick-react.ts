@@ -34,7 +34,7 @@ $checkbox-transition-timing: cubic-bezier(.4, 0, .23, 1);
         &:before {
             content: '';
             display: inline-block;
-            border: 2px solid $secondary-color;
+            border: 1px solid $secondary-color-45;
             width: 16px;
             height: 16px;
             border-radius: 4px;
@@ -59,7 +59,7 @@ $checkbox-transition-timing: cubic-bezier(.4, 0, .23, 1);
             font-size: 14px;
             position: absolute;
             left: 1.7px;
-            top: -1px;
+            top: 0px;
         }
     }
     .virtualized-tree-filter-checkbox-checkmark {
