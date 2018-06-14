@@ -269,8 +269,25 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
         }
 
         return classNames(textFieldClassName, this.props.inputClassName, {
-            'textField-invalid': !!errorMessage
+            'textField-invalid': !!errorMessage && this.props.isSuccess !== true,
+            'textField-success': this.props.isSuccess && !errorMessage
         });
+    }
+
+    private get _iconClassName(): string {
+        if (this.props.errorMessage && this.props.isSuccess !== true) {
+            return classNames('textField-error-icon');
+        } else if (this.props.isSuccess && !this.props.errorMessage) {
+            return classNames('textField-success-icon');
+        }
+    }
+
+    private _iconName(): string {
+        if (this.props.errorMessage) {
+            return 'icon-warning2';
+        } else if (this.props.isSuccess) {
+            return 'icon-checkmark';
+        }
     }
 
     private _renderTextArea(): React.ReactElement<React.HTMLProps<HTMLAreaElement>> {
@@ -292,7 +309,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                     showTooltip={showTooltip}
                     directionalHint={DirectionalHint.bottomLeftEdge}>
                     <textarea
-                        { ...textAreaProps }
+                        {...textAreaProps}
                         id={this._id}
                         ref={(c): HTMLTextAreaElement => this._field = c}
                         value={this.state.value}
@@ -337,7 +354,7 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                     <div className="text-field-input-error-content">
                         <input
                             type={'text'}
-                            { ...inputProps }
+                            {...inputProps}
                             id={this._id}
                             ref={(c): HTMLInputElement => this._field = c}
                             value={this.state.value}
@@ -349,11 +366,9 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                             onFocus={this._onFocus}
                             onBlur={this._onBlur}
                         />
-                        {this.props.errorMessage &&
-                            <span className="textField-error-icon">
-                                <Icon iconName={'icon-warning2'}></Icon>
-                            </span>
-                        }
+                        <span className={classNames(this._iconClassName)}>
+                            <Icon iconName={this._iconName()}></Icon>
+                        </span>
                     </div>
                 </Tooltip>
                 {this.props.description &&

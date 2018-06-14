@@ -18,7 +18,7 @@ export interface IVirtualizedTreeViewProps {
     onValuesSelected?: (filterId: string, filterSelection: IFilterSelection) => void;
     defaultSelection?: FilterSelectionEnum;
     rowHeight?: number;
-    onItemsSearch?: (query: string) => void;
+    onItemsSearch?: (query: string, newItems: any) => void;
     searchQuery?: string;
     allItemIdsGetter?: (items?: Array<TreeItem>) => ReadonlyArray<string>;
     lookupTableGetter?: (items?: Array<TreeItem>) => any;
@@ -49,4 +49,5 @@ export interface IVirtualizedTreeViewState {
     searchText: string;
     partiallyCheckedItemIds: Array<string>;
     scrollToIndex: number;
+    searchedItemList: Array<TreeItem>;
 }
