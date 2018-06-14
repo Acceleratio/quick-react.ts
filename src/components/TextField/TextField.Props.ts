@@ -10,7 +10,6 @@ export interface ITextFieldProps extends React.HTMLProps<HTMLInputElement | HTML
     defaultValue?: string;
     value?: string;
     disabled?: boolean;
-    errorMessage?: string;
     onChanged?: (newValue: any) => void;
     onBeforeChange?: (newValue: any) => void;
     onNotifyValidationResult?: (errorMessage: string, value: string) => void;
@@ -19,4 +18,15 @@ export interface ITextFieldProps extends React.HTMLProps<HTMLInputElement | HTML
     deferredValidationTime?: number;
     className?: string;
     inputClassName?: string;
+    /**
+     * used to show a error after an async action
+     * to hide the status, set to undefined or empty string
+     * keep in mind that you don't have at the same time isSuccess = true and (errorMessage != undefined or errorMessage != '')
+     */
+    errorMessage?: string;
+    /**
+     * used to show a checkmark after an async action
+     * to hide the status, set to undefined or false
+     */
+    isSuccess?: boolean;
 }
