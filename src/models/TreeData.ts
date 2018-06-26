@@ -39,6 +39,15 @@ export interface ILookupTable {
     [id: string]: AugmentedTreeNode;
 }
 
+export enum RootNodeBehaviourEnum {
+    Ignore,
+    HideInUIKeepInDataStructure,
+    /**
+     * NOT IMPLEMENTED
+     */
+    ShowInUI
+}
+
 export type IdGetter = (node: TreeNode) => string | number;
 
 export type SelectedIdListener = (selectedIds: Array<string>) => void;
@@ -67,6 +76,7 @@ export class TreeDataSource<T = {}> implements IObservable<React.Component> {
     private treeStructure: AugmentedTreeNode<T>;
     private idMember: string | IdGetter;
     private renumberIds: boolean;
+    private rootNodeBehaviour: RootNodeBehaviourEnum;
     public isEmpty: boolean;
 
     /** Lookup that holds parent object for given node */
@@ -85,7 +95,9 @@ export class TreeDataSource<T = {}> implements IObservable<React.Component> {
         input: TreeNode | TreeDataSource | Array<any>,
         idMember?: (string | IdGetter),
         enableRecursiveSelection: boolean = true,
-        selectedNodes: Array<number | string> = []
+        selectedNodes: Array<number | string> = [],
+        rootNodeBehaviour: RootNodeBehaviourEnum = RootNodeBehaviourEnum.Ignore
+        
     ) {
         this.updateSelectStrategy(enableRecursiveSelection);
         this.partiallySelectedIds = {};
@@ -105,6 +117,7 @@ export class TreeDataSource<T = {}> implements IObservable<React.Component> {
             this.dataListeners = input.dataListeners;
             this.subscribers = input.subscribers;
             this.selectedIdsListeners = input.selectedIdsListeners;
+            this.rootNodeBehaviour = input.rootNodeBehaviour;
         } else {
             let rootNode: TreeNode = this.isRootNodesArray(input) ? { children: input } : input;
             this.nodesById = {};
@@ -115,7 +128,7 @@ export class TreeDataSource<T = {}> implements IObservable<React.Component> {
                     nodeLevel: -1
                 };
             }
-
+            this.rootNodeBehaviour = rootNodeBehaviour;
             this.renumberIds = true;
             this.extendNodes(rootNode, rootNode.children);
             this.renumberIds = false;
@@ -140,12 +153,13 @@ export class TreeDataSource<T = {}> implements IObservable<React.Component> {
     private extendSingleNode(node: TreeNode, parent: AugmentedTreeNode<T>) {
         let extendedNode = <AugmentedTreeNode>node;
         let level = parent && parent.$meta ? parent.$meta.nodeLevel + 1 : 0;
+        const hasParent = parent && parent.$meta && (parent.$meta.nodeLevel !== -1 || this.rootNodeBehaviour !== RootNodeBehaviourEnum.Ignore);
         extendedNode.$meta = {
             nodeId: this.getNodeId(extendedNode),
-            parentNodeId: parent && parent.$meta && parent.$meta.nodeLevel !== -1 ? parent.$meta.nodeId : undefined,
+            parentNodeId: hasParent ? parent.$meta.nodeId : undefined,
             nodeLevel: level
         };
-        extendedNode.parentNode = parent && parent.$meta && parent.$meta.nodeLevel !== -1 ? parent : undefined;
+        extendedNode.parentNode = hasParent ? parent : undefined;
         this.nodesById[extendedNode.$meta.nodeId] = extendedNode;
         if (node.children && node.children.length > 0) {
             this.extendNodes(node, node.children);
