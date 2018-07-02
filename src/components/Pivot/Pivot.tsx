@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { IPivotProps } from './Pivot.Props';
-import { IPivotItemProps, renderModeEnum } from './PivotItem.Props';
+import { IPivotItemProps, RenderModeEnum } from './PivotItem.Props';
 import { KeyCodes } from '../../utilities/KeyCodes';
 import { PivotItem } from './PivotItem';
 import { PivotLinkFormat } from './Pivot.Props';
@@ -128,11 +128,11 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
         const iconElement = <Icon iconName={link.linkIcon} className={'pivot-icon'} title={link.linkText} />;
 
         switch (link.linkRenderMode) {
-            case renderModeEnum.Text:
+            case RenderModeEnum.Text:
             return textElement;
-            case renderModeEnum.Icon:
+            case RenderModeEnum.Icon:
             return iconElement;
-            case renderModeEnum.Both:
+            case RenderModeEnum.Both:
             return <div className="pivot-icon-text">{iconElement}{textElement}</div>;
             default:
             if (link.linkIcon) {

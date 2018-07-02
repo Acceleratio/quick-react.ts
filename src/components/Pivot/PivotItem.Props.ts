@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export enum renderModeEnum {
+export enum RenderModeEnum {
     Text,
     Icon,
     Both
@@ -8,7 +8,7 @@ export enum renderModeEnum {
 export interface IPivotItemProps extends React.HTMLProps<HTMLDivElement> {
     linkText: string;
     linkIcon?: string;
-    linkRenderMode?: renderModeEnum;
+    linkRenderMode?: RenderModeEnum;
     itemKey?: string;
     itemCount?: number;
     disabled?: boolean;
