@@ -9,6 +9,7 @@ import { Pivot } from './../../src/components/Pivot/Pivot';
 import { PivotItem } from './../../src/components/Pivot/PivotItem';
 import { Label } from './../../src/components/Label/Label';
 import { PivotLinkFormat } from '../../src/components/Pivot/Pivot.Props';
+import { renderModeEnum } from '../../src/components/Pivot/PivotItem.Props';
 
 export class Index extends React.Component<any, any> {
     public render() {
@@ -99,6 +100,18 @@ export class Index extends React.Component<any, any> {
                         <Label>Pivot #2</Label>
                     </PivotItem>
                     <PivotItem linkText={'Shared with me'}>
+                        <Label>Pivot #3</Label>
+                    </PivotItem>
+                </Pivot>
+                <br />
+                <Pivot onLinkClick={(item, ev) => console.log(item)}>
+                    <PivotItem linkRenderMode={renderModeEnum.Both} linkText={'My Files'} linkIcon={'icon-user'}>
+                        <Label>Pivot #1</Label>
+                    </PivotItem>
+                    <PivotItem linkText={'Recent'} >
+                        <Label>Pivot #2</Label>
+                    </PivotItem>
+                    <PivotItem linkRenderMode={renderModeEnum.Both} linkText={'Shared with me'} linkIcon={'icon-add'}>
                         <Label>Pivot #3</Label>
                     </PivotItem>
                 </Pivot>

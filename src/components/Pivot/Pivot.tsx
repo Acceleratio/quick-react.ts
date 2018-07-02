@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { IPivotProps } from './Pivot.Props';
-import { IPivotItemProps } from './PivotItem.Props';
+import { IPivotItemProps, renderModeEnum } from './PivotItem.Props';
 import { KeyCodes } from '../../utilities/KeyCodes';
 import { PivotItem } from './PivotItem';
 import { PivotLinkFormat } from './Pivot.Props';
@@ -94,13 +94,8 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
 
     private _renderLink(link: IPivotItemProps) {
         const { itemKey, itemCount } = link;
-        const { textSize } = this.props;
         const { id } = this.state;
         let countText;
-        let textStyle;
-        if (textSize) {
-            textStyle = {fontSize: textSize};
-        }
         if (itemCount !== undefined && this.props.linkFormat !== PivotLinkFormat.tabs) {
             countText = <span className={'pivot-count'}>({itemCount})</span>;
         }
@@ -117,15 +112,35 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
                 className={classNames(pivotLinkClassName, { 'is-disabled': link.disabled })}
                 onClick={this._onLinkClick.bind(this, itemKey)}
                 role="tab">
-                {link.linkIcon &&
-                    <Icon iconName={link.linkIcon} className={'pivot-icon'} title={link.linkText} />
-                }
-                {!link.linkIcon &&
-                    <span className={'pivot-text'} style={textStyle}>{link.linkText}</span>
-                }
+                {this._linkRenderer(link)}
                 {countText}
             </a>
         );
+    }
+
+    private _linkRenderer(link: IPivotItemProps): JSX.Element {
+        const { textSize } = this.props;
+        let textStyle;
+        if (textSize) {
+            textStyle = {fontSize: textSize};
+        }
+        const textElement = <span className={'pivot-text'} style={textStyle}>{link.linkText}</span>;
+        const iconElement = <Icon iconName={link.linkIcon} className={'pivot-icon'} title={link.linkText} />;
+
+        switch (link.linkRenderMode) {
+            case renderModeEnum.Text:
+            return textElement;
+            case renderModeEnum.Icon:
+            return iconElement;
+            case renderModeEnum.Both:
+            return <div className="pivot-icon-text">{iconElement}{textElement}</div>;
+            default:
+            if (link.linkIcon) {
+                return iconElement;
+            } else {
+                return textElement;
+            }            
+        }
     }
 
     private _renderPivotItem() {
@@ -168,7 +183,8 @@ export class Pivot extends React.Component<IPivotProps, IPivotState> {
                     linkIcon: pivotItem.props.linkIcon,
                     itemKey: itemKey,
                     itemCount: pivotItem.props.itemCount,
-                    disabled: pivotItem.props.disabled
+                    disabled: pivotItem.props.disabled,
+                    linkRenderMode: pivotItem.props.linkRenderMode
                 });
                 this._keyToIndexMapping[itemKey] = index;
             }
