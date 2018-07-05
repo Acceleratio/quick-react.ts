@@ -244,8 +244,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const className = classNames(
             'grid-component-cell',
             'expand-collapse-cell',
-            rowClass,
-            { 'is-selected': isSelectedRow }
+            rowClass
         );
 
         return (
@@ -277,8 +276,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             rowClass,
             column.cellClassName,
             rowData.className,
-            { 'border-column-cell': notLastIndex },
-            { 'is-selected': isSelectedRow });
+            { 'border-column-cell': notLastIndex });
 
         let columnElement: any;
         let onCellClick = (e) => {
