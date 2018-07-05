@@ -7,6 +7,10 @@ export interface ITreeGridProps {
     columns: Array<GridColumn>;
 
     isMultiSelectable?: boolean;
+    /**
+     * When multiselect is enabled all selected rows will have highlighted background by default.
+     */
+    highlightRowsInMultiSelect?: boolean;
     className?: string;
     gridActions?: QuickGridActions;
     sortColumn?: string;
