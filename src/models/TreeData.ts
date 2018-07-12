@@ -11,6 +11,7 @@ export interface TreeNode { // extend this interface on a data structure to be u
     iconTooltipContent?: string;
     iconClassName?: string;
     className?: string;
+    isNodeDisabled?: boolean;
 }
 
 export type AugmentedTreeNode<T = {}> = TreeNode & T & {

@@ -172,6 +172,11 @@
             &.is-selected {
                 background-color: $selected-item-background;
             }
+
+            &.is-disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
             
             .center-icon {
                 display: block;

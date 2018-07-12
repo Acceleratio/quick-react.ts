@@ -225,7 +225,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         };
 
         let checkBox: JSX.Element = null;
-        if (this.props.isMultiSelectable) {
+        if (this.props.isMultiSelectable && !rowData.isNodeDisabled) {
             const checked = this.props.treeDataSource.SelectedNodes.hasOwnProperty(nodeId);
             checkBox = (
                 <VirtualizedTreeViewCheckBox
@@ -246,7 +246,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             'grid-component-cell',
             'expand-collapse-cell',
             rowClass,
-            { 'is-selected': isSelectedRow && this.props.highlightRowsInMultiSelect }
+            {
+                'is-selected': isSelectedRow && this.props.highlightRowsInMultiSelect && !rowData.isNodeDisabled,
+                'is-disabled': rowData.isNodeDisabled
+            }
+
         );
 
         return (
@@ -278,8 +282,11 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             rowClass,
             column.cellClassName,
             rowData.className,
-            { 'border-column-cell': notLastIndex },
-            { 'is-selected': isSelectedRow && this.props.highlightRowsInMultiSelect });
+            {
+                'border-column-cell': notLastIndex,
+                'is-selected': isSelectedRow && this.props.highlightRowsInMultiSelect && !rowData.isNodeDisabled,
+                'is-disabled': rowData.isNodeDisabled
+            });
 
         let columnElement: any;
         let onCellClick = (e) => {
