@@ -496,7 +496,7 @@ export class TreeDataSource<T = {}> implements IObservable<React.Component> {
         appendParentNode: boolean = true,
         skipItems: IDictionary<boolean> = {}
     ): void => {
-        if (appendParentNode) {
+        if (appendParentNode && node !== this.treeStructure) {
             const nodeId = this.getNodeId(node);
             selectedIds[nodeId] = true;
             if (this.partiallySelectedIds.hasOwnProperty(nodeId)) {
