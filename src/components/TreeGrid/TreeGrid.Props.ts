@@ -20,7 +20,7 @@ export interface ITreeGridProps {
     filterString?: string;
     selectedNodeId?: number;
     isNodeSelectable?: boolean;
-
+    tooltipsEnabled?: boolean;
     onRowDoubleClicked?: (row: any) => void;
     onSelectedNodeChanged?: (selectedNode: Array<AugmentedTreeNode>) => void;
     onLazyLoadChildNodes?: (node: AugmentedTreeNode) => void;

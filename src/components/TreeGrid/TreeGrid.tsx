@@ -19,7 +19,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         isNodeSelectable: true,
         isMultiSelectable: false,
         highlightRowsInMultiSelect: true,
-        onSelectedNodeChanged: nullFunc
+        onSelectedNodeChanged: nullFunc,
+        tooltipsEnabled: true
     };
 
     private _quickGrid: IQuickGrid;
@@ -325,7 +326,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             }
         }
 
-        const title = typeof (cellData) === 'string' ? cellData : null;
+        const title = typeof (cellData) === 'string' && this.props.tooltipsEnabled ? cellData : null;
         return (
             <CellElement
                 key={key}
@@ -406,7 +407,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 gridActions={this.props.gridActions}
                 sortDirection={this.state.sortDirection}
                 sortColumn={this.state.sortColumn}
-                tooltipsEnabled={true}
+                tooltipsEnabled={this.props.tooltipsEnabled}
                 customCellRenderer={this.treeCellRenderer}
                 hasCustomRowSelector={true}
                 hasStaticColumns={true}
