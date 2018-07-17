@@ -40,8 +40,14 @@ export const Icon: (props: IIconProps) => JSX.Element = (props: IIconProps) => {
     }
 
     if (svgIcon) {
+        const spaceIdx= props.iconName.indexOf(' ');
+        let iconName = props.iconName;
+        if(spaceIdx !== -1) {
+            iconName = props.iconName.substr(0, spaceIdx);
+        }
+
         return <svg { ...getNativeAttributes(props, htmlElementAttributes) } className={iconClassName} width={iconWidth} height={iconHeight}>
-            <use xlinkHref={'#symbol-defs_' + props.iconName} />
+            <use xlinkHref={'#symbol-defs_' + iconName} />
         </svg>;
     } else {
         return <i { ...getNativeAttributes(props, htmlElementAttributes) } className={iconClassName} />;
