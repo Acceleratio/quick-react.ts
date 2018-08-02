@@ -64,7 +64,6 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
 
         this.allItemIds = this.props.allItemIdsGetter(props.items);
 
-        this.searchItems = _.debounce(this.searchItems, 100);
     }
 
     public componentWillMount() {
@@ -91,7 +90,8 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
     }
 
     public componentWillReceiveProps(nextProps: IVirtualizedTreeViewProps) {
-        if (nextProps.items !== this.props.items) {
+
+        if (nextProps.items !== this.props.items || this.state.searchText !== nextProps.searchQuery) {
             const filteredItems = ItemOperator.filterItems(nextProps.items, this.state.searchText);
             this.setState(
                 prevState => ({
@@ -145,7 +145,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                     title && <label className="virtualized-tree-filter-title" title={ title }>{ title }</label>
                 }
                 {
-                    hasSearch && <Search labelText={ this.state.searchText } onChange={ this.searchItems } className="filter-search" />
+                    hasSearch && <Search value={ this.state.searchText } onChange={ this.searchItems } className="filter-search" />
                 }
                 {
                     !isSingleSelect && showSelectAll &&

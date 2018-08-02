@@ -137,7 +137,9 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
     }
 
     private onDismiss = () => {
-        this.setState(prevState => ({ ...prevState, isOpen: false }));
+        this.setState(prevState => ({ ...prevState, 
+            isOpen: false,
+            query: this.props.clearSearchOnClose ? '' : prevState.query, }));
         this.props.onCalloutClose();
     }
 
@@ -174,7 +176,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
         const isDefault = this.checkIfDefaultSelection(filterSelection.type, filterSelection.selectedIDs);
         let state = { ...this.state, isDefaultSelected: isDefault, selection: filterSelection };
         if (this.props.isSingleSelect) {
-            state = { ...state, isOpen: false };
+            state = { ...state, isOpen: false, query: this.props.clearSearchOnClose ? '' : state.query };
         }
         this.setState(state);
         if (this.props.onValuesSelected !== undefined) {
@@ -211,14 +213,6 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
 
     @autobind
     private onItemsSearch(query: string) {
-        /*
-         * no need to manually clear search because
-         * on every callout close inner component
-         * gets unmounted and its state reseted
-        */
-        if (this.props.clearSearchOnClose) {
-            return;
-        }
         this.setState({ ...this.state, query });
     }
 
@@ -228,6 +222,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
         this.setState(prevState => ({
             ...prevState,
             isOpen: false,
+            query: this.props.clearSearchOnClose ? '' : prevState.query,
             selection: this.props.filterSelection,
             selectionText: selectionStrings.selectionText,
             titleText: selectionStrings.titleText
@@ -241,7 +236,10 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
             this.props.onSave(this.props.filterId, this.state.selection);
         }
 
-        this.setState(prevState => ({ ...prevState, isOpen: false, selection: this.state.selection }));
+        this.setState(prevState => ({ ...prevState, 
+            isOpen: false, 
+            query: this.props.clearSearchOnClose ? '' : prevState.query,
+            selection: this.state.selection }));
         this.props.onCalloutClose();
     }
 
