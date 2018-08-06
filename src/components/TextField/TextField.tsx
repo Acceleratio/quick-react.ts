@@ -359,14 +359,16 @@ export class TextField extends React.Component<ITextFieldProps, ITextFieldState>
                             ref={(c): HTMLInputElement => this._field = c}
                             value={this.state.value}
                             onChange={this._onInputChange}
-                            onMouseOver={this._onMouseOver}
-                            onMouseOut={this._onMouseOut}
+                            onMouseEnter={this._onMouseOver}
+                            onMouseLeave={this._onMouseOut}
                             onKeyUp={this._onKeyUp}
                             className={this._fieldClassName}
                             onFocus={this._onFocus}
                             onBlur={this._onBlur}
                         />
-                        <span className={classNames(this._iconClassName)}>
+                        <span className={classNames(this._iconClassName)}
+                            onMouseEnter={this._onMouseOver}
+                            onMouseLeave={this._onMouseOut}>
                             <Icon iconName={this._iconName()}></Icon>
                         </span>
 
