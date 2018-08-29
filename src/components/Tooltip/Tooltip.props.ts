@@ -2,7 +2,7 @@ import { DirectionalHint } from '../../utilities/DirectionalHint';
 
 export interface ITooltipProps {
     title?: string;
-    content: string;
+    content: string | JSX.Element;
     className?: string;
     targetElement?: HTMLElement;
     directionalHint?: DirectionalHint;

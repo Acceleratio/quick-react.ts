@@ -43,7 +43,7 @@ export interface IDropdownOption {
     selected?: boolean;
     href?: string;
     icon?: string;
-    tooltipInfo?: { title: string, content: string, directionalHint?: DirectionalHint; };
+    tooltipInfo?: { title: string, content: string | JSX.Element, directionalHint?: DirectionalHint; className?: string };
 }
 
 export enum DropdownType {
