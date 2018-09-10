@@ -7,6 +7,8 @@ import { GridColumn, SortDirection } from './';
 import * as classNames from 'classnames';
 
 import './QuickGrid.scss';
+import { Tooltip } from '../Tooltip';
+import { DirectionalHint } from '../../utilities/DirectionalHint';
 
 export interface IHeaderColumnProps {
     valueMember: string;
@@ -39,6 +41,18 @@ class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
         const { className, text, showSortIndicator, sortDirection, onClick, onKeyDown, tooltipsEnabled, tooltip } = this.props;
         const sortIcon = sortDirection === SortDirection.Ascending ? 'icon-Arrow_up' : 'icon-arrow_down';
         const title = getHeaderTooltip(tooltipsEnabled, tooltip, text);
+
+        let headerTextContent: JSX.Element;
+        if (tooltip) {
+            headerTextContent = <Tooltip directionalHint={DirectionalHint.bottomCenter} content={title} >
+                <span key="label" >
+                    {text}
+                </span>
+            </Tooltip>;
+        } else {
+            headerTextContent = <span key="label" title={title}>{text}</span>;
+        }
+
         return (
             this.props.connectDragSource(this.props.connectDropTarget(
                 <div
@@ -48,12 +62,7 @@ class HeaderColumnInner extends React.PureComponent<IHeaderColumnProps, void> {
                     className={className}
                 >
                     <div className="header-text">
-                        <span
-                            key="label"
-                            title={title}
-                        >
-                            {text}
-                        </span>
+                        {headerTextContent}
                     </div>
                     {showSortIndicator &&
                         <Icon iconName={sortIcon} className="icon-sort" />
