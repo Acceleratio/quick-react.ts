@@ -181,6 +181,8 @@ export interface FiltersProps {
     scrollLeft: number;
     allColumns: Array<GridColumn>;
     columnFilters: Array<FiltersData>;
+    groupBy: IGroupBy[];
+    hasActionColumn: boolean;
     addColumnFilter: (filterData: FiltersData) => void;
     removeColumnFilter: (filterData: FiltersData) => void;
 }
@@ -193,6 +195,7 @@ export interface FiltersData {
 export interface ColumnFilterProps {
     columnIndex: number;
     filterValue: string;
+    isNotEmpty: boolean;
     addColumnFilter: (filterData: FiltersData) => void;
     removeColumnFilter: (filterData: FiltersData) => void;
 }

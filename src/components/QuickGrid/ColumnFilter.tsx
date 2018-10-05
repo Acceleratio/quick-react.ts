@@ -4,7 +4,6 @@ import './QuickGrid.scss';
 import { TextField } from '../TextField';
 
 export class ColumnFilter extends React.PureComponent<ColumnFilterProps, null> {
-    private _filtersGrid: any;
     constructor(props: ColumnFilterProps) {
         super(props);
     }
@@ -26,11 +25,11 @@ export class ColumnFilter extends React.PureComponent<ColumnFilterProps, null> {
 
     public render() {
         return (
-            <TextField 
+            (this.props.isNotEmpty && <TextField 
                 className="filters-column"
                 onChanged={this.onChanged}
                 value={this.props.filterValue}
-            />
+            />)
         );
     }
 }

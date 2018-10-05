@@ -708,6 +708,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                             addColumnFilter={this.addColumnFilter}
                                             removeColumnFilter={this.removeColumnFilter}
                                             columnFilters={this.state.columnFilters}
+                                            groupBy={this.state.groupBy}
+                                            hasActionColumn={this._shouldRenderActionsColumn(this.props)}
                                         />
                                     }
 

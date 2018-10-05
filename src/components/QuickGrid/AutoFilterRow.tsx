@@ -46,10 +46,16 @@ export class AutoFilterRow extends React.PureComponent<FiltersProps, null> {
     }
 
     filtersCellRender = ({ columnIndex, style }) => {
-        const text = this.props.headerColumns[columnIndex].headerText;
+        const column = this.props.headerColumns[columnIndex];
+        const text = column.headerText;
+
         const startColumnIndex = this.props.allColumns.indexOf(this.props.allColumns.find(el => el.headerText === text));
+
         const filter = this.props.columnFilters.find(el => el.columnIndex === startColumnIndex);
-        let filterValue = filter !== undefined ? filter.filterValue : '';
+        const filterValue = filter !== undefined ? filter.filterValue : '';
+
+        const isAction = this.props.hasActionColumn && columnIndex === 0 || (column.valueMember === undefined && column.dataMember === undefined);
+        const isNotEmpty = !isAction && columnIndex >= this.props.groupBy.length;
 
         return (
             <div
@@ -61,6 +67,7 @@ export class AutoFilterRow extends React.PureComponent<FiltersProps, null> {
                     addColumnFilter={this.props.addColumnFilter}
                     removeColumnFilter={this.props.removeColumnFilter}
                     filterValue={filterValue}
+                    isNotEmpty={isNotEmpty}
                 />
             </div>
         );
