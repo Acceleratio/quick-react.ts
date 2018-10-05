@@ -73,6 +73,10 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         const checkedItemIds = this.props.filterSelection.type === FilterSelectionEnum.All ? this.allItemIds : this.props.filterSelection.selectedIDs;
 
         if (this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0) {
+            if (!this.props.itemsAreFlatList && this.props.enableRecursiveSelection) {
+                this.updatePartiallyCheckedItems(this.props.filterSelection.selectedIDs);
+            }
+
             scrollToIndex = this.state.filteredItems.findIndex((element) => {
                 return element.id === checkedItemIds[0];
             });
@@ -471,6 +475,31 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             return CheckStatus.ChildChecked;
         }
         return CheckStatus.NotChecked;
+    }
+
+    private updatePartiallyCheckedItems(checkedItemIds: Array<string>) {
+        const partiallyCheckedItemIds: Array<string> = [];
+        let parents: Array<TreeItem> = [];
+        checkedItemIds.forEach(itemId => {
+            const parentId = this.parentLookup[itemId];
+            if (parentId && parents.indexOf(parentId) === -1) {
+                parents.push(this.parentLookup[itemId]);
+            }
+        });
+        parents.forEach(parent => {
+            let isChecked = true;
+            for (let i = 0; i < parent.children.length; ++i) {
+                const childChecked = this.isItemInList(checkedItemIds, parent.children[i]);
+                if (isChecked !== childChecked && i > 0) {
+                    partiallyCheckedItemIds.push(parent.id);
+                    break;
+                }
+                if (!childChecked) {
+                    isChecked = false;
+                }
+            }
+        });
+        this.setState({ partiallyCheckedItemIds });
     }
 
     private getNewCheckedItems(changedTreeItem: TreeItem, checkedItemIds, wasChecked): CheckResult {
