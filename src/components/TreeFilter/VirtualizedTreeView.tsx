@@ -73,9 +73,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         const checkedItemIds = this.props.filterSelection.type === FilterSelectionEnum.All ? this.allItemIds : this.props.filterSelection.selectedIDs;
 
         if (this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0) {
-            if (!this.props.itemsAreFlatList && this.props.enableRecursiveSelection) {
-                this.updatePartiallyCheckedItems(this.props.filterSelection.selectedIDs);
-            }
+            this.updatePartiallyCheckedItems(this.props.filterSelection.selectedIDs);
 
             scrollToIndex = this.state.filteredItems.findIndex((element) => {
                 return element.id === checkedItemIds[0];
@@ -117,11 +115,15 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
     }
 
     public componentDidUpdate(prevProps: ITreeFilterProps, prevState: IVirtualizedTreeViewState) {
-        if (this.state.filteredItems !== prevState.filteredItems) {
+        if (!_.isEqual(this.state.filteredItems, prevState.filteredItems)) {
             if (this._list != null) {
                 this._list.recomputeRowHeights();
             }
-        } else if (this.props.filterSelection.selectedIDs !== prevProps.filterSelection.selectedIDs) {
+        } else if (!_.isEqual(this.props.filterSelection.selectedIDs, prevProps.filterSelection.selectedIDs)) {
+            const checkedItemIds = this.props.filterSelection.type === FilterSelectionEnum.All ? this.allItemIds : this.props.filterSelection.selectedIDs;
+            if (this.props.filterSelection.type !== FilterSelectionEnum.All && checkedItemIds.length > 0) {
+                this.updatePartiallyCheckedItems(this.props.filterSelection.selectedIDs);
+            }
             if (this._list != null) {
                 this._list.forceUpdateGrid();
             }
@@ -478,6 +480,9 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
     }
 
     private updatePartiallyCheckedItems(checkedItemIds: Array<string>) {
+        if (this.props.itemsAreFlatList || !this.props.enableRecursiveSelection) {
+            return;
+        }
         const partiallyCheckedItemIds: Array<string> = [];
         let parents: Array<TreeItem> = [];
         checkedItemIds.forEach(itemId => {
