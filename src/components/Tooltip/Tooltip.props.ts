@@ -10,4 +10,5 @@ export interface ITooltipProps {
     onTooltipToggle?(isTooltipVisible: boolean): void;
     containerClass?: string;
     delayMs?: number;
+    closeDelayMs?: number;
 }

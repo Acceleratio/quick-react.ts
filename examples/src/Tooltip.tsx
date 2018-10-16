@@ -34,7 +34,18 @@ export class Index extends React.Component<any, any> {
                     </Tooltip>
                 </div>
                 <div style={{ marginLeft: '50px' }}>
-                    <Tooltip content={'This is error tooltip, because an error occured'} title={'Error tooltip title'}className={'tooltip-error'} directionalHint={DirectionalHint.rightCenter} >
+                    <Tooltip content={'This is error tooltip, because an error occured'} title={'Error tooltip title'} className={'tooltip-error'} directionalHint={DirectionalHint.rightCenter} >
+                        <Button>Hover Over Me</Button>
+                    </Tooltip>
+                </div>
+                <div style={{ marginLeft: '50px' }}>
+                    <Tooltip
+                        content={'This tooltip have delay and interaction capabilities'}
+                        title={'You can interact with me'}
+                        className={'tooltip-error'}
+                        directionalHint={DirectionalHint.rightCenter}
+                        closeDelayMs={500}
+                        >
                         <Button>Hover Over Me</Button>
                     </Tooltip>
                 </div>

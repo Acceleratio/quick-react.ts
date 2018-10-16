@@ -11,6 +11,7 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
     private _tooltipHost: HTMLElement;
 
     public timer = null;
+    private _closingTimer = null;
 
     public static defaultProps = {
         directionalHint: DirectionalHint.bottomCenter,
@@ -56,8 +57,8 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
         return (
             <div
                 ref={this._resolveRef('_tooltipHost')}
-                { ...{ onFocusCapture: this._onTooltipMouseEnter } }
-                { ...{ onBlurCapture: this._onTooltipMouseLeave } }
+                {...{ onFocusCapture: this._onTooltipMouseEnter }}
+                {...{ onBlurCapture: this._onTooltipMouseLeave }}
                 onMouseEnter={this._onTooltipMouseEnter}
                 onMouseLeave={this._onTooltipMouseLeave}
                 onMouseUpCapture={this._onTooltipMouseLeave}
@@ -71,8 +72,15 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
                         directionalHint={directionalHint}
                         className={tooltipClassName}
                         isBeakVisible={true}
-                        gapSpace={0}>
-                        <div className="tooltip-content" role="tooltip">
+                        gapSpace={0}
+                    >
+
+                        <div
+                            className="tooltip-content"
+                            role="tooltip"
+                            onMouseEnter={this._onTooltipMouseEnter}
+                            onMouseLeave={this._onTooltipMouseLeave}
+                        >
                             {title &&
                                 <div>
                                     <span className="tooltip-title">{title}</span>
@@ -97,7 +105,10 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
             return;
         }
         this.timer = setTimeout(() => this._toggleTooltip(true), this.props.delayMs);
+        clearTimeout(this._closingTimer);
     }
+
+
 
     // Hide Tooltip
     @autobind
@@ -107,7 +118,15 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
                 clearTimeout(this.timer);
             }
 
-            this._toggleTooltip(false);
+            if (this.props.closeDelayMs) {
+               clearTimeout(this._closingTimer);
+
+                this._closingTimer = setTimeout(() => {
+                    this._toggleTooltip(false);
+                }, this.props.closeDelayMs);
+            } else {
+                this._toggleTooltip(false);
+            }
         }
     }
 
