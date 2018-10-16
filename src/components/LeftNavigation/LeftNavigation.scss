@@ -94,4 +94,17 @@ $leftNavigation-collapsed-width: 45px;
             display: none;
         }
     }
+
+    &.collapsed-margin {
+        width: $leftNavigation-collapsed-width - 10px;
+        transition-duration: $leftNavigation-transition-duration;
+
+        .nav-item a span {
+            display: none;
+        }
+    }
+
+    &.left-nav-container {
+        width: $leftNavigation-collapsed-width;
+    }
 }

@@ -16,6 +16,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
     private _targetWindow: Window;
     private _leftNavElement: HTMLDivElement;
     private _target: HTMLElement | MouseEvent;
+    private timer = null;
 
     public static defaultProps: Partial<ILeftNavigationProps> = {
         expandCaptionsBehavior: ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover,
@@ -92,14 +93,21 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
 
     @autobind
     private onNavigationMouseOver() {
-        if (this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover && !this.state.isOpen) {
-            this.setState({ isOpen: true });
+        if (this.timer !== null || this.props.expandCaptionsBehavior !== ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover || this.state.isOpen) {
+            return;
+        }
+        if (this.props.expandDelayMs) {
+            this.timer = setTimeout(() => this.setNavigationOpenState(), this.props.expandDelayMs);
+        } else {
+            this.setNavigationOpenState();
         }
     }
 
     @autobind
     private setNavigationOpenState() {
         this.setState({ isOpen: !this.state.isOpen });
+
+        this.timer = null;
     }
 
     private _getOptionDetails(options: Array<ILeftNavigationOption>) {
@@ -111,7 +119,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
                     'selected': option.selected
                 });
 
-            const spanClasses = classNames({'with-notification': option.notificationNumber !== undefined});
+            const spanClasses = classNames({ 'with-notification': option.notificationNumber !== undefined });
 
             return (
                 <div
@@ -121,10 +129,10 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
                     onClick={(ev) => this.onLinkClick(option.id, option, ev)}
                 >
                     <a id={option.id}>
-                        {(option.notificationNumber) ? 
+                        {(option.notificationNumber) ?
                             <NotificationIcon iconName={option.icon} notificationNumber={option.notificationNumber}
-                            notificationBubbleStyleObject={this.props.notificationBubbleStyleObject}/> 
-                            : <Icon iconName={option.icon}/>}
+                                notificationBubbleStyleObject={this.props.notificationBubbleStyleObject} />
+                            : <Icon iconName={option.icon} />}
                         <span className={spanClasses} >{option.text}</span>
                     </a>
                 </div>
@@ -134,7 +142,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
         return childrenItems;
     }
 
-    public render(): JSX.Element {
+    private _renderBody() {
         let leftNavigationTextClass = classNames({
             'show-text': this.state.isOpen,
             'hide-text': !this.state.isOpen
@@ -144,7 +152,8 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
             'left-nav',
             {
                 'expanded': this.state.isOpen,
-                'collapsed': !this.state.isOpen
+                'collapsed': !this.state.isOpen && !this.props.expandMargin,
+                'collapsed-margin': !this.state.isOpen && this.props.expandMargin
             }, [this.props.className]);
 
         let upOptions = [];
@@ -171,6 +180,16 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
                     <div className="down-options">{this._getOptionDetails(downOptions)}</div>
                 </div>
             </div>
+        );
+    }
+
+    public render(): JSX.Element {
+        return (
+            this.props.expandMargin ? (
+                <div className="left-nav left-nav-container">
+                    {this._renderBody()}
+                </div>
+            ) : (this._renderBody())
         );
     }
 }
