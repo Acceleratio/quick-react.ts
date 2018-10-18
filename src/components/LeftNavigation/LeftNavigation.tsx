@@ -107,7 +107,8 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
 
     @autobind
     private setNavigationOpenState() {
-        if (this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover && this.props.expandDelayMs && this.timer === null) {
+        if (this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.ShowCaptionsOnHover &&
+         this.props.expandDelayMs && this.timer === null) {
             return;
         }
         this.setState({ isOpen: !this.state.isOpen });
