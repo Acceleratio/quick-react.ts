@@ -289,7 +289,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 'is-disabled': rowData.isNodeDisabled
             });
 
-        let columnElement: any;
+        let columnElement: Array<JSX.Element>;
         let onCellClick = (e) => {
             // https://github.com/facebook/react/issues/1691 funky bussinese because of multiple mount points in the hover actions
             // so stopPropagation and preventDefault do not work there, manually checking if row actions were clicked
@@ -306,14 +306,14 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
         onCellClick = rowData.$meta.isAsyncLoadingDummyNode || this.props.isMultiSelectable ? undefined : onCellClick;
         if (rowData.$meta.isAsyncLoadingDummyNode && columnIndex === 1) {
-            columnElement = (
+            columnElement = [
                 <div className="loading-container">
                     <Spinner className="async-loading-spinner" type={SpinnerType.small} />
                     <span className="async-loading-label">Loading...</span>
                 </div>
-            );
+            ];
         } else if (column.cellFormatter) {
-            columnElement = column.cellFormatter(cellData, rowData);
+            columnElement = [column.cellFormatter(cellData, rowData)];
         } else {
             columnElement = [
                 columnIndex === 1 && rowData.iconName ? <span key="cellIcon" style={{ display: 'flex' }} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} className={rowData.iconClassName} /></span> : null,
@@ -321,9 +321,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                     {cellData}
                 </div>
             ];
-            if (!notLastIndex && !rowData.$meta.isAsyncLoadingDummyNode) {
-                columnElement.push(rowActionsRender(rowIndex, rowData, isSelectedRow));
-            }
+        }
+        if (!notLastIndex && !rowData.$meta.isAsyncLoadingDummyNode) {
+            columnElement.push(rowActionsRender(rowIndex, rowData, isSelectedRow));
         }
 
         const title = typeof (cellData) === 'string' && this.props.tooltipsEnabled ? cellData : null;
