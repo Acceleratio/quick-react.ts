@@ -173,8 +173,8 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 <AutoSizer>
                     {({ width, height }) => (
                         <List
-                            height={this.getListHeight(height)}
-                            width={width}
+                            height={this.getListHeight(height || 100)}
+                            width={width || 100}
                             overscanRowCount={10}
                             ref={this.setListReference}
                             rowHeight={this.rowHeight}
