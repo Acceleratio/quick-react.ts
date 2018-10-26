@@ -524,9 +524,9 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     renderRowContextActions = (rowIndex, rowData, isSelectedRow) => {
-        let actions = this.getRowContextActions(rowIndex);
-        let safeActions: Array<ActionItem> = isContextActionsObject(actions) ? actions.actions : actions;
-        if (!safeActions || safeActions.length === 0) {
+        const actions = this.getRowContextActions(rowIndex);
+        const actionItems: Array<ActionItem> = isContextActionsObject(actions) ? actions.actions : actions;
+        if (!actionItems || actionItems.length === 0) {
             return;
         }
 

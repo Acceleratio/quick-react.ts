@@ -155,7 +155,7 @@ export interface QuickGridActions {
      */
     actionIconName: string;
     /**
-     * used in ShowOnRowHover behaviour to specify actions per row, 
+     * used in ShowOnRowHover behaviour to specify actions per row
      */
     onGetSingleRowContextActions?: (rowData) => Array<ActionItem> | ContextActionsObject;
     onActionSelected: (commandName: string, parameters, rowData) => void;
