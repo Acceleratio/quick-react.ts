@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Icon } from '../Icon/Icon';
-import { ActionItem } from './QuickGrid.Props';
+import { ActionItem, isContextActionsObject, ContextActionsObject } from './QuickGrid.Props';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { DropdownType } from '../Dropdown/Dropdown.Props';
 import { Tooltip } from '../Tooltip/Tooltip';
@@ -9,10 +9,10 @@ import { DirectionalHint } from '../../index';
 
 
 export interface IQuickGridRowAContextActionsHandlerProps {
-    onGetRowActions?: (rowIndex: number) => Array<ActionItem>;
-    onActionClicked?: (rowIndex: number, action: ActionItem) => void;
     hideDropdownActionIcons?: boolean;
     delayMs?: number;
+    onGetRowActions?: (rowIndex: number) => Array<ActionItem> | ContextActionsObject;
+    onActionClicked?: (rowIndex: number, action: ActionItem) => void;
 }
 
 export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuickGridRowAContextActionsHandlerProps, {}> {
@@ -122,8 +122,10 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
         this.clearHoveredElement();
     }
 
-    renderActions(rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
-        if (!actions || actions.length === 0) {
+    renderActions(rowIndex: number, actions: Array<ActionItem> | ContextActionsObject, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
+        const actionItems: Array<ActionItem> = isContextActionsObject(actions) ? actions.actions : actions;
+        const dropdownIcon = isContextActionsObject(actions) ? actions.dropdownIconName : 'svg-icon-more';
+        if (!actionItems || actionItems.length === 0) {
             return null;
         }
     
@@ -132,35 +134,37 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
             return x.tooltip !== undefined ? <Tooltip key={x.commandName} {...x.tooltip} delayMs={this.props.delayMs} >  {mappedAction} </Tooltip> : mappedAction;
         };
     
-        let renderDropDown = actions.length >= 4;
         let elements = [];
-        if (renderDropDown) {
-            elements.push(mapAction(actions[0]));
-            elements.push(mapAction(actions[1]));
+        const dropdownActions = actionItems.filter((action, index) => action.showInDropdown || (actionItems.length >= 4 ? index > 1 : null));
+        if (dropdownActions && dropdownActions.length > 0) {
             let actionOptions = [];
-            for (let i = 2; i < actions.length; i++) {
-                let tooltipInfo = actions[i].tooltip;
-                if (tooltipInfo && !tooltipInfo.directionalHint) {
-                    tooltipInfo = { ...tooltipInfo, directionalHint: DirectionalHint.leftCenter };
+            for (let i = 0; i < actionItems.length; i++) {
+                if (dropdownActions.find(x => x === actionItems[i])) {
+                    let tooltipInfo = actionItems[i].tooltip;
+                    if (tooltipInfo && !tooltipInfo.directionalHint) {
+                        tooltipInfo = { ...tooltipInfo, directionalHint: DirectionalHint.leftCenter };
+                    }
+                    actionOptions.push({ key: actionItems[i].commandName, icon: this.props.hideDropdownActionIcons === true ? undefined : actionItems[i].iconName, text: actionItems[i].name, tooltipInfo });
+                } else {
+                    elements.push(mapAction(actionItems[i]));
                 }
-                actionOptions.push({ key: actions[i].commandName, icon: this.props.hideDropdownActionIcons === true ? undefined : actions[i].iconName, text: actions[i].name, tooltipInfo });
             }
             elements.push(
                 <Dropdown
                     key="hoverDropDown"
                     className="hoverable_items__btn-dropdown"
                     dropdownKey={rowIndex}
-                    icon="svg-icon-more"
+                    icon={dropdownIcon}
                     dropdownType={DropdownType.actionDropdown}
                     displaySelection={false}
-                    onClick={(item) => onActionClicked(rowIndex, actions.find(x => x.commandName === item.key))}
+                    onClick={(item) => onActionClicked(rowIndex, actionItems.find(x => x.commandName === item.key))}
                     options={actionOptions}
                     onMenuToggle={onMenuToggle}
                     onClosed={() => onMenuToggle(false)}
                     delayMs={this.props.delayMs}
                 />);
         } else {
-            elements = actions.map(mapAction);
+            elements = actionItems.map(mapAction);
         }
     
         return <span key="hoverActionsSpan" className="hoverable-items-inner-container" title="">
