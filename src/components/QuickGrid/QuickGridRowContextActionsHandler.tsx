@@ -127,8 +127,6 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
         if (!actionItems || actionItems.length === 0) {
             return null;
         }
-
-        const dropdownIcon = isContextActionsObject(actions) ? actions.dropdownIconName : 'svg-icon-more';
     
         const mapAction = (x: ActionItem) => {
             const mappedAction = <Icon key={x.commandName} iconName={x.iconName} title={x.tooltip ? undefined : x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
@@ -136,8 +134,11 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
         };
     
         let elements = [];
+        const dropdownIcon = isContextActionsObject(actions) && actions.dropdownIconName ? actions.dropdownIconName : 'svg-icon-more';
         const dropdownActions = actionItems.filter((action, index) => action.showInDropdown || (actionItems.length >= 4 ? index > 1 : null));
+
         if (isContextActionsObject(actions) && actions.dropdownCustomRenderer) {
+            elements = actionItems.filter(x => !x.showInDropdown).map(mapAction);
             elements.push(
                 <Dropdown
                     key="hoverDropDown"
@@ -145,10 +146,12 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
                     dropdownKey={rowIndex}
                     icon={dropdownIcon}
                     dropdownType={DropdownType.customDropdown}
-                    displaySelection={false}
+                    showArrowIcon={false}
+                    onMenuToggle={onMenuToggle}
+                    onClosed={() => onMenuToggle(false)}
                     delayMs={this.props.delayMs}
                 >
-                    {actions.dropdownCustomRenderer(dropdownActions)}
+                    {actions.dropdownCustomRenderer(rowIndex, dropdownActions, onActionClicked)}
                 </Dropdown>
             );
         } else if (dropdownActions && dropdownActions.length > 0) {
@@ -164,6 +167,7 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
                     elements.push(mapAction(actionItems[i]));
                 }
             }
+
             elements.push(
                 <Dropdown
                     key="hoverDropDown"

@@ -23,7 +23,8 @@ import {
     DataTypeEnum,
     BoolFormatTypeEnum,
     FiltersData,
-    isContextActionsObject
+    isContextActionsObject,
+    ContextActionsObject
 } from './QuickGrid.Props';
 import { GridFooter } from './QuickGridFooter';
 import { GridHeader } from './QuickGridHeader';

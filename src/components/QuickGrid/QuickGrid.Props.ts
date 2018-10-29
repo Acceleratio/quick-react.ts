@@ -165,7 +165,7 @@ export interface QuickGridActions {
 export interface ContextActionsObject {
     actions: Array<ActionItem>;
     dropdownIconName?: string;
-    dropdownCustomRenderer?: (actions: Array<ActionItem>) => JSX.Element;
+    dropdownCustomRenderer?: (rowIndex: number, actions: Array<ActionItem>, onActionClicked: (rowIndex: number, action: ActionItem) => void) => JSX.Element;
 }
 
 export function isContextActionsObject(arg: any): arg is ContextActionsObject {

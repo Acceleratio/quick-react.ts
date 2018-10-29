@@ -23,16 +23,6 @@ const columnSummaries = {
     Numbers: 'Favorite: 7'
 };
 
-const customDropdownRenderer = (actions: Array<ActionItem>): JSX.Element => {
-    return (
-        <div>
-            {actions.map(a => {
-                return (<span>{a.name}</span>);
-            })}
-        </div>
-    );
-};
-
 export class Index extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
@@ -58,7 +48,7 @@ export class Index extends React.Component<any, any> {
         onGetSingleRowContextActions: (node) => {
 
             // here we use the same node actions each time for demo purposes, but the actions can be per node
-            return { actions: nodeActions, dropdownCustomRenderer: customDropdownRenderer };
+            return nodeActions;
         }
     };
 
