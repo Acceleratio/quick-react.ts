@@ -1,4 +1,4 @@
-import { GridColumn, DataTypeEnum, SortDirection, BoolFormatTypeEnum } from '../../src/components/QuickGrid/QuickGrid.Props';
+import { GridColumn, DataTypeEnum, SortDirection, BoolFormatTypeEnum, ActionItem } from '../../src/components/QuickGrid/QuickGrid.Props';
 import { TreeNode, TreeDataSource } from '../../src/models/TreeData';
 
 const RANDOM_WORDS = ['abstrusity', 'advertisable', 'bellwood', 'benzole', 'disputative', 'djilas', 'ebracteate', 'zonary'];
@@ -27,7 +27,8 @@ export const nodeActions = [
     {
         name: 'Test Action 1',
         commandName: 'TestAction1',
-        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)]
+        iconName: RANDOM_ActionIcons[Math.floor(Math.random() * RANDOM_ActionIcons.length)],
+        showInDropdown: true
     },
     {
         name: 'Test Action 2',

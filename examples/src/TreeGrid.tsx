@@ -7,7 +7,7 @@ import Resizable from 'react-resizable-box';
 import { Dropdown, DropdownType } from '../../src/components/Dropdown';
 import { Button } from '../../src/components/Button';
 import { TreeGrid, ITreeGridProps } from '../../src/components/TreeGrid';
-import { SortDirection, GridColumn } from '../../src/components/QuickGrid';
+import { SortDirection, GridColumn, ActionItem } from '../../src/components/QuickGrid';
 import { gridColumns1, getTreeGridData, generateTreeNode, nodeActions, GridData } from '../MockData/gridData';
 import '../../src/components/TreeFilter/TreeFilter.scss'; // used for react-resizable style
 import '../../src/components/Label/Label.scss';
@@ -21,6 +21,16 @@ const columnSummaries = {
     Color: 'Best: Orange',
     Animal: 'Fastest: Dog',
     Numbers: 'Favorite: 7'
+};
+
+const customDropdownRenderer = (actions: Array<ActionItem>): JSX.Element => {
+    return (
+        <div>
+            {actions.map(a => {
+                return (<span>{a.name}</span>);
+            })}
+        </div>
+    );
 };
 
 export class Index extends React.Component<any, any> {
@@ -48,7 +58,7 @@ export class Index extends React.Component<any, any> {
         onGetSingleRowContextActions: (node) => {
 
             // here we use the same node actions each time for demo purposes, but the actions can be per node
-            return nodeActions;
+            return { actions: nodeActions, dropdownCustomRenderer: customDropdownRenderer };
         }
     };
 

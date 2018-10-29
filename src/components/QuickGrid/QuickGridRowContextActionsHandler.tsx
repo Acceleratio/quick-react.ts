@@ -124,10 +124,11 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
 
     renderActions(rowIndex: number, actions: Array<ActionItem> | ContextActionsObject, onActionClicked: (rowIndex: number, action: ActionItem) => void, onMenuToggle: (opened: boolean) => void) {
         const actionItems: Array<ActionItem> = isContextActionsObject(actions) ? actions.actions : actions;
-        const dropdownIcon = isContextActionsObject(actions) ? actions.dropdownIconName : 'svg-icon-more';
         if (!actionItems || actionItems.length === 0) {
             return null;
         }
+
+        const dropdownIcon = isContextActionsObject(actions) ? actions.dropdownIconName : 'svg-icon-more';
     
         const mapAction = (x: ActionItem) => {
             const mappedAction = <Icon key={x.commandName} iconName={x.iconName} title={x.tooltip ? undefined : x.name} className="hoverable-items__btn" onClick={() => onActionClicked(rowIndex, x)} />;
@@ -136,7 +137,21 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
     
         let elements = [];
         const dropdownActions = actionItems.filter((action, index) => action.showInDropdown || (actionItems.length >= 4 ? index > 1 : null));
-        if (dropdownActions && dropdownActions.length > 0) {
+        if (isContextActionsObject(actions) && actions.dropdownCustomRenderer) {
+            elements.push(
+                <Dropdown
+                    key="hoverDropDown"
+                    className="hoverable_items__btn-dropdown"
+                    dropdownKey={rowIndex}
+                    icon={dropdownIcon}
+                    dropdownType={DropdownType.customDropdown}
+                    displaySelection={false}
+                    delayMs={this.props.delayMs}
+                >
+                    {actions.dropdownCustomRenderer(dropdownActions)}
+                </Dropdown>
+            );
+        } else if (dropdownActions && dropdownActions.length > 0) {
             let actionOptions = [];
             for (let i = 0; i < actionItems.length; i++) {
                 if (dropdownActions.find(x => x === actionItems[i])) {
