@@ -137,7 +137,31 @@ export const DefaultIconNumberStyleObject = (iconSize: IconSize, numberOfCharact
       styleObject.containerStyleObject.marginRight = '10px';
       styleObject.bubbleStyleObject.width = '20px';
     }
+  }
 
+  if (numberOfCharacters === 3) {
+    styleObject.bubbleStyleObject.borderRadius = '40px';
+      switch (iconSize) {
+      case IconSize.smallest:
+          styleObject.containerStyleObject.marginRight = '13px';
+          styleObject.bubbleStyleObject.width = '26px';
+          break;
+      case IconSize.small:
+          styleObject.containerStyleObject.marginRight = '14px';
+          styleObject.bubbleStyleObject.width = '28px';
+          break;
+      case IconSize.medium:
+          styleObject.containerStyleObject.marginRight = '16px';
+          styleObject.bubbleStyleObject.width = '32px';          
+          break;
+      case IconSize.large:
+          styleObject.containerStyleObject.marginRight = '21px';
+          styleObject.bubbleStyleObject.width = '42px';
+          break;
+      default:
+      styleObject.containerStyleObject.marginRight = '13px';
+      styleObject.bubbleStyleObject.width = '26px';
+    }
   }
 
   return styleObject;

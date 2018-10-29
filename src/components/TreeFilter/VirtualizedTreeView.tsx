@@ -125,9 +125,6 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
             }
         } else if (!_.isEqual(this.props.filterSelection.selectedIDs, prevProps.filterSelection.selectedIDs)) {
             selectionChanged = true;
-            if (this._list != null) {
-                this._list.forceUpdateGrid();
-            }
         }
         if (selectionChanged) {
             if (this.props.filterSelection.type !== FilterSelectionEnum.All) {
@@ -181,6 +178,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                             rowRenderer={this.rowRenderer}
                             rowCount={this.state.filteredItems.length}
                             scrollToIndex={this.state.scrollToIndex}
+                            {...this.props.filterSelection}
                         />
                     )}
                 </AutoSizer>

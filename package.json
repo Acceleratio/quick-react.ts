@@ -1,6 +1,6 @@
 {
     "name": "quick-react-ts",
-    "version": "0.13.11",
+    "version": "0.13.12",
     "description": "Reusable components for React, written in TypeScript",
     "main": "./lib/index.js",
     "typings": "./lib/index",
@@ -13,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/Acceleratio/quick-react.ts.git"
+        "url": "https://github.com/SysKitTeam/quick-react.ts.git"
     },
     "keywords": [],
     "author": "",

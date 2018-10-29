@@ -11,7 +11,7 @@ export const NotificationIcon: (props: INotificationIconProps) => JSX.Element = 
         [props.className]);
 
     const numberString = props.notificationNumber === undefined || props.notificationNumber === 0 ? '' 
-                            : props.notificationNumber < 10 ? props.notificationNumber.toLocaleString() : '9+';
+                            : props.notificationNumber < 100 ? props.notificationNumber.toLocaleString() : '99+';
 
     const defaultStyleObject = DefaultIconNumberStyleObject(props.iconSize, numberString.length);
    
