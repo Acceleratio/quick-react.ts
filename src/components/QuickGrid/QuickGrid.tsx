@@ -696,6 +696,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                                             onCollapseAll={this.collapseAll}
                                             onExpandAll={this.expandAll}
                                             tooltipsEnabled={this.props.tooltipsEnabled}
+                                            hideGroupExpandButton={this.props.hideGroupExpandButton}
                                         />
                                     }
                                     {

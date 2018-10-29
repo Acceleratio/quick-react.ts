@@ -11,6 +11,7 @@ import './QuickGrid.scss';
 export interface IGroupByProps {
     groupBy: Array<IGroupBy>;
     columns: Array<GridColumn>;
+    hideGroupExpandButton?: boolean;
     onGroupByRemoved: (groupName: string) => void;
     onGroupByChanged: (newGroupBy: Array<IGroupBy>) => void;
     onSort: (sortBy: string, sortDirection: SortDirection) => void;
@@ -64,26 +65,22 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
         };
         return (
             <div key={valueMember} className="group-column-box">
-                <span className="group-text-boarder">
-                    <span  >
-                        <HeaderColumn
-                            valueMember={columnDefinition.valueMember}
-                            text={headerText}
-                            showSortIndicator={true}
-                            sortDirection={groupBy.sortDirection}
-                            className={columnClassName}
-                            isGroupable={columnDefinition.isGroupable}
-                            onClick={onChangeSortDirection}
-                            onKeyDown={onKeyDown}
-                            moveGroupByColumn={this.groupOrderChange}
-                            itemArrayIndex={index}
-                            removeGroupColumn={this.props.onGroupByRemoved}
-                            tooltipsEnabled={this.props.tooltipsEnabled}
-                            tooltip={columnDefinition.headerTooltip}
-                        />
-                    </span>
-                    <Icon iconName="icon-delete" className="icon-remove-group" onClick={removeGroup} />
-                </span>
+                <HeaderColumn
+                    valueMember={columnDefinition.valueMember}
+                    text={headerText}
+                    showSortIndicator={true}
+                    sortDirection={groupBy.sortDirection}
+                    className={columnClassName}
+                    isGroupable={columnDefinition.isGroupable}
+                    onClick={onChangeSortDirection}
+                    onKeyDown={onKeyDown}
+                    moveGroupByColumn={this.groupOrderChange}
+                    itemArrayIndex={index}
+                    removeGroupColumn={this.props.onGroupByRemoved}
+                    tooltipsEnabled={this.props.tooltipsEnabled}
+                    tooltip={columnDefinition.headerTooltip}
+                />
+                <Icon iconName="icon-delete" className="icon-remove-group" onClick={removeGroup} />
             </div>
 
         );
@@ -100,7 +97,7 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
     }
 
     render() {
-        const { connectDropTarget, columns, onGroupByRemoved, onCollapseAll, onExpandAll } = this.props;
+        const { connectDropTarget, columns, onGroupByRemoved, onCollapseAll, onExpandAll, hideGroupExpandButton } = this.props;
         const isEmpty = _.isEmpty(this.state.groupBy);
         return connectDropTarget(
             <div className="group-drop-toolbar">
@@ -114,7 +111,7 @@ class GroupByToolbarInner extends React.PureComponent<IGroupByProps, IGroupBySta
                         })
                     }
                 </div>
-                {!isEmpty &&
+                {!isEmpty && !hideGroupExpandButton &&
                     <div
                         className="expand-collapse-buttons"
                     >

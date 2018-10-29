@@ -16,6 +16,7 @@ export interface IGridHeaderProps {
     displayGroupContainer: boolean;
     onGroupByChanged?: (groupBy: Array<IGroupBy>) => void;
     hasActionColumn: boolean;
+    hideGroupExpandButton?: boolean;
     onCollapseAll?: (event) => void;
     onExpandAll?: (event) => void;
     tooltipsEnabled?: boolean;

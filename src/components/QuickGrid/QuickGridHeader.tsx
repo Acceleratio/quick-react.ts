@@ -47,7 +47,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
 
     public render() {
         const headerClass = classNames('grid-header', this.props.className);
-        const { allColumns, headerColumns, width, scrollLeft, tooltipsEnabled } = this.props;
+        const { allColumns, headerColumns, width, scrollLeft, tooltipsEnabled, hideGroupExpandButton } = this.props;
         return (
             <div style={{ width }}>
                 {
@@ -61,6 +61,7 @@ export class GridHeaderInner extends React.PureComponent<IGridHeaderProps, IGrid
                         onCollapseAll={this.props.onCollapseAll}
                         onExpandAll={this.props.onExpandAll}
                         tooltipsEnabled={tooltipsEnabled}
+                        hideGroupExpandButton={hideGroupExpandButton}
                     />
                 }
                 <Grid

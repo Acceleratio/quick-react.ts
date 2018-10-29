@@ -41,6 +41,7 @@ export interface IQuickGridProps {
     delayMs?: number;
     filterString?: string;
     showAutoFilterRow?: boolean;
+    hideGroupExpandButton?: boolean;
 
     // callbacks
     onSelectedRowChanged?: (selectedRowIndex: number, rowData: any) => void;
