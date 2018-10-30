@@ -170,9 +170,6 @@ export interface ContextActionsObject {
 }
 
 export function isContextActionsObject(arg: any): arg is ContextActionsObject {
-    if (arg instanceof Array) {
-        return false;
-    }
     return arg && arg.actions !== undefined;
 }
 
