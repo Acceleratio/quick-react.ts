@@ -170,7 +170,10 @@ export interface ContextActionsObject {
 }
 
 export function isContextActionsObject(arg: any): arg is ContextActionsObject {
-    return arg.actions !== undefined;
+    if (arg instanceof Array) {
+        return false;
+    }
+    return arg && arg.actions !== undefined;
 }
 
 export enum QuickGridActionsBehaviourEnum {
