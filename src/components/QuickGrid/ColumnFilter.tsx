@@ -29,6 +29,7 @@ export class ColumnFilter extends React.PureComponent<ColumnFilterProps, null> {
                 className="filters-column"
                 onChanged={this.onChanged}
                 value={this.props.filterValue}
+                placeholder={this.props.placeholderText}
             />)
         );
     }

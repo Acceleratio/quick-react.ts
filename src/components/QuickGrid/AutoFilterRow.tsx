@@ -68,6 +68,7 @@ export class AutoFilterRow extends React.PureComponent<FiltersProps, null> {
                     removeColumnFilter={this.props.removeColumnFilter}
                     filterValue={filterValue}
                     isNotEmpty={isNotEmpty}
+                    placeholderText={this.props.placeholderText}
                 />
             </div>
         );

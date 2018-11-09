@@ -41,6 +41,7 @@ export interface IQuickGridProps {
     delayMs?: number;
     filterString?: string;
     showAutoFilterRow?: boolean;
+    filterPlaceholderText?: string;
     hideGroupExpandButton?: boolean;
 
     // callbacks
@@ -195,6 +196,7 @@ export interface FiltersProps {
     columnFilters: Array<FiltersData>;
     groupBy: IGroupBy[];
     hasActionColumn: boolean;
+    placeholderText?: string;
     addColumnFilter: (filterData: FiltersData) => void;
     removeColumnFilter: (filterData: FiltersData) => void;
 }
@@ -208,6 +210,7 @@ export interface ColumnFilterProps {
     columnIndex: number;
     filterValue: string;
     isNotEmpty: boolean;
+    placeholderText?: string;
     addColumnFilter: (filterData: FiltersData) => void;
     removeColumnFilter: (filterData: FiltersData) => void;
 }
