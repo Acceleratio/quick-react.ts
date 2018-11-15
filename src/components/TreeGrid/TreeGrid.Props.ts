@@ -24,6 +24,7 @@ export interface ITreeGridProps {
     onRowDoubleClicked?: (row: any) => void;
     onSelectedNodeChanged?: (selectedNode: Array<AugmentedTreeNode>) => void;
     onLazyLoadChildNodes?: (node: AugmentedTreeNode) => void;
+    onNodeExpand?: (node: AugmentedTreeNode) => void;
 }
 
 export interface ITreeGridState {

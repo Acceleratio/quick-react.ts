@@ -114,6 +114,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         const result = getTreeRowsSelector(nextState, nextProps, this.props);
         this._finalGridRows = result.data;
         this._maxExpandedLevel = result.maxExpandedLevel;
+        this._quickGrid.updateColumnWidth(0, () => {
+            return this.props.isMultiSelectable ? 35 : 16;
+        });
         this._quickGrid.updateColumnWidth(1, (old) => {
             return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[1]));
         });
@@ -289,7 +292,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 'is-disabled': rowData.isNodeDisabled
             });
 
-        let columnElement: Array<JSX.Element>;
+        let columnElement: any;
         let onCellClick = (e) => {
             // https://github.com/facebook/react/issues/1691 funky bussinese because of multiple mount points in the hover actions
             // so stopPropagation and preventDefault do not work there, manually checking if row actions were clicked
@@ -306,14 +309,14 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
 
         onCellClick = rowData.$meta.isAsyncLoadingDummyNode || this.props.isMultiSelectable ? undefined : onCellClick;
         if (rowData.$meta.isAsyncLoadingDummyNode && columnIndex === 1) {
-            columnElement = [
+            columnElement = (
                 <div className="loading-container">
                     <Spinner className="async-loading-spinner" type={SpinnerType.small} />
                     <span className="async-loading-label">Loading...</span>
                 </div>
-            ];
+            );
         } else if (column.cellFormatter) {
-            columnElement = [column.cellFormatter(cellData, rowData)];
+            columnElement = column.cellFormatter(cellData, rowData);
         } else {
             columnElement = [
                 columnIndex === 1 && rowData.iconName ? <span key="cellIcon" style={{ display: 'flex' }} title={rowData.iconTooltipContent}><Icon iconName={rowData.iconName} className={rowData.iconClassName} /></span> : null,
@@ -321,9 +324,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                     {cellData}
                 </div>
             ];
-        }
-        if (!notLastIndex && !rowData.$meta.isAsyncLoadingDummyNode) {
-            columnElement.push(rowActionsRender(rowIndex, rowData, isSelectedRow));
+            if (!notLastIndex && !rowData.$meta.isAsyncLoadingDummyNode) {
+                columnElement.push(rowActionsRender(rowIndex, rowData, isSelectedRow));
+            }
         }
 
         const title = typeof (cellData) === 'string' && this.props.tooltipsEnabled ? cellData : null;
@@ -358,6 +361,9 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
             && !rowData.$meta.isLazyChildrenLoadInProgress) {
             rowData.$meta.isLazyChildrenLoadInProgress = true;
             this.props.onLazyLoadChildNodes(rowData);
+        }
+        if (this.props.onNodeExpand) {
+            this.props.onNodeExpand(rowData);
         }
         this.setState((oldState) => {
             return { structureRequestChangeId: oldState.structureRequestChangeId + 1 };
