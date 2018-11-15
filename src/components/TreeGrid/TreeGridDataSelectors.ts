@@ -48,7 +48,7 @@ const transformData = (tree: TreeDataSource,
     // and it could be the case that selected node is somewhere collapsed because
     // this is controlled component with mutable state, so we need to check if newly
     // selected node is collapsed and if it is we need to expand it to first expanded parent
-    if (currentlySelectedNodeId !== newSelectedNodeId && newSelectedNodeId) {
+    if (newSelectedNodeId && currentlySelectedNodeId !== newSelectedNodeId) {
         // get ids of all nodes in the path from root to currently selected node
         const currentNode = tree.getNodeById(newSelectedNodeId);
         idsInPathToSelected = getTreePathsToSelected(currentNode.parentNode);
