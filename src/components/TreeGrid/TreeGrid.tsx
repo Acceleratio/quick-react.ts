@@ -64,10 +64,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this.props.treeDataSource.subscribe(this);
         this.props.treeDataSource.registerDataListener(this.props.onSelectedNodeChanged);
 
-        if (this.props.isNodeSelectable) {
-            if (this.state.selectedNodeId > 0) {
-                this._setSelectedNodeAndState(this.state.selectedNodeId);
-            }
+        if (!this.props.isMultiSelectable && this.props.isNodeSelectable && this.state.selectedNodeId > 0) {
+            this._setSelectedNodeAndState(this.state.selectedNodeId);
         }
     }
 
@@ -128,7 +126,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this._quickGrid.updateColumnWidth(1, (old) => {
             return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[1]));
         });
-        if (this.props.selectedNodeId !== nextProps.selectedNodeId && this.props.isNodeSelectable) {
+        if (!nextProps.isMultiSelectable && (this.props.selectedNodeId !== nextProps.selectedNodeId || nextProps.isMultiSelectable !== this.props.isMultiSelectable) && this.props.isNodeSelectable) {
             this._setSelectedNodeAndState(nextProps.selectedNodeId);
         }
     }
