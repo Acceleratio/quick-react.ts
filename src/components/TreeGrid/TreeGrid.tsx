@@ -126,7 +126,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         this._quickGrid.updateColumnWidth(1, (old) => {
             return Math.max(old, getColumnMinWidth(this.state.columnsToDisplay[1]));
         });
-        if (!nextProps.isMultiSelectable && (this.props.selectedNodeId !== nextProps.selectedNodeId || nextProps.isMultiSelectable !== this.props.isMultiSelectable) && this.props.isNodeSelectable) {
+        if (!nextProps.isMultiSelectable && (this.props.selectedNodeId !== nextProps.selectedNodeId || this.props.isMultiSelectable) && this.props.isNodeSelectable) {
             this._setSelectedNodeAndState(nextProps.selectedNodeId);
         }
     }
