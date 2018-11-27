@@ -54,12 +54,15 @@ $checkbox-transition-timing: cubic-bezier(.4, 0, .23, 1);
     }
     &.partial-selected {
         label:after {
-            content: '\25FC';
-            color: $primary-color;
+            content: '';            
             font-size: 14px;
             position: absolute;
-            left: 1.7px;
-            top: 0px;
+            left: 4px;
+            top: 6px;
+            display: block;
+            width: 8px;
+            height: 8px;
+            background-color: #F79428;
         }
     }
     .virtualized-tree-filter-checkbox-checkmark {
