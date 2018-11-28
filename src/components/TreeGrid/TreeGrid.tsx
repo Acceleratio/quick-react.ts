@@ -20,7 +20,8 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
         isMultiSelectable: false,
         highlightRowsInMultiSelect: true,
         onSelectedNodeChanged: nullFunc,
-        tooltipsEnabled: true
+        tooltipsEnabled: true,
+        rowHeight: 28
     };
 
     private _quickGrid: IQuickGrid;
@@ -427,6 +428,7 @@ export class TreeGrid extends React.PureComponent<ITreeGridProps, ITreeGridState
                 columnSummaries={this.props.columnSummaries}
                 columnHeadersVisible={this.props.columnHeadersVisible}
                 isRowSelectable={this.props.isNodeSelectable}
+                rowHeight={this.props.rowHeight}
                 {...this._overscanProps}
                 ref={this._getQuickGridRef}
             />

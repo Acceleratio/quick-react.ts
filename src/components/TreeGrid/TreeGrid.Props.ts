@@ -21,6 +21,7 @@ export interface ITreeGridProps {
     selectedNodeId?: number;
     isNodeSelectable?: boolean;
     tooltipsEnabled?: boolean;
+    rowHeight?: number | ((info: { index: number }) => number); // Number or a function that returns the height of a row given its index 
     onRowDoubleClicked?: (row: any) => void;
     onSelectedNodeChanged?: (selectedNode: Array<AugmentedTreeNode>) => void;
     onLazyLoadChildNodes?: (node: AugmentedTreeNode) => void;
