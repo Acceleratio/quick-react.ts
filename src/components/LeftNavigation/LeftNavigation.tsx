@@ -190,9 +190,10 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
     }
 
     public render(): JSX.Element {
+        const className = classNames('left-nav', 'left-nav-container', [this.props.className]);
         return (
             this.props.expandMargin ? (
-                <div className="left-nav left-nav-container">
+                <div className={className}>
                     {this._renderBody()}
                 </div>
             ) : (this._renderBody())
