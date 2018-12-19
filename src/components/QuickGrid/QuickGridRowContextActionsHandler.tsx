@@ -151,7 +151,7 @@ export class QuickGridRowContextActionsHandler extends React.PureComponent<IQuic
                     onClosed={() => onMenuToggle(false)}
                     delayMs={this.props.delayMs}
                 >
-                    {actions.dropdownCustomRenderer(rowIndex, dropdownActions, onActionClicked)}
+                    {actions.dropdownCustomRenderer(rowIndex, dropdownActions, onMenuToggle, onActionClicked)}
                 </Dropdown>
             );
         } else if (dropdownActions && dropdownActions.length > 0) {
