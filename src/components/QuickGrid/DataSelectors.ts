@@ -129,7 +129,7 @@ const addLowerCaseMembersToRows = (rows: Array<any>, columns: Array<GridColumn>)
     const newRows = [...rows].map(row => {
         let modifiedRow = { ...row };
         for (let value of members) {
-            modifiedRow[lowercasedColumnPrefix + value] = modifiedRow[value].toLowerCase();
+            modifiedRow[lowercasedColumnPrefix + value] = modifiedRow[value] ? modifiedRow[value].toLowerCase() : modifiedRow[value];
         }
         return modifiedRow;
     });
