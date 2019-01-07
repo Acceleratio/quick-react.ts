@@ -250,13 +250,16 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         const itemChecked = this.isItemInList(checkedItemIds, treeItem);
         const itemCheckedOrAllFilteredChecked = itemChecked || (this.state.searchText !== '' && this.allFilteredChildrenChecked(treeItem, checkedItemIds));
 
+        //#region Item click events
+
+        // used with double click events, so we don't trigger both the single click action, and the double click if double click is enabled
         let doubleClickTimer;
         let doubleClickDelay = 200;
         let preventSingleClick = false;
 
         const onItemCheckedChange = () => {
             const onItemCheckedChangeAction = () => {
-                if (preventSingleClick) {
+                if (this.props.shouldGroupExpandOnDoubleClick && preventSingleClick) {
                     return;
                 }
 
@@ -265,16 +268,12 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 preventSingleClick = false;
             };
 
-            if (this.props.shouldGroupExpandOnDoubleClick) {
-                doubleClickTimer = setTimeout(onItemCheckedChangeAction, doubleClickDelay);
-            } else {
-                onItemCheckedChangeAction();
-            }
+            onItemClicked(onItemCheckedChangeAction);
         };
 
         const onSingleSelectItemClick = () => {
             const onSingleClickAction = () => {
-                if (this.props.isGroupSelectableOnSingleSelect === false && itemHasChildren(treeItem) || preventSingleClick) {
+                if (this.props.isGroupSelectableOnSingleSelect === false && itemHasChildren(treeItem) || this.props.shouldGroupExpandOnDoubleClick && preventSingleClick) {
                     return;
                 }
                 
@@ -282,10 +281,14 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 preventSingleClick = false;
             };
 
+            onItemClicked(onSingleClickAction);
+        };
+
+        const onItemClicked = (singleClickedAction: () => void) => {
             if (this.props.shouldGroupExpandOnDoubleClick) {
-                doubleClickTimer = setTimeout(onSingleClickAction, doubleClickDelay);
+                doubleClickTimer = setTimeout(singleClickedAction, doubleClickDelay);
             } else {
-                onSingleClickAction();
+                singleClickedAction();
             }
         };
 
@@ -296,6 +299,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                 onExpandClick(event);
             }
         };
+        //#endregion
 
         // tslint:disable-next-line:variable-name
         const ItemCheckboxElement = () => {
