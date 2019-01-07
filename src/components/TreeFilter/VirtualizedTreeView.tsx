@@ -250,16 +250,51 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
         const itemChecked = this.isItemInList(checkedItemIds, treeItem);
         const itemCheckedOrAllFilteredChecked = itemChecked || (this.state.searchText !== '' && this.allFilteredChildrenChecked(treeItem, checkedItemIds));
 
+        let doubleClickTimer;
+        let doubleClickDelay = 200;
+        let preventSingleClick = false;
+
         const onItemCheckedChange = () => {
-            const newCheckedAndPartial = this.getNewCheckedItems(treeItem, checkedItemIds, itemCheckedOrAllFilteredChecked);
-            this.setNewSelectedState(false, newCheckedAndPartial.checked, newCheckedAndPartial.partially);
+            const onItemCheckedChangeAction = () => {
+                if (preventSingleClick) {
+                    return;
+                }
+
+                const newCheckedAndPartial = this.getNewCheckedItems(treeItem, checkedItemIds, itemCheckedOrAllFilteredChecked);
+                this.setNewSelectedState(false, newCheckedAndPartial.checked, newCheckedAndPartial.partially);
+                preventSingleClick = false;
+            };
+
+            if (this.props.shouldGroupExpandOnDoubleClick) {
+                doubleClickTimer = setTimeout(onItemCheckedChangeAction, doubleClickDelay);
+            } else {
+                onItemCheckedChangeAction();
+            }
         };
 
         const onSingleSelectItemClick = () => {
-            if (this.props.isGroupSelectableOnSingleSelect === false && itemHasChildren(treeItem)) {
-                return;
+            const onSingleClickAction = () => {
+                if (this.props.isGroupSelectableOnSingleSelect === false && itemHasChildren(treeItem) || preventSingleClick) {
+                    return;
+                }
+                
+                this.props.onValuesSelected(this.props.filterId, { type: FilterSelectionEnum.Selected, selectedIDs: [treeItem.id] });
+                preventSingleClick = false;
+            };
+
+            if (this.props.shouldGroupExpandOnDoubleClick) {
+                doubleClickTimer = setTimeout(onSingleClickAction, doubleClickDelay);
+            } else {
+                onSingleClickAction();
             }
-            this.props.onValuesSelected(this.props.filterId, { type: FilterSelectionEnum.Selected, selectedIDs: [treeItem.id] });
+        };
+
+        const onItemDoubleClick = (event) => {
+            if (this.props.shouldGroupExpandOnDoubleClick && (itemHasChildren(treeItem) || treeItem.hasChildren)) {
+                clearTimeout(doubleClickTimer);
+                preventSingleClick = true;
+                onExpandClick(event);
+            }
         };
 
         // tslint:disable-next-line:variable-name
@@ -282,6 +317,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                     <span
                         className={singleSelectClassNames}
                         onClick={onSingleSelectItemClick}
+                        onDoubleClick={this.props.shouldGroupExpandOnDoubleClick && onItemDoubleClick}
                     >
                         {treeItem.iconName &&
                             <span title={treeItem.iconTooltipContent}>
@@ -306,6 +342,7 @@ export class VirtualizedTreeView extends React.PureComponent<IVirtualizedTreeVie
                         text={treeItem.value}
                         checked={checked}
                         onChange={onItemCheckedChange}
+                        onDoubleClick={this.props.shouldGroupExpandOnDoubleClick && onItemDoubleClick}
                         iconName={treeItem.iconName}
                         iconClassName={iconClassName}
                         iconTooltipContent={treeItem.iconTooltipContent}

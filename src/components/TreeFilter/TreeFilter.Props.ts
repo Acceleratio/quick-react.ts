@@ -29,6 +29,7 @@ export interface ITreeFilterProps {
     hasSearch?: boolean;
     isSingleSelect?: boolean;
     isGroupSelectableOnSingleSelect?: boolean;
+    shouldGroupExpandOnDoubleClick?: boolean;
     enableRecursiveSelection?: boolean;
     itemsAreFlatList?: boolean;
     onValuesSelected?: (filterId: string, filterSelection: IFilterSelection) => void;
@@ -73,6 +74,7 @@ export const defaultTreeFilterProps: Partial<ITreeFilterProps> = {
     isSingleSelect: false,
     itemsAreFlatList: false,
     isGroupSelectableOnSingleSelect: false,
+    shouldGroupExpandOnDoubleClick: false,
     enableRecursiveSelection: true,
     directionalHint: DirectionalHint.bottomRightEdge,
     filterSelection: { type: FilterSelectionEnum.None, selectedIDs: [] },

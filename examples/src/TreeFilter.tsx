@@ -109,6 +109,8 @@ export class Index extends React.Component<any, DemoState> {
                     maxHeight={500}
                     onItemExpand={this.onAsyncTreeItemExpand}
                     onCalloutClose={() => console.log('closing...')}
+                    isSingleSelect={true}
+                    isGroupSelectableOnSingleSelect={false}
                 />
                 <br /><br />
 
@@ -131,7 +133,7 @@ export class Index extends React.Component<any, DemoState> {
                     onItemExpand={this.onItemExpand}
                     onValuesSelected={this.onValuesSelected}
                     isSingleSelect={true}
-                    isGroupSelectableOnSingleSelect={true}
+                    isGroupSelectableOnSingleSelect={false}
                     // tslint:disable-next-line:no-string-literal
                     filterSelection={this.state.filterStates['f3']}
                     defaultSelection={FilterSelectionEnum.All}
