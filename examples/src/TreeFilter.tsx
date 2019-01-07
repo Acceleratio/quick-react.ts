@@ -272,6 +272,23 @@ export class Index extends React.Component<any, DemoState> {
                     isReady={ false }
                     showResetButton={false}
                 />
+
+                <br /><br />
+
+                <p>TreeFilter with enabled expand on double click</p>
+                <TreeFilter
+                    filterId={'f12'}
+                    items={customTooltipContent}
+                    defaultSelection={FilterSelectionEnum.All}
+                    // tslint:disable-next-line:no-string-literal
+                    filterSelection={this.state.filterStates['f12']}
+                    enableRecursiveSelection={false}
+                    hasTitleBorder={true}
+                    showButtons={false}
+                    onValuesSelected={this.onValuesSelected}
+                    onSave={this.onSave}
+                    shouldGroupExpandOnDoubleClick={true}
+                />
             </div>
         );
     }
