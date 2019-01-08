@@ -193,10 +193,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 minWidth: emptyCellWidth
             });
         }
-        displayColumns = emptyArray.concat(displayColumns);
         if (this.props.hasColumnPicker && this.state && this.state.pickedColumns) {
             displayColumns = displayColumns.filter(col => !!this.state.pickedColumns.find(pick => pick.valueMember === col.valueMember));
         }
+        displayColumns = emptyArray.concat(displayColumns);
         return displayColumns;
     }
 
