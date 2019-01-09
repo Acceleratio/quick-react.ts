@@ -204,7 +204,10 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     private updateColumns(props: IQuickGridProps) {
-        const groupBy = this.getGroupByFromProps(props.groupBy);
+        let groupBy = this.getGroupByFromProps(props.groupBy);
+        if (this.state.pickedColumns) {
+            groupBy = groupBy.filter(col => this.state.pickedColumns.find(pick => col.column === pick.valueMember));
+        }
         const hasActionColumn = this._shouldRenderActionsColumn(props);
         const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupBy, hasActionColumn);
         const columnWidths = this.getColumnWidths(columnsToDisplay);
@@ -365,7 +368,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
                 if (columnIndex === 0 && this._shouldRenderActionsColumn(this.props)) {
                     return this.renderActionCell(key, rowIndex, rowData, overridenStyle);
                 }
-                if (columnIndex < this.props.groupBy.length) {
+                if (columnIndex < this.state.groupBy.length) {
                     return this.renderEmptyCell(key, rowIndex, rowData, overridenStyle);
                 }
                 return this.renderBodyCell(columnIndex, key, rowIndex, rowData, overridenStyle, onClick);
@@ -687,8 +690,12 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
     }
 
     private onColumnSelectionChanged = (picked: Array<GridColumn>) => {
-        this.setState({
-            pickedColumns: picked
+        this.setState(prevState => {
+            const groupBy = prevState.groupBy.filter(col => picked.find(pick => col.column === pick.valueMember));
+            return {
+                pickedColumns: picked,
+                groupBy
+            };
         });
         if (this.props.onColumnSelectionChanged) {
             this.props.onColumnSelectionChanged(picked);
