@@ -194,7 +194,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             });
         }
 
-        const _pickedColumns = pickedColumns || this.state.pickedColumns;
+        const _pickedColumns = pickedColumns || (this.state && this.state.pickedColumns);
 
         if (this.props.hasColumnPicker && _pickedColumns) {
             displayColumns = displayColumns.filter(col => !!_pickedColumns.find(pick => pick.valueMember === col.valueMember));
