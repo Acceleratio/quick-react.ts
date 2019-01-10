@@ -194,10 +194,8 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             });
         }
 
-        const _pickedColumns = pickedColumns || (this.state && this.state.pickedColumns);
-
-        if (this.props.hasColumnPicker && _pickedColumns) {
-            displayColumns = displayColumns.filter(col => !!_pickedColumns.find(pick => pick.valueMember === col.valueMember));
+        if (this.props.hasColumnPicker && pickedColumns) {
+            displayColumns = displayColumns.filter(col => !!pickedColumns.find(pick => pick.valueMember === col.valueMember));
         }
         displayColumns = emptyArray.concat(displayColumns);
         return displayColumns;
@@ -209,7 +207,7 @@ export class QuickGridInner extends React.Component<IQuickGridProps, IQuickGridS
             groupBy = groupBy.filter(col => this.state.pickedColumns.find(pick => col.column === pick.valueMember));
         }
         const hasActionColumn = this._shouldRenderActionsColumn(props);
-        const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupBy, hasActionColumn);
+        const columnsToDisplay = props.hasStaticColumns ? props.columns : this.getColumnsToDisplay(props.columns, groupBy, hasActionColumn, this.state.pickedColumns);
         const columnWidths = this.getColumnWidths(columnsToDisplay);
         this.setState({
             columnsToDisplay, columnWidths, groupBy
