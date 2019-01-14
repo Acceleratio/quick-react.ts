@@ -6,7 +6,8 @@ import { NotificationBubbleStyleObject } from '../NotificationIcon';
 export enum ExpandCaptionsBehaviorEnum {
     ShowCaptionsOnHover,
     ShowCaptionsOnToggleButton,
-    AlwaysHideCaptions
+    AlwaysHideCaptions,
+    AlwaysShowCaptions
 }
 
 export interface ILeftNavigationProps {

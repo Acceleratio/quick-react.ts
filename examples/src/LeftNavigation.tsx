@@ -51,6 +51,15 @@ export class Index extends React.Component<any, any> {
                         expandCaptionsBehavior={ExpandCaptionsBehaviorEnum.AlwaysHideCaptions}
                     />
                 </div>
+
+                <div style={{ height: 500, width: 200 }}>
+                    <div style={{ padding: '20px 0' }}>Always expanded</div>
+                    <LeftNavigation
+                        id={'leftNavigation'}
+                        options={options}
+                        expandCaptionsBehavior={ExpandCaptionsBehaviorEnum.AlwaysShowCaptions}
+                    />
+                </div>
             </div>
 
 

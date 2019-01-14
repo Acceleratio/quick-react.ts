@@ -154,12 +154,13 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
             'hide-text': !this.state.isOpen
         });
 
+        const isNavigationAlwaysExpanded = this.props.expandCaptionsBehavior === ExpandCaptionsBehaviorEnum.AlwaysShowCaptions;
         const className = classNames(
             'left-nav',
             {
-                'expanded': this.state.isOpen,
-                'collapsed': !this.state.isOpen && !this.props.expandMargin,
-                'collapsed-margin': !this.state.isOpen && this.props.expandMargin
+                'expanded': isNavigationAlwaysExpanded || this.state.isOpen,
+                'collapsed': !isNavigationAlwaysExpanded && !this.state.isOpen && !this.props.expandMargin,
+                'collapsed-margin': !isNavigationAlwaysExpanded && !this.state.isOpen && this.props.expandMargin
             }, [this.props.className]);
 
         let upOptions = [];
