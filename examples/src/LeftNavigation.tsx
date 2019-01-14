@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { LeftNavigation } from './../../src/components/LeftNavigation/LeftNavigation';
-import { ExpandCaptionsBehaviorEnum, LeftNavigationOptionPositionEnum, NotificationBubbleStyleObject } from '../../src/index';
+import { ExpandCaptionsBehaviorEnum, LeftNavigationOptionPositionEnum, NotificationBubbleStyleObject, Tooltip, DirectionalHint } from '../../src/index';
 
 const styleObject: NotificationBubbleStyleObject = { bubbleStyleObject: {backgroundColor: 'orange'}};
 
@@ -18,11 +18,7 @@ const options = [
     { text: 'Books', id: 'Books', href: '#4', icon: 'icon-trash', position: LeftNavigationOptionPositionEnum.Down }
 ];
 
-export class Index extends React.Component<any, any> {
-
-
-
-
+export class Index extends React.Component<any, any> { 
     public render() {
         const defaultStyleObject: NotificationBubbleStyleObject = { bubbleStyleObject: {backgroundColor: 'purple'}};
         return (

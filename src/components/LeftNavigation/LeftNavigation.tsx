@@ -23,6 +23,8 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
         onClick: nullFunc
     };
 
+    /** Used for targeting of any navigation option item */
+    public navigationItemElements: {[optionId: string]: HTMLElement} = {};
     constructor(props: ILeftNavigationProps) {
         super(props);
 
@@ -132,6 +134,7 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
                     className={linkClasses}
                     title={option.text}
                     onClick={(ev) => this.onLinkClick(option.id, option, ev)}
+                    ref={(element) => this._setNavigationItemRef(element, option.id)}
                 >
                     <a id={option.id}>
                         {(option.notificationNumber) ?
@@ -146,6 +149,10 @@ export class LeftNavigation extends CommonComponent<ILeftNavigationProps, any> {
         });
 
         return childrenItems;
+    }
+
+    private _setNavigationItemRef = (navigationItemElement: HTMLElement, optionId: string) => {
+        this.navigationItemElements[optionId] = navigationItemElement;
     }
 
     private _renderBody() {

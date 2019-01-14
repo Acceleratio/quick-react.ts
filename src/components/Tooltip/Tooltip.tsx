@@ -68,7 +68,7 @@ export class Tooltip extends CommonComponent<ITooltipProps, any> {
 
                 {this.state.isTooltipVisible &&
                     <Callout
-                        target={this._getTargetElement()}
+                        target={targetElement || this._getTargetElement()}
                         directionalHint={directionalHint}
                         className={tooltipClassName}
                         isBeakVisible={true}
