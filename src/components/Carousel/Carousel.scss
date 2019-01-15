@@ -59,6 +59,10 @@
                     background-color: #F79428;
                     box-shadow: 0 0 0 3px #DCDADA;
                 }
+
+                &:hover {
+                    cursor: pointer;
+                }
             }
         }
     }

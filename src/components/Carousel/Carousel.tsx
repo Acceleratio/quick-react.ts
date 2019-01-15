@@ -12,6 +12,7 @@ export interface CarouselStepProps {
 export interface CarouselProps {
     initialStep?: number;
     carouselSteps: Array<CarouselStepProps>;
+    onStepChanged?(nextStepIndex: number);
     onFinish();
     
     showBackButton?: boolean;
@@ -79,18 +80,25 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
             return;
         }
 
-        this.setState(prev => ({selectedStepIndex: prev.selectedStepIndex + 1}));
+        this.changeStep(this.state.selectedStepIndex + 1);
     }
 
     private _onBackClicked = () => {
-        this.setState(prev => ({selectedStepIndex: prev.selectedStepIndex - 1}));
+        this.changeStep(this.state.selectedStepIndex - 1);
+    }
+
+    public changeStep = (newStepIndex: number) => {
+        this.setState(prev => ({selectedStepIndex: newStepIndex}));
+        if (this.props.onStepChanged) {
+            this.props.onStepChanged(newStepIndex);
+        }
     }
 
     private _renderCarouselSteps = () => {
         return <div className="carousel__footer__steps">
             {this.props.carouselSteps.map((step, index) => {
                 const className = classNames('carousel__footer__steps__step', {'carousel__footer__steps__step--active': index === this.state.selectedStepIndex});
-                return <div className={className} ></div>;
+                return <div className={className} onClick={() => this.changeStep(index)}></div>;
             })}
         </div>;
     }
