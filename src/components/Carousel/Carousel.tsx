@@ -88,7 +88,10 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
 
     private _renderCarouselSteps = () => {
         return <div className="carousel__footer__steps">
-            Hello
+            {this.props.carouselSteps.map((step, index) => {
+                const className = classNames('carousel__footer__steps__step', {'carousel__footer__steps__step--active': index === this.state.selectedStepIndex});
+                return <div className={className} ></div>;
+            })}
         </div>;
     }
 }
