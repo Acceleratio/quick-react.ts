@@ -1,0 +1,49 @@
+.carousel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    box-sizing: border-box;
+    width: 500px;
+    height: 500px;
+
+    background-color: lightgray;
+
+    &__header {
+        font-size: 22px;
+        font-weight: 600;
+
+        word-wrap: break-word;
+
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding-left: 40px;
+        padding-right: 25px;
+    }
+
+    &__content {
+        margin-bottom: 20px;
+        padding-left: 40px;
+        padding-right: 25px;
+        text-align: justify;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        height: 72px;
+        padding-left: 32px;
+        padding-right: 32px;
+
+        background-color: #F2F2F2;
+        border-radius: 0px 0px 8px 8px;
+
+        &__back-btn--hidden {
+            visibility: hidden;
+        }
+    }
+
+    border-radius: 0px 0px 8px 8px;
+}
