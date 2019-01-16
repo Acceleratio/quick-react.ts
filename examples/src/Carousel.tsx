@@ -19,7 +19,7 @@ export class Index extends React.Component<any, any> {
 
     render() {
         return <div style={{width: 320}}>
-            <Carousel carouselSteps={this._steps} onFinish={() => console.log('finished')} />
+            <Carousel steps={this._steps} onFinish={() => console.log('finished')} />
         </div>;
     }
 }

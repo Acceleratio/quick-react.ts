@@ -11,7 +11,7 @@ export interface CarouselStepProps {
 
 export interface CarouselProps {
     initialStep?: number;
-    carouselSteps: Array<CarouselStepProps>;
+    steps: Array<CarouselStepProps>;
     onStepChanged?(nextStepIndex: number);
     onFinish();
     
@@ -38,7 +38,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
         super(props);
         this.state = {
             selectedStepIndex: props.initialStep || 0,
-            numberOfSteps: props.carouselSteps.length
+            numberOfSteps: props.steps.length
         };
     }
 
@@ -67,7 +67,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
     }
 
     private _getSelectedStepProps = (): CarouselStepProps => {
-        return this.props.carouselSteps[this.state.selectedStepIndex];
+        return this.props.steps[this.state.selectedStepIndex];
     }
 
     private _isLastStep = () => {
@@ -96,7 +96,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
 
     private _renderCarouselSteps = () => {
         return <div className="carousel__footer__steps">
-            {this.props.carouselSteps.map((step, index) => {
+            {this.props.steps.map((step, index) => {
                 const className = classNames('carousel__footer__steps__step', {'carousel__footer__steps__step--active': index === this.state.selectedStepIndex});
                 return <div key={index} className={className} onClick={() => this.changeStep(index)}></div>;
             })}
