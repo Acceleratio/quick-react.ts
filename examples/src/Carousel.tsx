@@ -18,7 +18,9 @@ export class Index extends React.Component<any, any> {
     ];
 
     render() {
-        return <Carousel carouselSteps={this._steps} onFinish={() => console.log('finished')} />;
+        return <div style={{width: 320}}>
+            <Carousel carouselSteps={this._steps} onFinish={() => console.log('finished')} />
+        </div>;
     }
 }
 

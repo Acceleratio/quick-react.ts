@@ -47,7 +47,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
         const stepProps = this._getSelectedStepProps();
         const showBackButton = this.state.selectedStepIndex > 0 && this.props.showBackButton;
         const buttonText = this._isLastStep() ? finishButtonText : forwardButtonText;
-        const backBtnClass = classNames('button-primary-gray', {'carousel__footer__back-btn--hidden' : !showBackButton});
+        const backBtnClass = classNames('carousel__footer__back-button', 'button-primary-gray', {'carousel__footer__back-button--hidden' : !showBackButton});
 
         return (
             <div className="carousel">
@@ -60,7 +60,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
                 <div className="carousel__footer">
                     <Button className={backBtnClass} onClick={this._onBackClicked}>{backButtonText}</Button>
                     {this._renderCarouselSteps()}
-                    <Button className="button-primary" onClick={this._onNextClicked}>{buttonText}</Button>
+                    <Button className="carousel__footer__forward-btton button-primary" onClick={this._onNextClicked}>{buttonText}</Button>
                 </div>
             </div>
         );
@@ -88,7 +88,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
     }
 
     public changeStep = (newStepIndex: number) => {
-        this.setState(prev => ({selectedStepIndex: newStepIndex}));
+        this.setState({selectedStepIndex: newStepIndex});
         if (this.props.onStepChanged) {
             this.props.onStepChanged(newStepIndex);
         }
@@ -98,7 +98,7 @@ export class Carousel extends React.Component<CarouselProps, CarouselState> {
         return <div className="carousel__footer__steps">
             {this.props.carouselSteps.map((step, index) => {
                 const className = classNames('carousel__footer__steps__step', {'carousel__footer__steps__step--active': index === this.state.selectedStepIndex});
-                return <div className={className} onClick={() => this.changeStep(index)}></div>;
+                return <div key={index} className={className} onClick={() => this.changeStep(index)}></div>;
             })}
         </div>;
     }
