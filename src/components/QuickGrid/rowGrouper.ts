@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { GroupRow, IGroupBy, GridColumn } from './QuickGrid.Props';
 import { groupByColumn as groupByColumnFunction  } from '../../utilities/array';
-import { resolveCellValueForDisplay } from '../../utilities/resolveCellValue';
+import { resolveCellValueForDisplay, resolveCellValue } from '../../utilities/resolveCellValue';
 
 class RowGrouper {
     groupByColumns: Array<IGroupBy>;
@@ -30,8 +30,7 @@ class RowGrouper {
         let columnName = groupByColumn.column;
         let column = _.find(this.columns, x => x.valueMember === columnName);
         let groupedRows = groupByColumnFunction(rows, column);
-        let groupMapper = (column.getCellValue || columnName) as string;
-        let groupKeys = _.uniq(_.map<any, string>(rows, groupMapper));
+        let groupKeys = _.uniq(_.map<any, string>(rows, row => resolveCellValue(row, column)));
         let dataViewRows = [];
         for (let i = 0; i < groupKeys.length; i++) {
             let groupKeyValue = groupKeys[i];
