@@ -33,7 +33,7 @@ export interface SortProps {
 }
 
 export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>) => {
-    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent'});
+    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent', numeric: true});
     const sortFunction = (a, b) => {
         for (let sortOption of sortOptions) {
             let valueA;

@@ -108,7 +108,7 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
         return input;
     }
     const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
-    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent'});
+    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent', numeric: true});
     const sortFunction = (a, b) => {
         let compare = 0;
         if (valueGetterForSort) {
