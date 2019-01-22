@@ -67,7 +67,7 @@ export const generateTreeData = (size: number): TreeNode => {
     if (size === 0) {
         treeSize = [5, 5, 5, 2];
     } else {
-        treeSize = [10, 100, 100];
+        treeSize = [20, 100, 100];
     }
     let result: Array<TreeNode> = [];
 

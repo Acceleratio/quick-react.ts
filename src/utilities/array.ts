@@ -1,4 +1,5 @@
 import { resolveCellValue } from './resolveCellValue';
+import * as _ from 'lodash';
 
 export function findIndex<T>(array: Array<T>, predicate: (item: T, index?: number) => boolean): number {
     let index = -1;
@@ -30,38 +31,22 @@ export interface SortProps {
     sortFunction?: (row) => any;
 }
 
-export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>) => {
-    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent', numeric: true});
-    const sortFunction = (a, b) => {
-        for (let sortOption of sortOptions) {
-            let valueA;
-            let valueB;
-            if (sortOption.sortFunction) {
-                valueA = sortOption.sortFunction(a);
-                valueB = sortOption.sortFunction(b);
-            } else {
-                valueA = resolveCellValue(a, sortOption.column);
-                valueB = resolveCellValue(b, sortOption.column);
-            }
-            let compare;
-            if (typeof valueA === 'string' && typeof valueB === 'string') {
-                compare = collator.compare(valueA, valueB);
-            } else {
-                if (valueA < valueB) {
-                    compare = -1;
-                }
-                if (valueA > valueB) {
-                    compare = 1;
-                }
-            }
-            if (compare !== 0) {
-                return compare * sortOption.sortModifier;
-            }
-        }
-        return 0;
-    }
-    return [...rows].sort(sortFunction);
-};
+ export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>) => {
+     const iteratees = sortOptions.map(sortOption => row => {
+         let value;
+         if (sortOption.sortFunction) {
+             value = sortOption.sortFunction(row);
+         } else {
+             value = resolveCellValue(row, sortOption.column);
+         }
+         if (typeof value === 'string') {
+             value = value.toLocaleLowerCase();
+         }
+         return value;
+     });
+     const orders = sortOptions.map(sortOption => sortOption.sortModifier > 0 ? 'asc' : 'desc');
+     return _.orderBy(rows, iteratees, orders);
+ };
 
 export const groupByColumn = function (rows, groupColumn) {
     return rows.reduce((groups, item) => {
