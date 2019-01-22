@@ -42,7 +42,6 @@ export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>
             } else {
                 valueA = resolveCellValue(a, sortOption.column);
                 valueB = resolveCellValue(b, sortOption.column);
-
             }
             let compare;
             if (typeof valueA === 'string' && typeof valueB === 'string') {
@@ -58,8 +57,8 @@ export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>
             if (compare !== 0) {
                 return compare * sortOption.sortModifier;
             }
-            return 0;
         }
+        return 0;
     }
     return [...rows].sort(sortFunction);
 };
