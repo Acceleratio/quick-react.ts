@@ -120,6 +120,10 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
             valueA = a[sortColumnFinal];
             valueB = b[sortColumnFinal];
         }
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+            valueA = valueA.toLowerCase();
+            valueB = valueB.toLowerCase();
+        }
         if (valueA < valueB) {
             return -1 * sortModifier;
         }
@@ -129,6 +133,10 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
         sortColumnFinal = 'treeId';
         valueA = a[sortColumnFinal];
         valueB = b[sortColumnFinal];
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+            valueA = valueA.toLowerCase();
+            valueB = valueB.toLowerCase();
+        }
         if (valueA < valueB) {
             return -1 * sortModifier;
         }
