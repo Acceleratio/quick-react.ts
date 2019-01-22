@@ -98,7 +98,7 @@ const sortData = (treeNode: AugmentedTreeNode, sortColumn: string, sortDirection
     // if the last sort configuration differs from the current, we need to resort the children
     // otherwise, performance gains
     if ((<AugmentedTreeNode>treeNode).$meta.sortRequestId !== rootSortRequestId) {
-        sort(treeNode.children, sortDirection, sortColumn, valueGetterForSort);
+        treeNode.children = sort(treeNode.children, sortDirection, sortColumn, valueGetterForSort);
         (<AugmentedTreeNode>treeNode).$meta.sortRequestId = rootSortRequestId;
     }
 };
@@ -107,35 +107,19 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
     if (sortColumn === undefined || sortDirection === undefined) {
         return input;
     }
-    const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
-    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent', numeric: true});
-    const comparer = (a, b) => {
-        if (typeof a === 'string' && typeof b === 'string') {
-            return collator.compare(a, b);
-        } else {
-            if (a < b) {
-                return -1;
-            }
-            if (a > b) {
-                return 1;
-            }
-        }
-        return 0;
-    };
-    const sortFunction = (a, b) => {
-        let compare = 0;
+    const iteratee = row => {
+        let value;
         if (valueGetterForSort) {
-            compare = comparer(valueGetterForSort(a), valueGetterForSort(b));
+            value = valueGetterForSort(row);
         } else {
-            compare = comparer(a[sortColumn], b[sortColumn]);
+            value = row[sortColumn];
         }
-        if (compare !== 0) {
-            return compare * sortModifier;
+        if (typeof value === 'string') {
+            return value.toLocaleLowerCase();
         }
-        const sortColumnFinal = 'treeId';
-        return comparer(a[sortColumnFinal], b[sortColumnFinal]) * sortModifier;
-    };
-    input.sort(sortFunction);
+        return value;
+    }
+    return _.orderBy(input, iteratee, sortDirection === SortDirection.Descending ? 'desc' : 'asc');
 };
 
 function filterNodes(root: AugmentedTreeNode, filterText: string, columns: Array<string>);
