@@ -109,18 +109,31 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
     }
     const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
     const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent', numeric: true});
+    const comparer = (a, b) => {
+        if (typeof a === 'string' && typeof b === 'string') {
+            return collator.compare(a, b);
+        } else {
+            if (a < b) {
+                return -1;
+            }
+            if (a > b) {
+                return 1;
+            }
+        }
+        return 0;
+    };
     const sortFunction = (a, b) => {
         let compare = 0;
         if (valueGetterForSort) {
-            compare = collator.compare(valueGetterForSort(a), valueGetterForSort(b));
+            compare = comparer(valueGetterForSort(a), valueGetterForSort(b));
         } else {
-            compare = collator.compare(a[sortColumn], b[sortColumn]);
+            compare = comparer(a[sortColumn], b[sortColumn]);
         }
         if (compare !== 0) {
             return compare * sortModifier;
         }
         const sortColumnFinal = 'treeId';
-        return collator.compare(a[sortColumnFinal], b[sortColumnFinal]) * sortModifier;
+        return comparer(a[sortColumnFinal], b[sortColumnFinal]) * sortModifier;
     };
     input.sort(sortFunction);
 };

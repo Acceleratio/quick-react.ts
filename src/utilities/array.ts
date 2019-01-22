@@ -1,6 +1,4 @@
-import { getObjectValue } from './getObjectValue';
 import { resolveCellValue } from './resolveCellValue';
-import { GridColumn } from '../components/QuickGrid';
 
 export function findIndex<T>(array: Array<T>, predicate: (item: T, index?: number) => boolean): number {
     let index = -1;
@@ -46,7 +44,17 @@ export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>
                 valueB = resolveCellValue(b, sortOption.column);
 
             }
-            const compare = collator.compare(valueA, valueB);
+            let compare;
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                compare = collator.compare(valueA, valueB);
+            } else {
+                if (valueA < valueB) {
+                    compare = -1;
+                }
+                if (valueA > valueB) {
+                    compare = 1;
+                }
+            }
             if (compare !== 0) {
                 return compare * sortOption.sortModifier;
             }
