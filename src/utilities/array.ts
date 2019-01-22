@@ -33,6 +33,7 @@ export interface SortProps {
 }
 
 export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>) => {
+    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent'});
     const sortFunction = (a, b) => {
         for (let sortOption of sortOptions) {
             let valueA;
@@ -45,15 +46,13 @@ export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>
                 valueB = resolveCellValue(b, sortOption.column);
 
             }
-            if (valueA < valueB) {
-                return -1 * sortOption.sortModifier;
+            const compare = collator.compare(valueA, valueB);
+            if (compare !== 0) {
+                return compare * sortOption.sortModifier;
             }
-            if (valueA > valueB) {
-                return 1 * sortOption.sortModifier;
-            }
+            return 0;
         }
-        return 0;
-    };
+    }
     return [...rows].sort(sortFunction);
 };
 

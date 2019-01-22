@@ -108,37 +108,22 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
         return input;
     }
     const sortModifier = sortDirection === SortDirection.Descending ? -1 : 1;
+    const collator = Intl.Collator([...navigator.languages], {sensitivity: 'accent'});
     const sortFunction = (a, b) => {
         let compare = 0;
         if (valueGetterForSort) {
-            compare = lowerCaseCompare(valueGetterForSort(a), valueGetterForSort(b));
+            compare = collator.compare(valueGetterForSort(a), valueGetterForSort(b));
         } else {
-            compare = lowerCaseCompare(a[sortColumn], b[sortColumn]);
+            compare = collator.compare(a[sortColumn], b[sortColumn]);
         }
         if (compare !== 0) {
             return compare * sortModifier;
         }
         const sortColumnFinal = 'treeId';
-        return lowerCaseCompare(a[sortColumnFinal], b[sortColumnFinal])
+        return collator.compare(a[sortColumnFinal], b[sortColumnFinal]) * sortModifier;
     };
     input.sort(sortFunction);
 };
-
-function lowerCaseCompare(a: any, b: any) {
-    let lA = a;
-    let lB = b;
-    if (typeof lA === 'string' && typeof lB === 'string') {
-        lA = a.toLowerCase();
-        lB = b.toLowerCase();
-    }
-    if (lA < lB) {
-        return -1;
-    }
-    if (lA > lB) {
-        return 1;
-    }
-    return 0;
-}
 
 function filterNodes(root: AugmentedTreeNode, filterText: string, columns: Array<string>);
 function filterNodes(root: AugmentedTreeNode, nodeFilterFunc: (node: AugmentedTreeNode) => boolean);
