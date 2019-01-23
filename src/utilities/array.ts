@@ -32,20 +32,31 @@ export interface SortProps {
 }
 
  export const sortRowsByColumn = (rows: Array<any>, sortOptions: Array<SortProps>) => {
-     const iteratees = sortOptions.map(sortOption => row => {
-         let value;
-         if (sortOption.sortFunction) {
-             value = sortOption.sortFunction(row);
-         } else {
-             value = resolveCellValue(row, sortOption.column);
+     const collator = Intl.Collator(...navigator.languages, { sensitivity: 'accent', numeric: true });
+     const comparator = (a, b) => {
+         for (let sortOption of sortOptions) {
+            let valueA;
+            let valueB;
+            if (sortOption.sortFunction) {
+               valueA = sortOption.sortFunction(a);
+               valueB = sortOption.sortFunction(b);
+            } else {
+                valueA = resolveCellValue(a, sortOption.column);
+                valueB = resolveCellValue(b, sortOption.column);
+            }
+            let compare = 0;
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                compare = collator.compare(valueA, valueB) * sortOption.sortModifier;
+            } else {
+                compare = valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
+            }
+            if (compare !== 0) {
+                return compare;
+            }
          }
-         if (typeof value === 'string') {
-             value = value.toLocaleLowerCase();
-         }
-         return value;
-     });
-     const orders = sortOptions.map(sortOption => sortOption.sortModifier > 0 ? 'asc' : 'desc');
-     return _.orderBy(rows, iteratees, orders);
+         return 0;
+     };
+     return rows.sort(comparator);
  };
 
 export const groupByColumn = function (rows, groupColumn) {

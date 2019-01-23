@@ -95,6 +95,15 @@ export const generateTreeData = (size: number): TreeNode => {
     };
 };
 
+function randomizeCase(val: string): string {
+    let ans = "";
+    const coinFlip = () => Math.random() > 0.5;
+    for (let i = 0; i < val.length; ++i) {
+        ans += coinFlip() ? val[i].toLowerCase() : val[i].toUpperCase();
+    }
+    return ans;
+}
+
 export const gridColumns1: Array<GridColumn> = [
     {
         valueMember: 'Name',
@@ -215,7 +224,7 @@ export function getGridData(numberOfElements) {
         const date = randomDate(new Date(2012, 0, 1), new Date());
         data.push(
             {
-                RandomWords: RANDOM_WORDS[Math.floor(Math.random() * RANDOM_WORDS.length)],
+                RandomWords: randomizeCase(RANDOM_WORDS[Math.floor(Math.random() * RANDOM_WORDS.length)]),
                 Color: RANDOM_Color[Math.floor(Math.random() * RANDOM_Color.length)],
                 Animal: RANDOM_Animal[Math.floor(Math.random() * RANDOM_Animal.length)],
                 Mixed: RANDOM_Mix[Math.floor(Math.random() * RANDOM_Mix.length)],
