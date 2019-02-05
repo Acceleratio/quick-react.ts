@@ -66,6 +66,7 @@ export interface ITreeFilterProps {
     validationErrorMessage?: string;
     isReady?: boolean;
     showResetButton?: boolean;
+    calloutClassName?: string;
 }
 
 export const defaultTreeFilterProps: Partial<ITreeFilterProps> = {

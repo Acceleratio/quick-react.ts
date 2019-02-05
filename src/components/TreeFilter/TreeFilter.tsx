@@ -267,6 +267,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
             onCancel: this._onDismiss,
             filterSelection: this.state.selection
         };
+        const calloutClassName = this.props.calloutClassName;
 
         const treeFilterClassName = classNames(
             'tree-filter-container',
@@ -330,7 +331,7 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
                     <Callout
                         ref={this.setCalloutRef}
                         isBeakVisible={false}
-                        className="tree-filter-callout"
+                        className={classNames('tree-filter-callout', calloutClassName)}
                         gapSpace={0}
                         doNotLayer={false}
                         directionalHint={this.props.directionalHint}
