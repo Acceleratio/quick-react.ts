@@ -4,7 +4,9 @@
         "node_modules": true,
         "dist": true,
         "lib": true
-    }
-,
-"vsicons.presets.angular": false
+    },
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#00a300BF"
+    },
+    "vsicons.presets.angular": false
 }
