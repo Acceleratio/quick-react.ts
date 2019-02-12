@@ -12,6 +12,7 @@ export interface ISliderProps {
     disabled?: boolean;
     className?: string;
     buttonProps?: React.HTMLProps<HTMLButtonElement>;
+    showTickMarks?: boolean;
 }
 
 export interface ISlider {

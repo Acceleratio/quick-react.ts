@@ -57,6 +57,28 @@
             border-radius: 10px;
             transform: translateX(-50%);
         }
+
+        .slider-point-active {
+            background-color: $primary-color;
+            top: -7px;
+            box-sizing: border-box;
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            border-radius: 10px;
+            transform: translateX(-50%);
+        }
+
+        .slider-point-inactive {
+            background-color: $secondary-color-45;
+            top: -7px;
+            box-sizing: border-box;
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            border-radius: 10px;
+            transform: translateX(-50%);
+        }
     
         .slider-active {
             background-color: $primary-color;
@@ -69,7 +91,7 @@
 
     &.slider-enabled {
         .slider-slideBox:hover, .slider-slideBox:active {
-            .slider-thumb {
+            .slider-thumb, .slider-point-active {
                 border: 2px solid $primary-hover-color;
                 background-color: $primary-hover-color;
             }
@@ -78,14 +100,14 @@
                 background-color: $primary-hover-color;
             }
             
-            .slider-inactive {
+            .slider-inactive, .slider-point-inactive {
                 background-color: $secondary-color-45;
             }      
         }
     }
     
     &.slider-disabled {
-        .slider-thumb {
+        .slider-thumb, .slider-point-active {
             border: 2px solid $primary-color-50;
             background-color: $primary-color-50;
         }
@@ -94,7 +116,7 @@
             background-color: $primary-color-30;
         }
     
-        .slider-inactive {
+        .slider-inactive, .slider-point-inactive {
             background-color: $secondary-color-20;
         }
 

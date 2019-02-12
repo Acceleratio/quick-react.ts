@@ -21,7 +21,8 @@ export class Slider extends CommonComponent<ISliderProps, ISliderState> implemen
         max: 10,
         showValue: true,
         disabled: false,
-        buttonProps: {}
+        buttonProps: {},
+        showTickMarks: false
     };
 
     public refs: {
@@ -58,7 +59,7 @@ export class Slider extends CommonComponent<ISliderProps, ISliderState> implemen
     }
 
     public render(): React.ReactElement<{}> {
-        const { className, disabled, label, max, min, showValue, buttonProps } = this.props;
+        const { className, disabled, label, max, min, showValue, buttonProps, showTickMarks } = this.props;
         const { value, renderedValue } = this.state;
         const thumbOffsetPercent: number = (renderedValue - min) / (max - min) * 100;
 
@@ -106,7 +107,8 @@ export class Slider extends CommonComponent<ISliderProps, ISliderState> implemen
                                 style={isRTL() ?
                                     { 'right': thumbOffsetPercent + '%' } :
                                     { 'left': thumbOffsetPercent + '%' }}>
-                            </span>
+                            </span>    
+                            {showTickMarks && this._renderTickMarks(max - min).map(x => x)}                            
                             <span className={'slider-active'} style={{ 'width': thumbOffsetPercent + '%' }}></span>
                             <span className={'slider-inactive'} style={{ 'width': (100 - thumbOffsetPercent) + '%' }}></span>
                         </div>
@@ -125,6 +127,14 @@ export class Slider extends CommonComponent<ISliderProps, ISliderState> implemen
 
     public get value(): number {
         return this.state.value;
+    }
+
+    private _renderTickMarks(num : number) {
+        let tickMarks = [];
+        for (let i = 0; i <= num; i++) {
+            tickMarks.push(<span  className={i <= this.value ? 'slider-point-active' : 'slider-point-inactive'} style = {{'left' : i / num * 100 + '%'}}> </span>);
+        }
+        return tickMarks;
     }
 
     @autobind
