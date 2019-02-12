@@ -56,9 +56,11 @@
             position: absolute;
             border-radius: 10px;
             transform: translateX(-50%);
+            z-index: 10;
         }
 
         .slider-point-active {
+            border: 2px solid $primary-color;
             background-color: $primary-color;
             top: -7px;
             box-sizing: border-box;
@@ -70,7 +72,8 @@
         }
 
         .slider-point-inactive {
-            background-color: $secondary-color-45;
+            border: 2px solid $secondary-color-45;
+            background-color: $white-color;
             top: -7px;
             box-sizing: border-box;
             width: 16px;
@@ -100,10 +103,14 @@
                 background-color: $primary-hover-color;
             }
             
-            .slider-inactive, .slider-point-inactive {
+            .slider-inactive {
                 background-color: $secondary-color-45;
             }      
         }
+        .slider-point-inactive:hover{
+            border: 2px solid $primary-hover-color;
+            background-color: $primary-hover-color;
+        }      
     }
     
     &.slider-disabled {
@@ -116,8 +123,13 @@
             background-color: $primary-color-30;
         }
     
-        .slider-inactive, .slider-point-inactive {
+        .slider-inactive {
             background-color: $secondary-color-20;
+        }
+
+        .slider-point-inactive {
+            border: 2px solid $secondary-color-20;
+            background-color: $white-color;
         }
 
         .slider-value {
