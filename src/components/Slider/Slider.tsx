@@ -108,7 +108,7 @@ export class Slider extends CommonComponent<ISliderProps, ISliderState> implemen
                                     { 'right': thumbOffsetPercent + '%' } :
                                     { 'left': thumbOffsetPercent + '%' }}>
                             </span>    
-                            {showTickMarks && this._renderTickMarks(max - min).map(x => x)}                            
+                            {showTickMarks && this._renderTickMarks(max - min)}                            
                             <span className={'slider-active'} style={{ 'width': thumbOffsetPercent + '%' }}></span>
                             <span className={'slider-inactive'} style={{ 'width': (100 - thumbOffsetPercent) + '%' }}></span>
                         </div>
