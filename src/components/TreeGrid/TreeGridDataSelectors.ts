@@ -118,7 +118,7 @@ const sort = (input, sortDirection, sortColumn, valueGetterForSort) => {
             return value.toLocaleLowerCase();
         }
         return value;
-    }
+    };
     return _.orderBy(input, iteratee, sortDirection === SortDirection.Descending ? 'desc' : 'asc');
 };
 

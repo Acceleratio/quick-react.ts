@@ -96,7 +96,7 @@ export const generateTreeData = (size: number): TreeNode => {
 };
 
 function randomizeCase(val: string): string {
-    let ans = "";
+    let ans = '';
     const coinFlip = () => Math.random() > 0.5;
     for (let i = 0; i < val.length; ++i) {
         ans += coinFlip() ? val[i].toLowerCase() : val[i].toUpperCase();
@@ -175,7 +175,7 @@ export const gridColumns2: Array<GridColumn> = [
         headerText: 'Numbers',
         width: 100
     },
-     {
+    {
         valueMember: 'IsUpdated',
         headerText: 'Is Updated',
         width: 100,
@@ -234,7 +234,7 @@ export function getGridData(numberOfElements) {
                 DateFormatted: date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + ' - value member: ' + date.getTime(),
                 DateRaw: date.getTime(),
                 AmountRaw: Math.floor(i / 10000),
-                AmountString: Math.floor(i / 10000).toString().concat(' kn') 
+                AmountString: Math.floor(i / 10000).toString().concat(' kn')
             }
         );
     }

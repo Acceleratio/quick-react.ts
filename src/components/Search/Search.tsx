@@ -98,7 +98,7 @@ export class Search extends CommonComponent<ISearchProps, ISearchState> {
             <div
                 ref={this._resolveRef('_rootElement')}
                 className={searchClassName}
-                { ...{ onFocusCapture: this._onFocusCapture } }>
+                {...{ onFocusCapture: this._onFocusCapture }}>
                 {!underlined &&
                     <Icon className={'search-icon'} iconName={'icon-search'}></Icon>
                 }
@@ -111,17 +111,18 @@ export class Search extends CommonComponent<ISearchProps, ISearchState> {
                     onChange={this._onInputChange}
                     onKeyDown={this._onKeyDown}
                     disabled={disabled}
-                    ref={this._resolveRef('_inputElement')} />
-                {underlined &&
-                    <div className="search-button">
-                        <Button disabled={disabled} className={'button-primary'} icon={'icon-search'} onClick={this._onSearchClick}></Button>
-                    </div>
-                }
+                    ref={this._resolveRef('_inputElement')}
+                    title={value} />
                 <div
                     className={'search-clearButton'}
                     onClick={this._onClearClick}>
                     <Icon iconName={'icon-delete'}></Icon>
                 </div>
+                {underlined &&
+                    <div className="search-button">
+                        <Button disabled={disabled} className={'button-primary'} icon={'icon-search'} onClick={this._onSearchClick}></Button>
+                    </div>
+                }
             </div>
         );
     }
