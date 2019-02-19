@@ -11,7 +11,7 @@ import { Label } from './../../src/components/Label/Label';
 import { Icon } from './../../src/components/Icon/Icon';
 import { Slider } from './../../src/components/Slider/Slider';
 import { Button } from './../../src/components/Button/Button';
-
+import './../../src/components/Icon/symbol-defs.svg';
 import { dropdownOptions } from '../MockData/dropdownOptions';
 import { DirectionalHint } from '../../src';
 

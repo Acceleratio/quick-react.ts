@@ -107,7 +107,6 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
             'dropdown-title-error': !isValid
         });
 
-        const arrowIcon = isOpen ? 'icon-Arrow_up' : 'icon-arrow_down';
         const dropdownContainerStyle = {
             width: this.props.dropdownWidth ? this.props.dropdownWidth : this.getMaxItemWidth()
         };
@@ -118,7 +117,13 @@ export class Dropdown extends React.PureComponent<IDropdownProps, IDropdownState
             )}
             {selectionTextObj.text}
             {this.props.displaySelection && this.props.showArrowIcon && (this.state.isDisabled || !this.state.isLoading) &&
-                <Icon className={dropdownIconClassName} iconName={arrowIcon}></Icon>
+                <Icon
+                    className={
+                        isOpen ?
+                            `icon-flip ${dropdownIconClassName}` :
+                            dropdownIconClassName}
+                    iconName="svg-icon-dropDown"
+                />
             }
             {
                 this.state.isLoading && !this.state.isDisabled &&

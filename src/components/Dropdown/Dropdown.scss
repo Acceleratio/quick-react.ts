@@ -6,6 +6,16 @@
     outline: none;
     max-width: 250px;
 
+    .iconArrow,
+    .iconArrowWithBorder {
+        height: 10px;
+        width: 10px;
+
+        &.icon-flip {
+            transform: translateZ(0) rotate(180deg);
+        }
+    }
+
     .dropdown-title {
         display: block;
         width: 100%;
@@ -30,6 +40,7 @@
 
     .dropdown-title:hover {
         cursor: pointer;
+
         .icon {
             color: $primary-hover-color;
             fill: $primary-hover-color !important;
@@ -54,25 +65,30 @@
             user-select: none;
         }
     }
-    .dropdown-title-error{
+
+    .dropdown-title-error {
         border-color: $error-color;
-        &:hover{
+
+        &:hover {
             border-color: $error-color !important;
         }
     }
-    
+
     .iconArrowWithBorder,
     .spinner {
         position: absolute;
         cursor: pointer;
         font-size: 10px;
         line-height: 32px;
+        height: 100%;
         top: 0;
         right: 5px;
     }
+
     .spinner {
         top: 7px;
     }
+
     .iconArrow {
         font-size: 10px;
         margin: 0 5px;
@@ -87,12 +103,14 @@
 
         .iconArrowWithBorder {
             color: $primary-color;
+            fill: $primary-color !important;
         }
     }
 
     &.is-open {
         .iconArrowWithBorder {
             color: $primary-color;
+            fill: $primary-color !important;
         }
     }
 
@@ -108,7 +126,7 @@
             span {
                 color: $secondary-disabled-color;
             }
-           
+
             &.arrow {
                 &.text {
                     padding-right: 20px;
@@ -119,15 +137,18 @@
 
         .icon {
             color: $secondary-disabled-color;
+            fill: $secondary-disabled-color !important;
         }
 
         .iconArrowWithBorder {
             color: $secondary-disabled-color;
+            fill: $secondary-disabled-color !important;
         }
     }
 
     &.icon-dropdown {
         background-color: $primary-color;
+        border: 1px solid transparent;
         border-radius: 8px;
         cursor: pointer;
         display: inline-block;
@@ -139,6 +160,7 @@
             .icon {
                 font-size: 16px;
                 color: $white-color;
+                fill: $white-color !important;
                 padding: 8px 7px;
                 margin-right: 0;
                 line-height: 16px;
@@ -168,17 +190,18 @@
             cursor: pointer;
 
             .dropdown-title {
-                background-color: $white-color;
+                background-color: transparent;
             }
 
             .icon {
-                color: $primary-color;      
-                fill: $primary-color !important;         
+                color: $primary-color;
+                fill: $primary-color !important;
             }
 
             &:hover {
                 .iconArrow {
                     color: $primary-hover-color;
+                    fill: $primary-hover-color !important;
                 }
             }
         }
@@ -209,20 +232,22 @@
 
         &:hover {
             border-color: $white-background-lines-hover;
-            
+
             .dropdown-title {
                 .iconArrow {
                     color: $primary-color;
+                    fill: $primary-color !important;
                 }
-            } 
+            }
         }
 
         &.is-open {
             .dropdown-title {
                 .iconArrow {
                     color: $primary-color;
+                    fill: $primary-color !important;
                 }
-            } 
+            }
         }
 
         &.is-disabled {
@@ -233,6 +258,7 @@
             .dropdown-title {
                 .iconArrow {
                     color: $secondary-disabled-color;
+                    fill: $secondary-disabled-color !important;
                 }
             }
         }
@@ -282,7 +308,7 @@
                         background-color: $white-color;
                         color: $primary-color;
                     }
-        
+
                     &:hover {
                         background-color: $primary-background-hover-color;
                     }
@@ -294,7 +320,7 @@
                             padding: 0 10px;
                         }
                     }
-                }               
+                }
             }
         }
     }
