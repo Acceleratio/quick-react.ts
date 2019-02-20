@@ -13,7 +13,7 @@
         transition: 60ms;
 
         &.icon-flip {
-            transform: rotate(180deg);
+            transform: rotateX(180deg);
         }
     }
 
