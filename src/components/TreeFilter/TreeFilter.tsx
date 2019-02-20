@@ -137,9 +137,11 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
     }
 
     private onDismiss = () => {
-        this.setState(prevState => ({ ...prevState, 
+        this.setState(prevState => ({
+            ...prevState,
             isOpen: false,
-            query: this.props.clearSearchOnClose ? '' : prevState.query }));
+            query: this.props.clearSearchOnClose ? '' : prevState.query
+        }));
         this.props.onCalloutClose();
     }
 
@@ -236,10 +238,12 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
             this.props.onSave(this.props.filterId, this.state.selection);
         }
 
-        this.setState(prevState => ({ ...prevState, 
-            isOpen: false, 
+        this.setState(prevState => ({
+            ...prevState,
+            isOpen: false,
             query: this.props.clearSearchOnClose ? '' : prevState.query,
-            selection: this.state.selection }));
+            selection: this.state.selection
+        }));
         this.props.onCalloutClose();
     }
 
@@ -313,12 +317,14 @@ export class TreeFilter extends React.PureComponent<ITreeFilterProps, ITreeFilte
                             <Icon className="validation-error-icon" iconName="icon-warning2" />
                         }
                         {
-                            hasItems && isOpen && this.state.isReady &&
-                            <Icon className="dropdown-icon" iconName="icon-Arrow_up" />
-                        }
-                        {
-                            hasItems && !isOpen && this.state.isReady &&
-                            <Icon className="dropdown-icon" iconName="icon-arrow_down" />
+                            hasItems && this.state.isReady &&
+                            <div className="dropdown-icon-container">
+                                <Icon className={isOpen ?
+                                    'icon-flip dropdown-icon' :
+                                    'dropdown-icon'}
+                                    iconName="svg-icon-dropDown"
+                                />
+                            </div>
                         }
                         {
                             !this.state.isReady && !this.props.disabled &&

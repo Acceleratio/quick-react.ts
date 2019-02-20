@@ -11,7 +11,7 @@
     position: relative;
     display: inline-block;
 
-    > span {
+    >span {
         height: 22px;
         line-height: 22px;
     }
@@ -42,13 +42,26 @@
             color: $error-color;
         }
 
-        .dropdown-icon {
-            float: right;
-            padding-top: 5px;
-            font-size: 11px;
+        .dropdown-icon-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
 
-            &:hover {
-                color: $primary-color;
+            .dropdown-icon {
+                float: right;
+                font-size: 11px;
+                height: 10px;
+                width: 10px;
+                margin: 0 5px;
+                transition: 60ms;
+
+                &.icon-flip {
+                    transform: rotateX(180deg);
+                }
+
+                &:hover {
+                    color: $primary-color;
+                }
             }
         }
 
@@ -75,7 +88,8 @@
     &.is-disabled {
         cursor: default;
 
-        > span, .icon {
+        >span,
+        .icon {
             pointer-events: none;
             color: $secondary-disabled-color;
         }
@@ -84,7 +98,7 @@
             cursor: default;
             pointer-events: none;
 
-            > span {
+            >span {
                 color: $secondary-disabled-color;
             }
         }

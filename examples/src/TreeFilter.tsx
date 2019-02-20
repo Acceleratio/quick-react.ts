@@ -11,6 +11,7 @@ import { Button } from '../../src/components/Button/Button';
 import { ILookupTable } from '../../src/components/TreeFilter/TreeItemOperators';
 import { Spinner } from '../../src/components/Spinner/Spinner';
 import { SpinnerType } from '../../src/components/Spinner';
+import './../../src/components/Icon/symbol-defs.svg';
 
 interface DemoState {
     filterStates: { [id: string]: IFilterSelection };
@@ -258,16 +259,16 @@ export class Index extends React.Component<any, DemoState> {
 
                 <TreeFilter
                     title="Not ready filter"
-                    filterId={ 'f11' }
-                    items={ shortFlatList }
-                    itemsAreFlatList={ true }
-                    defaultSelection={ FilterSelectionEnum.All }
+                    filterId={'f11'}
+                    items={shortFlatList}
+                    itemsAreFlatList={true}
+                    defaultSelection={FilterSelectionEnum.All}
                     // tslint:disable-next-line:no-string-literal
-                    filterSelection={ this.state.filterStates[ 'f11' ] }
-                    hasTitleBorder={ true }
-                    showButtons={ false }
-                    onSave={ this.onSave }
-                    isReady={ false }
+                    filterSelection={this.state.filterStates['f11']}
+                    hasTitleBorder={true}
+                    showButtons={false}
+                    onSave={this.onSave}
+                    isReady={false}
                     showResetButton={false}
                 />
 
