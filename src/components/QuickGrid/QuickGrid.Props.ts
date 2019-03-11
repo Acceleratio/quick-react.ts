@@ -196,6 +196,7 @@ export interface ActionItem {
     tooltip?: ITooltipProps;
     showInDropdown?: boolean;
     isMultiSelectAction?: boolean;
+    buttonClass?: string;
 }
 export interface FiltersProps {
     headerColumns: Array<GridColumn>;
