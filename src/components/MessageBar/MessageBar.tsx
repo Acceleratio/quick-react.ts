@@ -16,8 +16,8 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
         onDismiss: null,
         hasDontShowAgain: false,
         dontShowAgainChecked: false,
-        hoverDelayInSeconds: 0.5,
-        hoverAnimationDurationInSeconds: 1
+        hoverDelayInSeconds: 1,
+        hoverAnimationDurationInSeconds: 2
     };
 
     private ICON_MAP = {
