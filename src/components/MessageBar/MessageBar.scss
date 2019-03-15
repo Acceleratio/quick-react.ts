@@ -152,7 +152,6 @@
     &.expandable:hover {
         animation: message-bar-container-animation 0s;
         animation-fill-mode: forwards;
-        animation-delay:1s;
         border-radius: 8px;
       
         .messageBar-actionables {
@@ -160,9 +159,8 @@
             .messageBar-text {
            
                 .messageBar-innerText {
-                    animation: message-bar-text-animation 2s;
+                    animation: message-bar-text-animation;
                     animation-fill-mode: forwards;
-                    animation-delay:1s;
                 }
             }
         }

@@ -8,7 +8,7 @@
     "build": "gulp build",
     "lib": "cross-env NODE_ENV=production webpack",
     "lint": "tslint -p tsconfig.json",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --progress --no-info --content-base examples/pages",
+    "dev": "cross-env NODE_ENV=development node --max_old_space_size=8192 node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --port 3000 --open --no-info --content-base examples/pages",
     "prepublish": "npm run build"
   },
   "repository": {

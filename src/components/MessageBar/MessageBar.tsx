@@ -15,7 +15,9 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
         messageBarType: MessageBarType.info,
         onDismiss: null,
         hasDontShowAgain: false,
-        dontShowAgainChecked: false
+        dontShowAgainChecked: false,
+        hoverDelayInSeconds: 0.5,
+        hoverAnimationDurationInSeconds: 1
     };
 
     private ICON_MAP = {
@@ -39,7 +41,7 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
         const messageBarClassName = classNames(
             'messageBar',
             'messageBar-singleline',
-            
+
             [this.props.className],
             {
                 'messageBar-info': this.props.messageBarType === MessageBarType.info,
@@ -50,17 +52,25 @@ export class MessageBar extends React.Component<IMessageBarProps, IMessageBarSta
             }
         );
 
+        const hoverDelayStyle = !!this.props.expandOnHover && {
+            animationDelay: `${this.props.hoverDelayInSeconds}s`
+        };
+        const hoverAnimationDurationStyle = !!this.props.expandOnHover && {
+            animationDuration: `${this.props.hoverAnimationDurationInSeconds}s`
+        };
+
         let tooltip;
         if (typeof this.props.children === 'string' && !this.props.expandOnHover) {
             tooltip = this.props.children;
         }
         return (
-            <div className={messageBarClassName} role="status">
+            <div style={hoverDelayStyle} className={messageBarClassName} role="status">
                 <div className={'messageBar-content'}>
                     {this._getIconSpan()}
                     <div className={'messageBar-actionables'}>
                         <div className={'messageBar-text'} id={this.state.labelId}>
-                            <span className={this._getInnerTextClassName()} title={tooltip}>
+                            <span style={{ ...hoverDelayStyle, ...hoverAnimationDurationStyle }} className={this._getInnerTextClassName()} title={tooltip}
+                            >
                                 {this.props.children}
                             </span>
                         </div>
